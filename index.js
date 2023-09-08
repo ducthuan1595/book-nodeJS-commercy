@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const fileupload = require("express-fileupload");
 require("dotenv").config();
 
 const init = require("./router/init");
@@ -8,13 +9,13 @@ const init = require("./router/init");
 const app = express();
 const port = process.env.PORT;
 
+app.set("view engine", "ejs");
+app.set("views", "views");
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-
-// app.use("/", (req, res) => {
-//   res.send("Hello world!");
-// });
+app.use(fileupload());
 
 init(app);
 

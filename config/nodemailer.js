@@ -12,17 +12,25 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const HTMLContent = (name, token) => `
+  <html>
+    <h1>Hello ${name}</h1>
+    <div>Please, confirm you already resgister!</div>
+    <div><a href="http://localhost:5050/confirm?token=${token}" >Confirm</a></div>
+  </html>
+`;
+
 // async..await is not allowed in global scope, must use a wrapper
-const sendMailer = async (email) => {
+const sendMailer = async (email, name, token) => {
   try {
     const options = await transporter.sendMail({
       from: '"Fred Foo 👻" <foo@example.com>', // sender address
-      to: "bar@example.com, baz@example.com", // list of receivers
-      subject: "Hello ✔", // Subject line
-      text: "Hello world?", // plain text body
-      html: "<b>Hello world?</b>", // html body
+      to: email, // list of receivers
+      subject: "Confirm email ✔", // Subject line
+      text: "Hello" + name, // plain text body
+      html: HTMLContent(name, token), // html body
     });
-    const info = await transporter.sendMail(options);
+    await transporter.sendMail(options);
   } catch (err) {
     console.error(err);
   }

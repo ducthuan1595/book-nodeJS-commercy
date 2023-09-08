@@ -20,8 +20,8 @@ const schema = new mongoose.Schema(
       default: false,
     },
     role: {
-      type: Boolean,
-      default: false,
+      type: String,
+      default: "F1",
     },
   },
   { timestamps: true }

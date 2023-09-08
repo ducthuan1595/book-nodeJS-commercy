@@ -48,16 +48,40 @@ exports.signup = (username, email, password) => {
           email,
           password: pw,
         });
-        await newUser.save();
-        sendMailer(email);
-        resolve({
-          status: 200,
-          message: "ok",
-        });
+        const addUser = await newUser.save();
+        if (addUser) {
+          const token = createToken(addUser._id);
+          sendMailer(email, username, token, () => {
+            console.log("Send email successfully");
+          });
+          resolve({
+            status: 200,
+            message: "ok",
+          });
+        }
       } else {
         resolve({
           status: 404,
           message: "Email already exist!",
+        });
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+exports.confirm = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const addUser = await User.findById(id);
+      addUser.role = "F2";
+      const updateUser = await addUser.save();
+      if (updateUser) {
+        resolve({
+          status: 201,
+          message: "ok",
+          data: updateUser,
         });
       }
     } catch (err) {

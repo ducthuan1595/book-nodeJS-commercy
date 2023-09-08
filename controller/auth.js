@@ -1,4 +1,5 @@
 const authService = require("../service/auth");
+const authMiddleware = require("../middleware/auth");
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
@@ -25,5 +26,21 @@ exports.signup = async (req, res) => {
         .status(data.status)
         .json({ message: data?.message, data: data?.data, token: data?.token });
     }
+  }
+};
+
+exports.confirm = async (req, res) => {
+  const token = req?.query.token;
+  const id = await authMiddleware.verifyToken(token);
+  if (id) {
+    const data = await authService.confirm(id);
+    if (data) {
+      res.status(data.status).render("confirm", {
+        path: "/confirm",
+        pageTitle: "Confirm",
+      });
+    }
+  } else {
+    res.status(404).json({ message: "User is invalid!" });
   }
 };
