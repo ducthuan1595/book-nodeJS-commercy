@@ -37,6 +37,16 @@ const init = (app) => {
     authMiddleware.protect,
     itemController.createItem
   );
+  router.post(
+    "/api/update-item",
+    authMiddleware.protect,
+    itemController.updateItem
+  );
+  router.post(
+    "/api/delete-item",
+    authMiddleware.protect,
+    itemController.deleteItem
+  );
 
   return app.use("/", router);
 };
