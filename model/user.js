@@ -23,6 +23,21 @@ const schema = new mongoose.Schema(
       type: String,
       default: "F1",
     },
+    cart: {
+      items: [
+        {
+          itemId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Item",
+            required: true,
+          },
+          quantity: {
+            type: Number,
+            required: true,
+          },
+        },
+      ],
+    },
   },
   { timestamps: true }
 );

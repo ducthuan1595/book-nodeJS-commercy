@@ -4,6 +4,8 @@ const authController = require("../controller/auth");
 const categoryController = require("../controller/category");
 const authMiddleware = require("../middleware/auth");
 const itemController = require("../controller/item");
+const cartController = require("../controller/cart");
+const orderController = require("../controller/order");
 
 const router = express.Router();
 
@@ -46,6 +48,23 @@ const init = (app) => {
     "/api/delete-item",
     authMiddleware.protect,
     itemController.deleteItem
+  );
+  router.get("/api/get-all-item", itemController.getAllItem);
+
+  // add cart;
+  router.post("/api/add-cart", authMiddleware.protect, cartController.addCart);
+  router.post(
+    "/api/delete-cart",
+    authMiddleware.protect,
+    cartController.deleteCart
+  );
+  router.get("/api/get-cart", authMiddleware.protect, cartController.getCart);
+
+  // order
+  router.post(
+    "/api/create-order",
+    authMiddleware.protect,
+    orderController.createOrder
   );
 
   return app.use("/", router);

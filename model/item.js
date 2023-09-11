@@ -12,6 +12,7 @@ const schema = new mongoose.Schema(
         required: true,
       },
     ],
+    detailPic: [{ type: String, required: false }],
     priceInput: {
       type: Number,
       required: true,
@@ -38,6 +39,10 @@ const schema = new mongoose.Schema(
       required: true,
     },
     count: {
+      type: Number,
+      required: true,
+    },
+    weight: {
       type: Number,
       required: true,
     },

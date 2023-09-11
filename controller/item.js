@@ -10,14 +10,21 @@ exports.createItem = async (req, res) => {
     barcode,
     count,
     categoryId,
+    weight,
   } = req.body;
   const images = req.files.images;
-  const imageArr = [];
-  if (Array.isArray(images)) {
-    imageArr = images;
-  } else {
-    imageArr.push(images);
-  }
+  const detailPic = req.files?.detailPic;
+  const handleImg = (images) => {
+    let arrImg = [];
+    if (Array.isArray(images)) {
+      arrImg = images;
+    } else {
+      arrImg.push(images);
+    }
+    return arrImg;
+  };
+  const imageArr = handleImg(images);
+  const detailPicArr = handleImg(detailPic);
   if (
     !name &&
     !priceInput &&
@@ -26,7 +33,8 @@ exports.createItem = async (req, res) => {
     !barcode &&
     !count &&
     !categoryId &&
-    !imageArr.length
+    !imageArr.length &&
+    !weight
   ) {
     res.status(404).json({ message: "Input invalid" });
   } else {
@@ -41,6 +49,8 @@ exports.createItem = async (req, res) => {
         count,
         categoryId,
         imageArr,
+        detailPicArr,
+        weight,
       },
       req
     );
@@ -61,14 +71,21 @@ exports.updateItem = async (req, res) => {
     count,
     categoryId,
     itemId,
+    weight,
   } = req.body;
   const images = req.files.images;
-  const imageArr = [];
-  if (Array.isArray(images)) {
-    imageArr = images;
-  } else {
-    imageArr.push(images);
-  }
+  const detailPic = req.files?.detailPic;
+  const handleImg = (images) => {
+    let arrImg = [];
+    if (Array.isArray(images)) {
+      arrImg = images;
+    } else {
+      arrImg.push(images);
+    }
+    return arrImg;
+  };
+  const imageArr = handleImg(images);
+  const detailPicArr = handleImg(detailPic);
   if (
     !name &&
     !priceInput &&
@@ -78,7 +95,8 @@ exports.updateItem = async (req, res) => {
     !count &&
     !categoryId &&
     !itemId &&
-    !imageArr.length
+    !imageArr.length &&
+    !weight
   ) {
     res.status(404).json({ message: "Input invalid" });
   } else {
@@ -93,7 +111,9 @@ exports.updateItem = async (req, res) => {
         count,
         categoryId,
         imageArr,
+        detailPicArr,
         itemId,
+        weight,
       },
       req
     );
@@ -108,5 +128,13 @@ exports.deleteItem = async (req, res) => {
   const data = await itemService.deleteItem(itemId, req);
   if (data) {
     res.status(200).json({ message: data.message, data: data.data });
+  }
+};
+
+exports.getAllItem = async (req, res) => {
+  const key = req.query?.key;
+  const data = await itemService.getAllItem(key);
+  if (data) {
+    res.status(data.status).json({ message: data.message, data: data.data });
   }
 };
