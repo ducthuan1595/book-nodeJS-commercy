@@ -1,3 +1,4 @@
+const Item = require("../model/item");
 const Order = require("../model/order");
 const User = require("../model/user");
 
@@ -6,6 +7,7 @@ exports.createOrder = (value, req) => {
     try {
       const user = await User.findById(req.user._id);
       if (user) {
+        // add items for order
         const arrCart = user.cart.items;
         const handleArr = (arr, id) => {
           return arr.find((v) => v.toString() === id.toString());
@@ -13,18 +15,37 @@ exports.createOrder = (value, req) => {
         const newArrOrder = arrCart.filter((v) =>
           handleArr(value.arrCartId, v._id)
         );
-        const updateCart = arrCart.filter(
+        const updateItem = arrCart.filter(
           (v) => !handleArr(value.arrCartId, v._id)
         );
-
-        user.cart.items = updateCart;
+        user.cart.items = updateItem;
         await user.save();
+
+        // update quantity for order
         const newQuantity = newArrOrder.reduce((a, b) => {
           return a + b.quantity;
         }, 0);
+
+        // Update mount
+        let amount = 0;
+
+        // Update count
+        const arrId = newArrOrder.map((item) => item.itemId.toString());
+        const items = await Item.find().where("_id", arrId);
+        const updateCount = async (arr, id, quantity) => {
+          const item = arr.find((v) => v._id.toString() === id.toString());
+          amount += item.pricePay;
+          const newQuantity = item.count - quantity;
+          item.count = newQuantity;
+          await item.save();
+        };
+        newArrOrder.forEach((item) => {
+          updateCount(items, item.itemId, +item.quantity);
+        });
+
         const order = new Order({
           userId: user._id,
-          amount: value.amount,
+          amount: amount,
           quantity: newQuantity,
           items: newArrOrder,
         });

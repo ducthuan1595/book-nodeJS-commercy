@@ -11,7 +11,6 @@ exports.addCart = (value, req) => {
           const existItemIndex = user.cart.items.findIndex(
             (item) => item.itemId.toString() === value.itemId.toString()
           );
-          console.log(existItemIndex);
           const updateItem = [...user.cart.items];
           if (existItemIndex != -1) {
             const newQuantity =
