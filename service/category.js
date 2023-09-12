@@ -43,6 +43,7 @@ exports.createCategory = (input, req) => {
           name: input.name,
           banner: imageName,
           description: input?.description,
+          position: input.position,
         });
         const newCategory = await category.save();
         resolve({
@@ -87,6 +88,7 @@ exports.updateCategory = (input, req) => {
         if (category) {
           category.name = input.name;
           category.description = input?.description;
+          category.position = input.position;
           if (category.banner.length) {
             handleFile.deleteFile(category.banner, "banner");
           }

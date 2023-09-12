@@ -1,5 +1,6 @@
 const User = require("../model/user");
 const Item = require("../model/item");
+const Order = require("../model/order");
 const path = require("path");
 const handleFile = require("../config/file");
 
@@ -126,16 +127,34 @@ exports.deleteItem = (itemId, req) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findById(req.user._id);
-      if (user) {
-        const item = await Item.findByIdAndDelete(itemId);
-        if (item) {
-          handleFile.deleteFile(item.pic, "images");
-          handleFile.deleteFile(item.detailPic, "images");
+      if (user && user.role === "F3") {
+        const orders = await Order.find().where("items.itemId", itemId);
+        if (!orders) {
+          const item = await Item.findByIdAndDelete(itemId);
+          if (item) {
+            handleFile.deleteFile(item.pic, "images");
+            handleFile.deleteFile(item.detailPic, "images");
+            resolve({
+              status: 200,
+              message: "ok",
+            });
+          } else {
+            resolve({
+              status: 404,
+              message: "Item is not exist!",
+            });
+          }
+        } else {
           resolve({
-            status: 200,
-            message: "ok",
+            status: 403,
+            message: "Item used order!",
           });
         }
+      } else {
+        resolve({
+          status: 403,
+          message: "Unauthorized",
+        });
       }
     } catch (err) {
       reject(err);
@@ -143,23 +162,52 @@ exports.deleteItem = (itemId, req) => {
   });
 };
 
-exports.getAllItem = (k) => {
+exports.getAllItem = (k, f, s, limit, page) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const key = k
-        ? {
-            $or: [
-              { name: { $regex: k, $options: "i" } },
-              // { pricePay: { $regex: +k, $options: "i" } },
-            ],
-          }
-        : {};
-      const items = await Item.find(key);
-      if (items) {
+      // filter
+      const itemFilter = await Item.find().populate({
+        path: "categoryId",
+        match: {
+          name: f,
+        },
+      });
+
+      const filters = itemFilter.filter((item) => item.categoryId !== null);
+      // search
+      const search = k
+        ? filters.filter((item) => {
+            if (item.name.includes(k)) {
+              return item;
+            }
+          })
+        : filters;
+
+      // Sort
+      const sort = s
+        ? search.filter((item) => {
+            if (+item.pricePay <= +s) {
+              return item;
+            }
+          })
+        : search;
+      if (sort) {
+        // page section
+        const totalPage = Math.ceil(sort.length / limit);
+        const start = (page - 1) * limit;
+        const end = page * limit;
+        const result = sort.slice(start, end);
+        const totalNumber = sort.length;
         resolve({
           status: 200,
           message: "ok",
-          data: items,
+          data: {
+            currPage: page,
+            nextPage: page * limit < totalNumber,
+            prevPage: 0 < page - 1,
+            products: result,
+            totalPage: totalPage,
+          },
         });
       }
     } catch (err) {

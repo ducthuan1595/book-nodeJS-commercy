@@ -6,11 +6,11 @@ const schema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    banner: {
-      type: Object,
+    startTime: {
+      type: String,
       required: true,
     },
-    description: {
+    endTime: {
       type: String,
       required: false,
     },
@@ -26,4 +26,4 @@ const schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Category", schema);
+module.exports = mongoose.model("Voucher", schema);
