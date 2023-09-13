@@ -7,6 +7,7 @@ const itemController = require("../controller/item");
 const cartController = require("../controller/cart");
 const orderController = require("../controller/order");
 const voucherController = require("../controller/voucher");
+const flashsaleController = require("../controller/flashsale");
 
 const router = express.Router();
 
@@ -68,7 +69,7 @@ const init = (app) => {
     orderController.createOrder
   );
 
-  // voucher
+  // voucher and flashsale
   router.post(
     "/api/create-voucher",
     authMiddleware.protect,
@@ -78,6 +79,11 @@ const init = (app) => {
     "/api/get-voucher",
     authMiddleware.protect,
     voucherController.getVoucher
+  );
+  router.post(
+    "/api/create-flashsale",
+    authMiddleware.protect,
+    flashsaleController.createFlashsale
   );
 
   return app.use("/", router);

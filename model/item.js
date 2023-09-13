@@ -46,6 +46,11 @@ const schema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    flashSaleId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Flashsale",
+      default: null,
+    },
   },
   { timestamps: true }
 );

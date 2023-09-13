@@ -2,6 +2,7 @@ const Item = require("../model/item");
 const Order = require("../model/order");
 const User = require("../model/user");
 const Voucher = require("../model/voucher");
+const FlashSale = require("../model/flashsale");
 
 exports.createOrder = (value, req) => {
   return new Promise(async (resolve, reject) => {
@@ -36,14 +37,26 @@ exports.createOrder = (value, req) => {
           const items = await Item.find().where("_id", arrId);
           const updateCount = async (arr, id, quantity) => {
             const item = arr.find((v) => v._id.toString() === id.toString());
+            // update flashsale
+            if (item.flashSaleId) {
+              const flashSale = await FlashSale.findById(item.flashSaleId);
+              if (flashSale && flashSale.end_date < Date.now()) {
+                item.pricePay = item.priceInput;
+              }
+            }
             amount += item.pricePay;
+
             const newQuantity = item.count - quantity;
             item.count = newQuantity;
             await item.save();
           };
-          newArrOrder.forEach((item) => {
-            updateCount(items, item.itemId, +item.quantity);
-          });
+          for (let i = 0; i < newArrOrder.length; i++) {
+            await updateCount(
+              items,
+              newArrOrder[i].itemId,
+              +newArrOrder[i].quantity
+            );
+          }
 
           // Apply voucher
           if (value.voucherCode) {
@@ -62,18 +75,21 @@ exports.createOrder = (value, req) => {
             }
           }
 
+          console.log({ amount });
           const order = new Order({
             userId: user._id,
             amount: amount,
             quantity: newQuantity,
             items: newArrOrder,
           });
-          const updateOrder = await order.save();
-          resolve({
-            status: 200,
-            message: "ok",
-            data: updateOrder,
-          });
+          if (order) {
+            const updateOrder = await order.save();
+            resolve({
+              status: 200,
+              message: "ok",
+              data: updateOrder,
+            });
+          }
         } else {
           resolve({
             status: 404,

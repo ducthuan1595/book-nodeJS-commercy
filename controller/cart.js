@@ -2,7 +2,7 @@ const cartService = require("../service/cart");
 
 exports.addCart = async (req, res) => {
   const { quantity, itemId } = req.body;
-  if (!quantity && !itemId) {
+  if (!quantity || !itemId) {
     res.status(403).json({ message: "Input invalid!" });
   } else {
     const data = await cartService.addCart({ quantity, itemId }, req);

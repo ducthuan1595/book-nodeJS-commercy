@@ -37,11 +37,11 @@ exports.createVoucher = (expiration, quantity, discount, req) => {
   });
 };
 
-exports.getVoucher = (req) => {
+exports.getVoucher = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findById(req.user._id);
-      if (user && user.role === "F3") {
+      if (user) {
         const vouchers = await Voucher.find();
         if (vouchers) {
           resolve({
