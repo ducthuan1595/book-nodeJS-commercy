@@ -32,6 +32,11 @@ const schema = new mongoose.Schema(
         },
       },
     ],
+    // voucherId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Voucher",
+    //   default: null,
+    // },
   },
   { timestamps: true }
 );

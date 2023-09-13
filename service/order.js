@@ -1,6 +1,7 @@
 const Item = require("../model/item");
 const Order = require("../model/order");
 const User = require("../model/user");
+const Voucher = require("../model/voucher");
 
 exports.createOrder = (value, req) => {
   return new Promise(async (resolve, reject) => {
@@ -43,6 +44,23 @@ exports.createOrder = (value, req) => {
           newArrOrder.forEach((item) => {
             updateCount(items, item.itemId, +item.quantity);
           });
+
+          // Apply voucher
+          if (value.voucherCode) {
+            const voucher = await Voucher.findOne({ code: value.voucherCode });
+            if (
+              new Date().getTime() < voucher.expirationDate &&
+              voucher.quantity > 0 &&
+              voucher.isActive === true
+            ) {
+              amount = amount - (amount * +voucher.discount) / 100;
+              voucher.quantity = voucher.quantity - 1;
+              await voucher.save();
+            } else {
+              voucher.isActive = false;
+              await voucher.save();
+            }
+          }
 
           const order = new Order({
             userId: user._id,

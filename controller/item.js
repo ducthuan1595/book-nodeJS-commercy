@@ -26,14 +26,14 @@ exports.createItem = async (req, res) => {
   const imageArr = handleImg(images);
   const detailPicArr = handleImg(detailPic);
   if (
-    !name &&
-    !priceInput &&
-    !pricePay &&
-    !description &&
-    !barcode &&
-    !count &&
-    !categoryId &&
-    !imageArr.length &&
+    !name ||
+    !priceInput ||
+    !pricePay ||
+    !description ||
+    !barcode ||
+    !count ||
+    !categoryId ||
+    !imageArr.length ||
     !weight
   ) {
     res.status(404).json({ message: "Input invalid" });
@@ -87,15 +87,15 @@ exports.updateItem = async (req, res) => {
   const imageArr = handleImg(images);
   const detailPicArr = handleImg(detailPic);
   if (
-    !name &&
-    !priceInput &&
-    !pricePay &&
-    !description &&
-    !barcode &&
-    !count &&
-    !categoryId &&
-    !itemId &&
-    !imageArr.length &&
+    !name ||
+    !priceInput ||
+    !pricePay ||
+    !description ||
+    !barcode ||
+    !count ||
+    !categoryId ||
+    !itemId ||
+    !imageArr.length ||
     !weight
   ) {
     res.status(404).json({ message: "Input invalid" });

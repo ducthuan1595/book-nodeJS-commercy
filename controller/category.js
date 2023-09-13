@@ -18,7 +18,7 @@ exports.createCategory = async (req, res) => {
   } else {
     images.push(banner);
   }
-  if (!name && !position && images.length) {
+  if (!name || !position || images.length) {
     res.status(404).json({ message: "Category is invalid!" });
   } else {
     const data = await categoryService.createCategory(
@@ -49,7 +49,7 @@ exports.updateCategory = async (req, res) => {
   } else {
     images.push(banner);
   }
-  if (!name && !position && images.length < 1 && !categoryId) {
+  if (!name || !position || images.length < 1 || !categoryId) {
     res.status(404).json({ message: "Category is invalid!" });
   } else {
     const data = await categoryService.updateCategory(

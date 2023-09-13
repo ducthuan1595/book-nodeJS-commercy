@@ -6,6 +6,7 @@ const authMiddleware = require("../middleware/auth");
 const itemController = require("../controller/item");
 const cartController = require("../controller/cart");
 const orderController = require("../controller/order");
+const voucherController = require("../controller/voucher");
 
 const router = express.Router();
 
@@ -65,6 +66,18 @@ const init = (app) => {
     "/api/create-order",
     authMiddleware.protect,
     orderController.createOrder
+  );
+
+  // voucher
+  router.post(
+    "/api/create-voucher",
+    authMiddleware.protect,
+    voucherController.createVoucher
+  );
+  router.get(
+    "/api/get-voucher",
+    authMiddleware.protect,
+    voucherController.getVoucher
   );
 
   return app.use("/", router);

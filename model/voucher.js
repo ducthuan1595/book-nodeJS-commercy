@@ -2,23 +2,24 @@ const mongoose = require("mongoose");
 
 const schema = new mongoose.Schema(
   {
-    name: {
+    code: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    expirationDate: {
       type: String,
       required: true,
     },
-    startTime: {
-      type: String,
-      required: true,
-    },
-    endTime: {
-      type: String,
+    discount: {
+      type: Number,
       required: false,
     },
-    active: {
+    isActive: {
       type: Boolean,
       default: true,
     },
-    position: {
+    quantity: {
       type: Number,
       required: true,
     },
