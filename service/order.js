@@ -35,17 +35,40 @@ exports.createOrder = (value, req) => {
           // Update count
           const arrId = newArrOrder.map((item) => item.itemId.toString());
           const items = await Item.find().where("_id", arrId);
+          // let flashSale;
           const updateCount = async (arr, id, quantity) => {
             const item = arr.find((v) => v._id.toString() === id.toString());
-            // update flashsale
             if (item.flashSaleId) {
-              const flashSale = await FlashSale.findById(item.flashSaleId);
-              if (flashSale && flashSale.end_date < Date.now()) {
-                item.pricePay = item.priceInput;
+              const flashSale = await FlashSale?.findById(item.flashSaleId);
+              // update flashsale
+              const quantitySale = flashSale.items.find((v) => {
+                if (v.itemId.toString() === item._id.toString()) {
+                  return v.quantity;
+                }
+              });
+              if (item.flashSaleId) {
+                if (
+                  flashSale &&
+                  flashSale.isActive &&
+                  flashSale.end_date < Date.now() &&
+                  flashSale.start_date > Date.now()
+                ) {
+                  item.pricePay = item.priceInput;
+                  item.flashSaleId = null;
+                  flashSale.isActive = false;
+                } else if (quantitySale < 1) {
+                  item.pricePay = item.priceInput;
+                }
               }
-            }
-            amount += item.pricePay;
+              amount += item.pricePay;
 
+              const updateFlashSale = flashSale?.items.find(
+                (v) => v.itemId.toString() === item._id.toString()
+              );
+              const newQuantityFlashSale = +quantitySale.quantity - quantity;
+              updateFlashSale.quantity = newQuantityFlashSale;
+              await flashSale.save();
+            }
             const newQuantity = item.count - quantity;
             item.count = newQuantity;
             await item.save();
@@ -66,7 +89,7 @@ exports.createOrder = (value, req) => {
               voucher.quantity > 0 &&
               voucher.isActive === true
             ) {
-              amount = amount - (amount * +voucher.discount) / 100;
+              amount = (amount - (amount * +voucher.discount) / 100).toFixed(2);
               voucher.quantity = voucher.quantity - 1;
               await voucher.save();
             } else {
@@ -75,7 +98,6 @@ exports.createOrder = (value, req) => {
             }
           }
 
-          console.log({ amount });
           const order = new Order({
             userId: user._id,
             amount: amount,

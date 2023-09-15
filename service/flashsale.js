@@ -1,6 +1,7 @@
 const Flashsale = require("../model/flashsale");
 const Item = require("../model/item");
 const User = require("../model/user");
+const scheduleSale = require("../suports/cron");
 
 exports.createFlashsale = (value, req) => {
   return new Promise(async (resolve, reject) => {
@@ -22,17 +23,26 @@ exports.createFlashsale = (value, req) => {
             const item = arr.find((item) => {
               return item._id.toString() === id.toString();
             });
-            item.pricePay =
-              item.pricePay - (item.pricePay * +value.discountPercent) / 100;
+            item.pricePay = (
+              item.pricePay -
+              (item.pricePay * +value.discountPercent) / 100
+            ).toFixed(2);
             item.flashSaleId = newFlashSale._id;
             await item.save();
           };
           value.items.map((item) => {
             return handleItem(items, item.itemId);
           });
-          console.log(Date.now());
-          console.log(Date.now() + 1000000);
+          console.log(Date.now() + 5000);
+          console.log(Date.now() + 10000000);
         }
+        const arrItemId = value.items.map((item) => item.itemId);
+        scheduleSale(
+          newFlashSale.start_date,
+          newFlashSale.end_date,
+          newFlashSale.discount_percent,
+          arrItemId
+        );
         resolve({
           status: 200,
           message: "ok",

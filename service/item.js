@@ -1,6 +1,7 @@
 const User = require("../model/user");
 const Item = require("../model/item");
 const Order = require("../model/order");
+const FlashSale = require("../model/flashsale");
 const path = require("path");
 const handleFile = require("../config/file");
 
@@ -192,6 +193,17 @@ exports.getAllItem = (k, f, s, limit, page) => {
           })
         : search;
       if (sort) {
+        for (let i = 0; i < sort.length; i++) {
+          if (sort[i].flashSaleId) {
+            const flashSale = await FlashSale.findById(sort[i].flashSaleId);
+            if (flashSale && flashSale.end_date < Date.now()) {
+              sort[i].pricePay = sort[i].priceInput;
+              sort[i].flashSaleId = null;
+              await sort[i].save();
+            }
+          }
+        }
+
         // page section
         const totalPage = Math.ceil(sort.length / limit);
         const start = (page - 1) * limit;
