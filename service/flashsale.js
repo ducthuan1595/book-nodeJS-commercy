@@ -17,7 +17,7 @@ exports.createFlashsale = (value, req) => {
           items: value.items,
         });
         const newFlashSale = await flashSale.save();
-        if (newFlashSale) {
+        if (newFlashSale && newFlashSale.start_date > new Date()) {
           const items = await Item.find();
           const handleItem = async (arr, id) => {
             const item = arr.find((item) => {
@@ -33,7 +33,7 @@ exports.createFlashsale = (value, req) => {
           value.items.map((item) => {
             return handleItem(items, item.itemId);
           });
-          console.log(Date.now() + 5000);
+          console.log(Date.now() + 1000000);
           console.log(Date.now() + 10000000);
         }
         const arrItemId = value.items.map((item) => item.itemId);
