@@ -13,8 +13,10 @@ const router = express.Router();
 
 const init = (app) => {
   router.get("/confirm", authController.confirm);
+  router.post("/confirm-password", authController.confirmPassword);
 
   router.post("/api/login", authController.login);
+  router.post("/api/forgot-password", authController.forgotPassword);
   router.post("/api/signup", authController.signup);
 
   // Category

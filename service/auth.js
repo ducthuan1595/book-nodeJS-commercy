@@ -7,7 +7,7 @@ exports.login = (email, password) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findOne({ email: email });
-      if (!user) {
+      if (!user || user.role === "F1") {
         resolve({
           status: 402,
           message: "User is not exist",
@@ -21,8 +21,8 @@ exports.login = (email, password) => {
             data: {
               name: user.username,
               email: user.email,
+              token: createToken(user._id),
             },
-            token: createToken(user._id),
           });
         } else {
           resolve({
@@ -51,9 +51,19 @@ exports.signup = (username, email, password) => {
         const addUser = await newUser.save();
         if (addUser) {
           const token = createToken(addUser._id);
-          sendMailer(email, username, token, () => {
-            console.log("Send email successfully");
-          });
+          sendMailer(
+            email,
+            username,
+            token,
+            null,
+            null,
+            null,
+            null,
+            (isPw = false),
+            () => {
+              console.log("Send email successfully");
+            }
+          );
           resolve({
             status: 200,
             message: "ok",
@@ -82,6 +92,63 @@ exports.confirm = (id) => {
           status: 201,
           message: "ok",
           data: updateUser,
+        });
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+exports.forgotPassword = (email) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await User.findOne({ email: email });
+      if (!user) {
+        resolve({
+          message: "User invalid",
+        });
+      } else {
+        console.log("user", user._id);
+        sendMailer(
+          email,
+          user.username,
+          user._id,
+          null,
+          null,
+          null,
+          null,
+          (isPw = true)
+        );
+        resolve({
+          status: 201,
+          message: "ok",
+        });
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+exports.confirmPassword = (password, id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await User.findById(id);
+      if (user) {
+        const pw = await bcrypt.hash(password, 12);
+        user.password = pw;
+        const updateUser = await user.save();
+        if (updateUser) {
+          resolve({
+            status: 200,
+            message: "ok",
+          });
+        }
+      } else {
+        resolve({
+          status: 404,
+          message: "Not found user",
         });
       }
     } catch (err) {

@@ -24,16 +24,16 @@ const schema = new mongoose.Schema(
       default: "F1",
     },
     cart: {
+      type: Array,
+      default: null,
       items: [
         {
           itemId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Item",
-            required: true,
           },
           quantity: {
             type: Number,
-            required: true,
           },
         },
       ],

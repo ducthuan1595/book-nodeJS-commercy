@@ -10,7 +10,7 @@ exports.login = async (req, res) => {
     if (data) {
       res
         .status(data.status)
-        .json({ message: data?.message, data: data?.data, token: data?.token });
+        .json({ message: data?.message, data: data?.data });
     }
   }
 };
@@ -42,5 +42,29 @@ exports.confirm = async (req, res) => {
     }
   } else {
     res.status(404).json({ message: "User is invalid!" });
+  }
+};
+
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    res.status(404).json({ message: "Not found" });
+  } else {
+    const data = await authService.forgotPassword(email);
+    if (data) {
+      res.status(data.status).json({ message: data.message, data: data?.data });
+    }
+  }
+};
+
+exports.confirmPassword = async (req, res) => {
+  const { password, user_id } = req.body;
+  if (!password || !user_id) {
+    res.status(404).json({ message: "Password invalid" });
+  } else {
+    const data = await authService.confirmPassword(password, user_id);
+    if (data) {
+      res.status(data.status).redirect("http://localhost:3000/login");
+    }
   }
 };

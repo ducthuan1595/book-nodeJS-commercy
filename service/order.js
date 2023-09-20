@@ -8,7 +8,7 @@ exports.createOrder = (value, req) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findById(req.user._id);
-      if (user) {
+      if (user && user.role === "F2") {
         // add items for order
         const arrCart = user.cart.items;
         if (arrCart.length) {
@@ -118,6 +118,11 @@ exports.createOrder = (value, req) => {
             message: "Not found item in the cart",
           });
         }
+      } else {
+        resolve({
+          status: 403,
+          message: "User invalid",
+        });
       }
     } catch (err) {
       reject(err);

@@ -14,13 +14,33 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const HTMLContent = (name, token) => `
-  <html>
-    <h1>Hello ${name}</h1>
-    <div>Please, confirm you already resgister!</div>
-    <div><a href="http://localhost:5050/confirm?token=${token}" >Confirm</a></div>
-  </html>
-`;
+const HTMLContent = (name, token, isPw) => {
+  if (isPw) {
+    return `
+    <html>
+      <h1>Hello ${name}</h1>
+      <form method="POST" action="http://localhost:5050/confirm-password">
+      <div>Please, reset your password here!</div>
+
+      <div>
+      <label>Password</label><br>
+        <input type='password' name="password" /><br>
+        <input type='hidden' name="user_id" value="${token}" /><br>
+      </div>
+      <div><button type="submit" style="cursor:'pointer'" >Confirm</button></div>
+      </form>
+    </html>
+  `;
+  } else {
+    return `
+    <html>
+      <h1>Hello ${name}</h1>
+      <div>Please, confirm you already resgister!</div>
+      <div><a href="http://localhost:5050/confirm?token=${token}" >Confirm</a></div>
+    </html>
+  `;
+  }
+};
 
 const HTMLSale = (items, name, start, end, percent) => `<html>
 <head>
@@ -91,7 +111,8 @@ const sendMailer = async (
   arrItemId,
   start,
   end,
-  percent
+  percent,
+  isPw
 ) => {
   try {
     // sale
@@ -99,10 +120,10 @@ const sendMailer = async (
     const options = await transporter.sendMail({
       from: '"Fred Foo 👻" <foo@example.com>', // sender address
       to: email, // list of receivers
-      subject: !arrItemId.length ? "Confirm email ✔" : "Flash sale", // Subject line
+      subject: !arrItemId ? "Confirm email ✔" : "Flash sale", // Subject line
       text: "Hello" + name, // plain text body
-      html: !arrItemId.length
-        ? HTMLContent(name, token)
+      html: !arrItemId
+        ? HTMLContent(name, token, isPw)
         : HTMLSale(items, name, start, end, percent), // html body
     });
     await transporter.sendMail(options);

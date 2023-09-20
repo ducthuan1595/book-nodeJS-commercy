@@ -25,7 +25,16 @@ const scheduleSale = (start, end, percent, arrItemId) => {
       const emails = users.map((u) => u.email);
       if (users) {
         console.log({ emails });
-        sendMailer(emails, "you", "", arrItemId, start, end, percent);
+        sendMailer(
+          emails,
+          "you",
+          "",
+          arrItemId,
+          start,
+          end,
+          percent,
+          (isPw = false)
+        );
         cronSchedules.stop();
       }
     },
