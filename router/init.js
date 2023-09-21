@@ -1,8 +1,9 @@
 const express = require("express");
 
+const authMiddleware = require("../middleware/auth");
+
 const authController = require("../controller/auth");
 const categoryController = require("../controller/category");
-const authMiddleware = require("../middleware/auth");
 const itemController = require("../controller/item");
 const cartController = require("../controller/cart");
 const orderController = require("../controller/order");
@@ -16,6 +17,7 @@ const init = (app) => {
   router.post("/confirm-password", authController.confirmPassword);
 
   router.post("/api/login", authController.login);
+  router.post("/api/login-admin", authController.loginAdmin);
   router.post("/api/forgot-password", authController.forgotPassword);
   router.post("/api/signup", authController.signup);
 

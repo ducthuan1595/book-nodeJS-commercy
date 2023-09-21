@@ -15,6 +15,20 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.loginAdmin = async (req, res) => {
+  const { email, password } = req.body;
+  if (!email && !password) {
+    res.status(403).json({ message: "You are not authentication" });
+  } else {
+    const data = await authService.loginAdmin(email, password);
+    if (data) {
+      res
+        .status(data.status)
+        .json({ message: data?.message, data: data?.data });
+    }
+  }
+};
+
 exports.signup = async (req, res) => {
   const { username, email, password } = req.body;
   if (!username && !email && !password) {
@@ -64,7 +78,13 @@ exports.confirmPassword = async (req, res) => {
   } else {
     const data = await authService.confirmPassword(password, user_id);
     if (data) {
-      res.status(data.status).redirect("http://localhost:3000/login");
+      res
+        .status(data.status)
+        .redirect(
+          data.data.role === "F2"
+            ? "http://localhost:3000/login"
+            : "http://localhost:3001/login"
+        );
     }
   }
 };

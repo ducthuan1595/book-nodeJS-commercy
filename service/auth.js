@@ -37,6 +37,40 @@ exports.login = (email, password) => {
   });
 };
 
+exports.loginAdmin = (email, password) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await User.findOne({ email: email });
+      if (!user || user.role === "F1" || user.role === "F2") {
+        resolve({
+          status: 402,
+          message: "Unauthorized",
+        });
+      } else {
+        const validPs = await bcrypt.compare(password, user.password);
+        if (validPs) {
+          resolve({
+            status: 200,
+            message: "ok",
+            data: {
+              name: user.username,
+              email: user.email,
+              token: createToken(user._id),
+            },
+          });
+        } else {
+          resolve({
+            status: 301,
+            message: "Password is incorrect",
+          });
+        }
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
 exports.signup = (username, email, password) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -143,6 +177,7 @@ exports.confirmPassword = (password, id) => {
           resolve({
             status: 200,
             message: "ok",
+            data: updateUser,
           });
         }
       } else {

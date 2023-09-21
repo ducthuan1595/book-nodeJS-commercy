@@ -23,6 +23,10 @@ const schema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    pic: {
+      type: Object,
+      required: true,
+    },
   },
   { timestamps: true }
 );
