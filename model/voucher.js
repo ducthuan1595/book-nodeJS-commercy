@@ -8,7 +8,7 @@ const schema = new mongoose.Schema(
       unique: true,
     },
     expirationDate: {
-      type: String,
+      type: Number,
       required: true,
     },
     discount: {

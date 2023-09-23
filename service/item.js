@@ -96,11 +96,11 @@ exports.updateItem = (value, req) => {
           product.count = value.count;
           product.weight = value.weight;
           if (product.pic.length) {
-            handleFile.deleteFile(product.pic, "images");
+            handleFile.deleteFile(product.pic);
           }
           product.pic = pic;
           if (product.detailPic.length) {
-            handleFile.deleteFile(product.detailPic, "images");
+            handleFile.deleteFile(product.detailPic);
           }
           product.detailPic = detailPic;
           const newItem = await product.save();
@@ -133,8 +133,8 @@ exports.deleteItem = (itemId, req) => {
         if (!orders) {
           const item = await Item.findByIdAndDelete(itemId);
           if (item) {
-            handleFile.deleteFile(item.pic, "images");
-            handleFile.deleteFile(item.detailPic, "images");
+            handleFile.deleteFile(item.pic);
+            handleFile.deleteFile(item.detailPic);
             resolve({
               status: 200,
               message: "ok",
@@ -166,6 +166,26 @@ exports.deleteItem = (itemId, req) => {
 exports.getAllItem = (k, f, s, limit, page) => {
   return new Promise(async (resolve, reject) => {
     try {
+      if (!f || !k || !s) {
+        const items = await Item.find();
+        // page section
+        const totalPage = Math.ceil(items.length / limit);
+        const start = (page - 1) * limit;
+        const end = page * limit;
+        const result = items.slice(start, end);
+        const totalNumber = items.length;
+        resolve({
+          status: 200,
+          message: "ok",
+          data: {
+            currPage: page,
+            nextPage: page * limit < totalNumber,
+            prevPage: 0 < page - 1,
+            products: result,
+            totalPage: totalPage,
+          },
+        });
+      }
       // filter
       const itemFilter = await Item.find().populate({
         path: "categoryId",
@@ -174,7 +194,9 @@ exports.getAllItem = (k, f, s, limit, page) => {
         },
       });
 
+      console.log(itemFilter);
       const filters = itemFilter.filter((item) => item.categoryId !== null);
+
       // search
       const search = k
         ? filters.filter((item) => {
@@ -192,6 +214,7 @@ exports.getAllItem = (k, f, s, limit, page) => {
             }
           })
         : search;
+
       if (sort) {
         for (let i = 0; i < sort.length; i++) {
           if (sort[i].flashSaleId) {

@@ -9,6 +9,7 @@ const cartController = require("../controller/cart");
 const orderController = require("../controller/order");
 const voucherController = require("../controller/voucher");
 const flashsaleController = require("../controller/flashsale");
+const helpFile = require("../config/file");
 
 const router = express.Router();
 
@@ -55,7 +56,7 @@ const init = (app) => {
     authMiddleware.protect,
     itemController.deleteItem
   );
-  router.get("/api/get-all-item", itemController.getAllItem);
+  router.get("/api/get-item", itemController.getAllItem);
 
   // add cart;
   router.post("/api/add-cart", authMiddleware.protect, cartController.addCart);
@@ -85,10 +86,17 @@ const init = (app) => {
     voucherController.getVoucher
   );
   router.post(
+    "/api/delete-voucher",
+    authMiddleware.protect,
+    voucherController.deleteVoucher
+  );
+  router.post(
     "/api/create-flashsale",
     authMiddleware.protect,
     flashsaleController.createFlashsale
   );
+
+  router.get("/api/image/:imageUrl", helpFile.sendImage);
 
   return app.use("/", router);
 };

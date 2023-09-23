@@ -1,9 +1,13 @@
 const categoryService = require("../service/category");
 
 exports.getAllCategory = async (req, res) => {
-  const data = await categoryService.getAllCategory();
+  const page = req.query?.page !== "null" ? req.query.page : 1;
+  const limit = req.query?.limit !== "null" ? req.query.limit : 8;
+  const categoryId = req.query?.categoryId;
+
+  const data = await categoryService.getAllCategory(page, limit, categoryId);
   if (data) {
-    res.status(data.status).json({ message: data.message, data: data.data });
+    res.status(data.status).json({ message: data.message, data: data?.data });
   }
 };
 
@@ -12,13 +16,22 @@ exports.createCategory = async (req, res) => {
   const description = req.body?.description;
   const banner = req.files.banner;
   const position = req.body.position;
+  const active = req.body.active;
+  let isActive;
+  if (active) {
+    if (active === "1") {
+      isActive = true;
+    } else {
+      isActive = false;
+    }
+  }
   let images = [];
   if (Array.isArray(banner)) {
     images = banner;
   } else {
     images.push(banner);
   }
-  if (!name || !position || images.length) {
+  if (!name || !position || !images.length) {
     res.status(404).json({ message: "Category is invalid!" });
   } else {
     const data = await categoryService.createCategory(
@@ -27,6 +40,7 @@ exports.createCategory = async (req, res) => {
         images,
         description,
         position,
+        isActive,
       },
       req
     );
@@ -42,14 +56,23 @@ exports.updateCategory = async (req, res) => {
   const { name, categoryId } = req.body;
   const description = req.body?.description;
   const position = req.body.position;
-  const banner = req.files.banner;
+  const banner = req.files?.banner;
+  const active = req.body.isActive;
+  let isActive;
+  if (active) {
+    if (active === "1") {
+      isActive = true;
+    } else {
+      isActive = false;
+    }
+  }
   let images = [];
   if (Array.isArray(banner)) {
     images = banner;
   } else {
     images.push(banner);
   }
-  if (!name || !position || images.length < 1 || !categoryId) {
+  if (!name || !position || !categoryId) {
     res.status(404).json({ message: "Category is invalid!" });
   } else {
     const data = await categoryService.updateCategory(
@@ -59,6 +82,7 @@ exports.updateCategory = async (req, res) => {
         categoryId,
         description,
         position,
+        isActive,
       },
       req
     );

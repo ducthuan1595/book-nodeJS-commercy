@@ -1,20 +1,49 @@
 const Category = require("../model/category");
+const Item = require("../model/item");
 const User = require("../model/user");
 const path = require("path");
 const handleFile = require("../config/file");
 
-const p = path.join("data", "banner", "image");
+const p = path.join("data", "images", "image");
 
-exports.getAllCategory = () => {
+exports.getAllCategory = (page, limit, categoryId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const categories = await Category.find();
-      if (categories) {
-        resolve({
-          status: 200,
-          message: "ok",
-          data: categories,
-        });
+      if (categoryId !== "null") {
+        const category = await Category.findById(categoryId);
+        if (!category) {
+          resolve({
+            status: 404,
+            message: "Not found",
+          });
+        } else {
+          resolve({
+            status: 201,
+            message: "ok",
+            data: category,
+          });
+        }
+      } else {
+        const categories = await Category.find();
+        const totalPage = Math.ceil(categories.length / limit);
+        const start = (page - 1) * limit;
+        const end = page * limit;
+        const result = categories.slice(start, end);
+        const totalNumber = categories.length;
+        if (categories) {
+          resolve({
+            status: 200,
+            message: "ok",
+            data: {
+              currPage: page,
+              nextPage: page * limit < totalNumber,
+              prevPage: 0 < page - 1,
+              categories: result,
+              totalPage: totalPage,
+              totalCategory: totalNumber,
+            },
+          });
+        }
       }
     } catch (err) {
       reject(err);
@@ -43,7 +72,8 @@ exports.createCategory = (input, req) => {
           name: input.name,
           banner: imageName,
           description: input?.description,
-          position: input.position,
+          position: Number(input.position),
+          active: input.isActive,
         });
         const newCategory = await category.save();
         resolve({
@@ -70,9 +100,8 @@ exports.updateCategory = (input, req) => {
       if (user && user.role === "F3") {
         const category = await Category.findById(input.categoryId);
         let imageName = [];
-        console.log(input.images);
-
-        if (input.images) {
+        if (input.images[0] !== undefined) {
+          console.log("hello");
           input.images.forEach((img) => {
             let pathname = Date.now() + img.name;
             imageName.push("image" + pathname);
@@ -89,10 +118,13 @@ exports.updateCategory = (input, req) => {
           category.name = input.name;
           category.description = input?.description;
           category.position = input.position;
-          if (category.banner.length) {
-            handleFile.deleteFile(category.banner, "banner");
+          category.active = input.isActive;
+          if (imageName.length) {
+            if (category.banner.length) {
+              handleFile.deleteFile(category.banner);
+            }
+            category.banner = imageName;
           }
-          category.banner = imageName;
           const newCategory = await category.save();
           resolve({
             status: 200,
@@ -122,18 +154,31 @@ exports.deleteCategory = (categoryId, req) => {
     try {
       const user = await User.findById(req.user._id);
       if (user && user.role === "F3") {
-        const category = await Category.findByIdAndDelete(categoryId);
-        if (category) {
+        const items = await Item.find({ categoryId: categoryId });
+        if (items.length) {
           resolve({
-            status: 200,
-            message: "ok",
+            status: 302,
+            message: "Category used to the product",
+            data: items,
           });
         } else {
-          resolve({
-            status: 404,
-            message: "Not found category",
-          });
+          const category = await Category.findByIdAndDelete(categoryId);
+          if (category.banner.length) {
+            handleFile.deleteFile(category.banner);
+          }
+          if (category) {
+            resolve({
+              status: 200,
+              message: "ok",
+            });
+          } else {
+            resolve({
+              status: 404,
+              message: "Not found category",
+            });
+          }
         }
+        return;
       }
     } catch (err) {
       reject(err);
