@@ -135,12 +135,20 @@ exports.deleteItem = async (req, res) => {
 };
 
 exports.getAllItem = async (req, res) => {
-  const key = req.query?.key ? req.query?.key : "";
-  const filter = req.query?.filter ? req.query?.filter : "";
-  const sort = req.query?.sort ? req.query?.sort : "";
-  const limit = req.query?.limit ? req.query?.limit : 8;
-  const page = req.query?.page ? req.query?.page : 1;
-  const data = await itemService.getAllItem(key, filter, sort, limit, page);
+  const key = req.query?.key !== "null" ? req.query?.key : null;
+  const filter = req.query?.filter !== "null" ? req.query?.filter : null;
+  const sort = req.query?.sort !== "null" ? req.query?.sort : null;
+  const limit = req.query?.limit !== "null" ? req.query?.limit : null;
+  const page = req.query?.page !== "null" ? req.query?.page : null;
+  const itemId = req.query?.itemId === "null" ? null : req.query?.itemId;
+  const data = await itemService.getAllItem(
+    key,
+    filter,
+    sort,
+    limit,
+    page,
+    itemId
+  );
   if (data) {
     res.status(data.status).json({ message: data.message, data: data?.data });
   }

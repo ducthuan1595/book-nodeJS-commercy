@@ -1,8 +1,8 @@
 const categoryService = require("../service/category");
 
 exports.getAllCategory = async (req, res) => {
-  const page = req.query?.page !== "null" ? req.query.page : 1;
-  const limit = req.query?.limit !== "null" ? req.query.limit : 8;
+  const page = req.query?.page;
+  const limit = req.query?.limit;
   const categoryId = req.query?.categoryId;
 
   const data = await categoryService.getAllCategory(page, limit, categoryId);

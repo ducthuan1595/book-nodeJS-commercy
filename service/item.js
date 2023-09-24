@@ -163,11 +163,13 @@ exports.deleteItem = (itemId, req) => {
   });
 };
 
-exports.getAllItem = (k, f, s, limit, page) => {
+exports.getAllItem = (k, f, s, limit, page, itemId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!f || !k || !s) {
-        const items = await Item.find();
+      if (!f || !k || !s || !itemId) {
+        const items = await Item.find()
+          .populate("categoryId")
+          .populate("flashSaleId");
         // page section
         const totalPage = Math.ceil(items.length / limit);
         const start = (page - 1) * limit;
@@ -185,6 +187,20 @@ exports.getAllItem = (k, f, s, limit, page) => {
             totalPage: totalPage,
           },
         });
+      } else if (itemId) {
+        const item = await Item.findById(itemId);
+        if (item) {
+          resolve({
+            status: 200,
+            message: "ok",
+            data: item,
+          });
+        } else {
+          resolve({
+            status: 404,
+            message: "Not found item",
+          });
+        }
       }
       // filter
       const itemFilter = await Item.find().populate({

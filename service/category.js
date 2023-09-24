@@ -23,6 +23,20 @@ exports.getAllCategory = (page, limit, categoryId) => {
             data: category,
           });
         }
+      } else if (page === "null" && limit === "null" && categoryId === "null") {
+        const categories = await Category.find();
+        if (!categories) {
+          resolve({
+            status: 404,
+            message: "Not found",
+          });
+        } else {
+          resolve({
+            status: 201,
+            message: "ok",
+            data: categories,
+          });
+        }
       } else {
         const categories = await Category.find();
         const totalPage = Math.ceil(categories.length / limit);
