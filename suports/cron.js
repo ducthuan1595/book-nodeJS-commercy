@@ -20,7 +20,6 @@ const scheduleSale = (start, end, percent, arrItemId) => {
   const cronSchedules = cron.schedule(
     timeString,
     async () => {
-      console.log("Hello");
       const users = await User.find().select("email");
       const emails = users.map((u) => u.email);
       if (users) {

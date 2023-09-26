@@ -11,8 +11,9 @@ exports.createItem = async (req, res) => {
     count,
     categoryId,
     weight,
+    author,
   } = req.body;
-  const images = req.files.images;
+  const images = req.files.pic;
   const detailPic = req.files?.detailPic;
   const handleImg = (images) => {
     let arrImg = [];
@@ -34,7 +35,8 @@ exports.createItem = async (req, res) => {
     !count ||
     !categoryId ||
     !imageArr.length ||
-    !weight
+    !weight ||
+    !author
   ) {
     res.status(404).json({ message: "Input invalid" });
   } else {
@@ -51,6 +53,7 @@ exports.createItem = async (req, res) => {
         imageArr,
         detailPicArr,
         weight,
+        author,
       },
       req
     );
@@ -71,9 +74,10 @@ exports.updateItem = async (req, res) => {
     count,
     categoryId,
     itemId,
+    author,
     weight,
   } = req.body;
-  const images = req.files.images;
+  const images = req.files.pic;
   const detailPic = req.files?.detailPic;
   const handleImg = (images) => {
     let arrImg = [];
@@ -96,7 +100,8 @@ exports.updateItem = async (req, res) => {
     !categoryId ||
     !itemId ||
     !imageArr.length ||
-    !weight
+    !weight ||
+    !author
   ) {
     res.status(404).json({ message: "Input invalid" });
   } else {
@@ -114,6 +119,7 @@ exports.updateItem = async (req, res) => {
         detailPicArr,
         itemId,
         weight,
+        author,
       },
       req
     );
@@ -135,11 +141,11 @@ exports.deleteItem = async (req, res) => {
 };
 
 exports.getAllItem = async (req, res) => {
-  const key = req.query?.key !== "null" ? req.query?.key : null;
-  const filter = req.query?.filter !== "null" ? req.query?.filter : null;
-  const sort = req.query?.sort !== "null" ? req.query?.sort : null;
-  const limit = req.query?.limit !== "null" ? req.query?.limit : null;
-  const page = req.query?.page !== "null" ? req.query?.page : null;
+  const key = req.query.key === "null" ? null : req.query?.key;
+  const filter = req.query.filter === "null" ? null : req.query?.filter;
+  const sort = req.query.sort === "null" ? null : req.query?.sort;
+  const limit = req.query.limit === "null" ? null : req.query?.limit;
+  const page = req.query.page === "null" ? null : req.query?.page;
   const itemId = req.query?.itemId === "null" ? null : req.query?.itemId;
   const data = await itemService.getAllItem(
     key,

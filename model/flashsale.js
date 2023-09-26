@@ -6,10 +6,6 @@ const schema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    description: {
-      type: String,
-      required: true,
-    },
     start_date: {
       type: Number,
       required: true,
@@ -35,10 +31,6 @@ const schema = new mongoose.Schema(
         },
       },
     ],
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
   },
   { timestamps: true }
 );

@@ -10,22 +10,25 @@ exports.createFlashsale = (value, req) => {
       if (user && user.role === "F3") {
         const flashSale = new Flashsale({
           name: value.name,
-          description: value.description,
-          start_date: value.startDate,
-          end_date: value.endDate,
+          start_date: value.start,
+          end_date: value.end,
           discount_percent: value.discountPercent,
           items: value.items,
         });
         const newFlashSale = await flashSale.save();
-        if (newFlashSale && newFlashSale.start_date > new Date()) {
+        if (
+          newFlashSale &&
+          newFlashSale.start_date > new Date() &&
+          newFlashSale.end_date > newFlashSale.start_date
+        ) {
           const items = await Item.find();
           const handleItem = async (arr, id) => {
             const item = arr.find((item) => {
               return item._id.toString() === id.toString();
             });
             item.pricePay = (
-              item.pricePay -
-              (item.pricePay * +value.discountPercent) / 100
+              item.priceInput -
+              (item.priceInput * +value.discountPercent) / 100
             ).toFixed(2);
             item.flashSaleId = newFlashSale._id;
             await item.save();
@@ -33,8 +36,6 @@ exports.createFlashsale = (value, req) => {
           value.items.map((item) => {
             return handleItem(items, item.itemId);
           });
-          console.log(Date.now() + 1000000);
-          console.log(Date.now() + 10000000);
         }
         const arrItemId = value.items.map((item) => item.itemId);
         scheduleSale(
@@ -60,17 +61,35 @@ exports.createFlashsale = (value, req) => {
   });
 };
 
-exports.getFlashSale = (req) => {
+exports.getFlashSale = (page, limit, req) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findById(req.user._id);
       if (user) {
-        const flashSales = await Flashsale.find();
+        const flashSales = await Flashsale.find().populate("items.itemId");
+
+        const flashSaleActive = flashSales.filter(
+          (f) => f.end_date > Date.now()
+        );
+
+        const totalPage = Math.ceil(flashSales.length / limit);
+        const start = (+page - 1) * +limit;
+        const end = +page * +limit;
+        const result = flashSales.slice(start, end);
+        const totalNumber = flashSales.length;
         if (flashSales) {
           resolve({
             status: 200,
             message: "ok",
-            data: flashSales,
+            data: {
+              currPage: +page,
+              nextPage: +page * +limit < totalNumber,
+              prevPage: 0 < +page - 1,
+              flashSales: result,
+              totalPage: totalPage,
+              totalFlashSale: totalNumber,
+              flashSaleActive,
+            },
           });
         }
       } else {

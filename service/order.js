@@ -55,7 +55,6 @@ exports.createOrder = (value, req) => {
                 ) {
                   item.pricePay = item.priceInput;
                   item.flashSaleId = null;
-                  flashSale.isActive = false;
                 } else if (quantitySale < 1) {
                   item.pricePay = item.priceInput;
                 }

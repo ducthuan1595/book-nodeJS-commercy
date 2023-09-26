@@ -99,7 +99,7 @@ table {
       .join("")}
 </table>
   <div>Limit quantity! Hurry up</div>
-  <div><a href="#">Visit website</a></div>
+  <div><a href="http://localhost:3000">Visit website</a></div>
 </body>
 </html>`;
 

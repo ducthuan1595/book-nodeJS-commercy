@@ -95,6 +95,11 @@ const init = (app) => {
     authMiddleware.protect,
     flashsaleController.createFlashsale
   );
+  router.get(
+    "/api/get-flashsale",
+    authMiddleware.protect,
+    flashsaleController.getFlashSale
+  );
 
   router.get("/api/image/:imageUrl", helpFile.sendImage);
 

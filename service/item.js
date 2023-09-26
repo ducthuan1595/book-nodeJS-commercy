@@ -33,6 +33,7 @@ exports.createItem = (value, req) => {
           name: value.name,
           priceInput: value.priceInput,
           pricePay: value.pricePay,
+          author: value.author,
           categoryId: value.categoryId,
           slogan: value?.slogan,
           description: value.description,
@@ -84,8 +85,20 @@ exports.updateItem = (value, req) => {
             });
             return imageName;
           };
-          const pic = handleImage(value.imageArr);
-          const detailPic = handleImage(value.detailPicArr);
+          if (value.imageArr.length) {
+            const pic = handleImage(value.imageArr);
+            if (product.pic.length) {
+              handleFile.deleteFile(product.pic);
+            }
+            product.pic = pic;
+          }
+          if (value.detailPicArr[0]) {
+            const detailPic = handleImage(value.detailPicArr);
+            if (product.detailPic.length) {
+              handleFile.deleteFile(product.detailPic);
+            }
+            product.detailPic = detailPic;
+          }
           product.name = value.name;
           product.priceInput = value.priceInput;
           product.pricePay = value.pricePay;
@@ -94,15 +107,9 @@ exports.updateItem = (value, req) => {
           product.description = value.description;
           product.barcode = value.barcode;
           product.count = value.count;
+          product.author = value.author;
           product.weight = value.weight;
-          if (product.pic.length) {
-            handleFile.deleteFile(product.pic);
-          }
-          product.pic = pic;
-          if (product.detailPic.length) {
-            handleFile.deleteFile(product.detailPic);
-          }
-          product.detailPic = detailPic;
+
           const newItem = await product.save();
           if (newItem) {
             resolve({
@@ -130,7 +137,7 @@ exports.deleteItem = (itemId, req) => {
       const user = await User.findById(req.user._id);
       if (user && user.role === "F3") {
         const orders = await Order.find().where("items.itemId", itemId);
-        if (!orders) {
+        if (!orders.length) {
           const item = await Item.findByIdAndDelete(itemId);
           if (item) {
             handleFile.deleteFile(item.pic);
@@ -166,7 +173,7 @@ exports.deleteItem = (itemId, req) => {
 exports.getAllItem = (k, f, s, limit, page, itemId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!f || !k || !s || !itemId) {
+      if (f === null && k === null && s === null && itemId === null) {
         const items = await Item.find()
           .populate("categoryId")
           .populate("flashSaleId");
@@ -203,24 +210,31 @@ exports.getAllItem = (k, f, s, limit, page, itemId) => {
         }
       }
       // filter
-      const itemFilter = await Item.find().populate({
-        path: "categoryId",
-        match: {
-          name: f,
-        },
-      });
+      const itemFilter = f
+        ? await Item.find().populate({
+            path: "categoryId",
+            match: {
+              name: f,
+            },
+          })
+        : await Item.find();
 
-      console.log(itemFilter);
-      const filters = itemFilter.filter((item) => item.categoryId !== null);
+      const filters = f
+        ? itemFilter.filter((item) => item.categoryId !== null)
+        : itemFilter;
 
       // search
+      // console.log("key", k);
+      // console.log("filter", filters);
       const search = k
         ? filters.filter((item) => {
-            if (item.name.includes(k)) {
+            if (item.name.toLowerCase().includes(k.toLowerCase())) {
               return item;
             }
           })
         : filters;
+
+      // console.log("search", search);
 
       // Sort
       const sort = s
@@ -230,6 +244,8 @@ exports.getAllItem = (k, f, s, limit, page, itemId) => {
             }
           })
         : search;
+
+      // console.log("sort", sort);
 
       if (sort) {
         for (let i = 0; i < sort.length; i++) {
@@ -244,21 +260,15 @@ exports.getAllItem = (k, f, s, limit, page, itemId) => {
         }
 
         // page section
-        const totalPage = Math.ceil(sort.length / limit);
-        const start = (page - 1) * limit;
-        const end = page * limit;
-        const result = sort.slice(start, end);
-        const totalNumber = sort.length;
+        // const totalPage = Math.ceil(sort.length / limit);
+        // const start = (page - 1) * limit;
+        // const end = page * limit;
+        // const result = sort.slice(start, end);
+        // const totalNumber = sort.length;
         resolve({
           status: 200,
           message: "ok",
-          data: {
-            currPage: page,
-            nextPage: page * limit < totalNumber,
-            prevPage: 0 < page - 1,
-            products: result,
-            totalPage: totalPage,
-          },
+          data: sort,
         });
       }
     } catch (err) {
