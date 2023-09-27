@@ -4,6 +4,7 @@ const Order = require("../model/order");
 const FlashSale = require("../model/flashsale");
 const path = require("path");
 const handleFile = require("../config/file");
+const pageSection = require("../suports/pageSection");
 
 const p = path.join("data", "images", "image");
 
@@ -66,6 +67,7 @@ exports.createItem = (value, req) => {
 exports.updateItem = (value, req) => {
   return new Promise(async (resolve, reject) => {
     try {
+      console.log(value.imageArr);
       const user = await User.findById(req.user._id);
       if (user && user.role === "F3") {
         const product = await Item.findById(value.itemId);
@@ -85,7 +87,7 @@ exports.updateItem = (value, req) => {
             });
             return imageName;
           };
-          if (value.imageArr.length) {
+          if (value.imageArr && value.imageArr[0]) {
             const pic = handleImage(value.imageArr);
             if (product.pic.length) {
               handleFile.deleteFile(product.pic);
@@ -178,22 +180,21 @@ exports.getAllItem = (k, f, s, limit, page, itemId) => {
           .populate("categoryId")
           .populate("flashSaleId");
         // page section
-        const totalPage = Math.ceil(items.length / limit);
-        const start = (page - 1) * limit;
-        const end = page * limit;
-        const result = items.slice(start, end);
-        const totalNumber = items.length;
-        resolve({
-          status: 200,
-          message: "ok",
-          data: {
-            currPage: page,
-            nextPage: page * limit < totalNumber,
-            prevPage: 0 < page - 1,
-            products: result,
-            totalPage: totalPage,
-          },
-        });
+        if (items.length) {
+          const data = pageSection(page, limit, items);
+          resolve({
+            status: 200,
+            message: "ok",
+            data: {
+              currPage: page,
+              nextPage: page * limit < items.length,
+              prevPage: 0 < page - 1,
+              products: data.result,
+              totalPage: data.totalPage,
+              totalNumber: items.length,
+            },
+          });
+        }
       } else if (itemId) {
         const item = await Item.findById(itemId);
         if (item) {

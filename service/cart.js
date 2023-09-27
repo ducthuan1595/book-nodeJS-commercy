@@ -8,24 +8,37 @@ exports.addCart = (value, req) => {
       if (user) {
         // const cart = await user?.populate("cart.items");
         if (user) {
-          const existItemIndex = user.cart.items.findIndex(
-            (item) => item.itemId.toString() === value.itemId.toString()
-          );
-          const updateItem = [...user.cart.items];
-          if (existItemIndex != -1) {
-            const newQuantity =
-              +user.cart.items[existItemIndex].quantity + +value.quantity;
-            updateItem[existItemIndex].quantity = Number(newQuantity);
+          if (!user.cart) {
+            const addCart = [
+              {
+                itemId: value.itemId,
+                quantity: value.quantity,
+              },
+            ];
+            await User.findOneAndUpdate({ _id: user._id }, { cart: addCart });
           } else {
-            updateItem.push({
-              itemId: value.itemId,
-              quantity: value.quantity,
+            const existItemIndex = user.cart.findIndex((item) => {
+              return item.itemId.toString() === value.itemId.toString();
             });
+            const updateItem = [...user.cart];
+            if (existItemIndex !== -1) {
+              const newQuantity =
+                +user.cart[existItemIndex].quantity + +value.quantity;
+              updateItem[existItemIndex].quantity = Number(newQuantity);
+            } else {
+              updateItem.push({
+                itemId: value.itemId,
+                quantity: value.quantity,
+              });
+            }
+            // const updateCart = {
+            //   items: updateItem,
+            // };
+            await User.findOneAndUpdate(
+              { _id: user._id },
+              { cart: updateItem }
+            );
           }
-          const updateCart = {
-            items: updateItem,
-          };
-          await User.findOneAndUpdate({ _id: user._id }, { cart: updateCart });
           resolve({
             status: 200,
             message: "ok",

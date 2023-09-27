@@ -77,7 +77,7 @@ exports.updateItem = async (req, res) => {
     author,
     weight,
   } = req.body;
-  const images = req.files.pic;
+  const images = req.files?.pic;
   const detailPic = req.files?.detailPic;
   const handleImg = (images) => {
     let arrImg = [];
@@ -90,6 +90,7 @@ exports.updateItem = async (req, res) => {
   };
   const imageArr = handleImg(images);
   const detailPicArr = handleImg(detailPic);
+
   if (
     !name ||
     !priceInput ||

@@ -74,6 +74,12 @@ const init = (app) => {
     orderController.createOrder
   );
 
+  router.get(
+    "/api/get-order",
+    authMiddleware.protect,
+    orderController.getOrder
+  );
+
   // voucher and flashsale
   router.post(
     "/api/create-voucher",

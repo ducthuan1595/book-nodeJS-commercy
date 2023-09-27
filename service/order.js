@@ -3,6 +3,7 @@ const Order = require("../model/order");
 const User = require("../model/user");
 const Voucher = require("../model/voucher");
 const FlashSale = require("../model/flashsale");
+const pageSection = require("../suports/pageSection");
 
 exports.createOrder = (value, req) => {
   return new Promise(async (resolve, reject) => {
@@ -10,7 +11,7 @@ exports.createOrder = (value, req) => {
       const user = await User.findById(req.user._id);
       if (user && user.role === "F2") {
         // add items for order
-        const arrCart = user.cart.items;
+        const arrCart = user.cart;
         if (arrCart.length) {
           const handleArr = (arr, id) => {
             return arr.find((v) => v.toString() === id.toString());
@@ -21,7 +22,7 @@ exports.createOrder = (value, req) => {
           const updateItem = arrCart.filter(
             (v) => !handleArr(value.arrCartId, v._id)
           );
-          user.cart.items = updateItem;
+          user.cart = updateItem;
           await user.save();
 
           // update quantity for order
@@ -121,6 +122,58 @@ exports.createOrder = (value, req) => {
         resolve({
           status: 403,
           message: "User invalid",
+        });
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+exports.getOrder = (page, limit, req) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await User.findById(req.user._id);
+      if (user && user.role === "F2") {
+        const orders = await Order.find({ userId: user._id });
+        if (orders.length) {
+          const data = pageSection(page, limit, orders);
+
+          resolve({
+            status: 200,
+            message: "ok",
+            data: {
+              orders: data.result,
+              totalPage: data.totalPage,
+              totalOrder: orders.length,
+              currPage: page,
+              nextPage: +page * +limit < orders.length,
+              prevPage: +page > 1,
+            },
+          });
+        }
+      } else if (user && user.role === "F3") {
+        const orders = await Order.find();
+        if (orders.length) {
+          const data = pageSection(page, limit, orders);
+
+          resolve({
+            status: 200,
+            message: "ok",
+            data: {
+              orders: data.result,
+              totalPage: data.totalPage,
+              totalOrder: orders.length,
+              currPage: page,
+              nextPage: +page * +limit < orders.length,
+              prevPage: +page > 1,
+            },
+          });
+        }
+      } else {
+        resolve({
+          status: 403,
+          message: "Unauthorized!",
         });
       }
     } catch (err) {

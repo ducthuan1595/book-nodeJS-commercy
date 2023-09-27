@@ -2,6 +2,7 @@ const Flashsale = require("../model/flashsale");
 const Item = require("../model/item");
 const User = require("../model/user");
 const scheduleSale = require("../suports/cron");
+const pageSection = require("../suports/pageSection");
 
 exports.createFlashsale = (value, req) => {
   return new Promise(async (resolve, reject) => {
@@ -72,22 +73,18 @@ exports.getFlashSale = (page, limit, req) => {
           (f) => f.end_date > Date.now()
         );
 
-        const totalPage = Math.ceil(flashSales.length / limit);
-        const start = (+page - 1) * +limit;
-        const end = +page * +limit;
-        const result = flashSales.slice(start, end);
-        const totalNumber = flashSales.length;
+        const data = pageSection(page, limit, flashSales);
         if (flashSales) {
           resolve({
             status: 200,
             message: "ok",
             data: {
               currPage: +page,
-              nextPage: +page * +limit < totalNumber,
+              nextPage: +page * +limit < flashSales.length,
               prevPage: 0 < +page - 1,
-              flashSales: result,
-              totalPage: totalPage,
-              totalFlashSale: totalNumber,
+              flashSales: data.result,
+              totalPage: data.totalPage,
+              totalFlashSale: flashSales.length,
               flashSaleActive,
             },
           });

@@ -3,6 +3,7 @@ const Voucher = require("../model/voucher");
 const User = require("../model/user");
 const path = require("path");
 const handleFile = require("../config/file");
+const pageSection = require("../suports/pageSection");
 
 const p = path.join("data", "images", "image");
 
@@ -66,11 +67,7 @@ exports.getVoucher = (page, limit, req) => {
         }
         const activeVoucher = vouchers.filter((v) => v.isActive === true);
         // page section
-        const totalPage = Math.ceil(vouchers.length / limit);
-        const start = (page - 1) * limit;
-        const end = page * limit;
-        const result = vouchers.slice(start, end);
-        const totalNumber = vouchers.length;
+        const data = pageSection(page, limit, vouchers);
 
         if (vouchers) {
           resolve({
@@ -78,11 +75,11 @@ exports.getVoucher = (page, limit, req) => {
             message: "ok",
             data: {
               currPage: page,
-              nextPage: page * limit < totalNumber,
+              nextPage: page * limit < vouchers.length,
               prevPage: 0 < page - 1,
-              vouchers: result,
-              totalPage: totalPage,
-              totalVoucher: totalNumber,
+              vouchers: data.result,
+              totalPage: data.totalPage,
+              totalVoucher: vouchers.length,
               activeVoucher: activeVoucher.length,
             },
           });

@@ -15,3 +15,12 @@ exports.createOrder = async (req, res) => {
     }
   }
 };
+
+exports.getOrder = async (req, res) => {
+  const page = req.query?.page === "null" ? 1 : req.query.page;
+  const limit = req.query?.limit === "null" ? 10 : req.query.limit;
+  const data = await orderService.getOrder(page, limit, req);
+  if (data) {
+    res.status(data.status).json({ message: data.message, data: data?.data });
+  }
+};

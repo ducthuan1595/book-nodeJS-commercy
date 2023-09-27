@@ -3,6 +3,7 @@ const Item = require("../model/item");
 const User = require("../model/user");
 const path = require("path");
 const handleFile = require("../config/file");
+const pageSection = require("../suports/pageSection");
 
 const p = path.join("data", "images", "image");
 
@@ -39,22 +40,19 @@ exports.getAllCategory = (page, limit, categoryId) => {
         }
       } else {
         const categories = await Category.find();
-        const totalPage = Math.ceil(categories.length / limit);
-        const start = (page - 1) * limit;
-        const end = page * limit;
-        const result = categories.slice(start, end);
-        const totalNumber = categories.length;
+        const data = pageSection(page, limit, categories);
+
         if (categories) {
           resolve({
             status: 200,
             message: "ok",
             data: {
               currPage: page,
-              nextPage: page * limit < totalNumber,
+              nextPage: page * limit < categories.length,
               prevPage: 0 < page - 1,
-              categories: result,
-              totalPage: totalPage,
-              totalCategory: totalNumber,
+              categories: data.result,
+              totalPage: data.totalPage,
+              totalCategory: categories.length,
             },
           });
         }
