@@ -19,7 +19,9 @@ exports.createOrder = async (req, res) => {
 exports.getOrder = async (req, res) => {
   const page = req.query?.page === "null" ? 1 : req.query.page;
   const limit = req.query?.limit === "null" ? 10 : req.query.limit;
-  const data = await orderService.getOrder(page, limit, req);
+  const type = req.query?.type === "null" ? null : req.query.type;
+  const column = req.query?.column === "null" ? null : req.query.column;
+  const data = await orderService.getOrder(page, limit, type, column, req);
   if (data) {
     res.status(data.status).json({ message: data.message, data: data?.data });
   }

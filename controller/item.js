@@ -148,13 +148,17 @@ exports.getAllItem = async (req, res) => {
   const limit = req.query.limit === "null" ? null : req.query?.limit;
   const page = req.query.page === "null" ? null : req.query?.page;
   const itemId = req.query?.itemId === "null" ? null : req.query?.itemId;
+  const type = req.query?.type === "null" ? null : req.query?.type;
+  const column = req.query?.column === "null" ? null : req.query?.column;
   const data = await itemService.getAllItem(
     key,
     filter,
     sort,
     limit,
     page,
-    itemId
+    itemId,
+    type,
+    column
   );
   if (data) {
     res.status(data.status).json({ message: data.message, data: data?.data });

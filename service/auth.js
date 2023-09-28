@@ -191,3 +191,39 @@ exports.confirmPassword = (password, id) => {
     }
   });
 };
+
+exports.getUser = (page, limit, key, req) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await User.findById(req.user._id);
+      if (user && user.role !== "F1") {
+        if (key) {
+          const users = await User.find({ username: key }).select("-password");
+          if (users) {
+            resolve({
+              status: 200,
+              message: "ok",
+              data: users,
+            });
+          } else {
+            resolve({
+              status: 404,
+              message: "Not found",
+            });
+          }
+        } else {
+          const users = await User.find().select("-password");
+          if (users) {
+            resolve({
+              status: 200,
+              message: "ok",
+              data: users,
+            });
+          }
+        }
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};

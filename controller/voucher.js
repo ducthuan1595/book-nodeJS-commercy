@@ -31,8 +31,8 @@ exports.deleteVoucher = async (req, res) => {
 };
 
 exports.getVoucher = async (req, res) => {
-  const page = req.query?.page !== "null" ? req.query.page : 1;
-  const limit = req.query?.limit !== "null" ? req.query.limit : 8;
+  const page = req.query?.page !== "null" ? req.query.page : null;
+  const limit = req.query?.limit !== "null" ? req.query.limit : null;
   const data = await voucherService.getVoucher(page, limit, req);
   if (data) {
     res.status(data.status).json({ message: data.message, data: data?.data });

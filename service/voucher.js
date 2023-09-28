@@ -59,29 +59,29 @@ exports.getVoucher = (page, limit, req) => {
       const user = await User.findById(req.user._id);
       if (user) {
         const vouchers = await Voucher.find();
-        for (let i = 0; i < vouchers.length; i++) {
-          if (vouchers[i].expirationDate < Date.now()) {
-            vouchers[i].isActive = false;
-            await vouchers[i].save();
-          }
-        }
-        const activeVoucher = vouchers.filter((v) => v.isActive === true);
         // page section
-        const data = pageSection(page, limit, vouchers);
+        if (page && limit) {
+          const data = pageSection(page, limit, vouchers);
 
-        if (vouchers) {
+          if (vouchers) {
+            resolve({
+              status: 200,
+              message: "ok",
+              data: {
+                currPage: page,
+                nextPage: page * limit < vouchers.length,
+                prevPage: 0 < page - 1,
+                vouchers: data.result,
+                totalPage: data.totalPage,
+                totalVoucher: vouchers.length,
+              },
+            });
+          }
+        } else {
           resolve({
             status: 200,
             message: "ok",
-            data: {
-              currPage: page,
-              nextPage: page * limit < vouchers.length,
-              prevPage: 0 < page - 1,
-              vouchers: data.result,
-              totalPage: data.totalPage,
-              totalVoucher: vouchers.length,
-              activeVoucher: activeVoucher.length,
-            },
+            data: vouchers,
           });
         }
       } else {

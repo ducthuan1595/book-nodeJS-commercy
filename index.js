@@ -5,6 +5,7 @@ const fileupload = require("express-fileupload");
 require("dotenv").config();
 
 const init = require("./router/init");
+// const sortMiddleware = require("./middleware/sort");
 
 const app = express();
 const port = process.env.PORT;
@@ -12,6 +13,7 @@ const port = process.env.PORT;
 app.set("view engine", "ejs");
 app.set("views", "views");
 
+// app.use(sortMiddleware());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());

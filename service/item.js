@@ -172,13 +172,14 @@ exports.deleteItem = (itemId, req) => {
   });
 };
 
-exports.getAllItem = (k, f, s, limit, page, itemId) => {
+exports.getAllItem = (k, f, s, limit, page, itemId, type, column) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (f === null && k === null && s === null && itemId === null) {
         const items = await Item.find()
           .populate("categoryId")
-          .populate("flashSaleId");
+          .populate("flashSaleId")
+          .sort([[column, type]]);
         // page section
         if (items.length) {
           const data = pageSection(page, limit, items);
@@ -212,13 +213,15 @@ exports.getAllItem = (k, f, s, limit, page, itemId) => {
       }
       // filter
       const itemFilter = f
-        ? await Item.find().populate({
-            path: "categoryId",
-            match: {
-              name: f,
-            },
-          })
-        : await Item.find();
+        ? await Item.find()
+            .populate({
+              path: "categoryId",
+              match: {
+                name: f,
+              },
+            })
+            .sort([[column, key]])
+        : await Item.find().sort([[column, key]]);
 
       const filters = f
         ? itemFilter.filter((item) => item.categoryId !== null)

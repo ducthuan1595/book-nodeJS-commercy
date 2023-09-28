@@ -18,7 +18,7 @@ exports.addCart = (value, req) => {
             await User.findOneAndUpdate({ _id: user._id }, { cart: addCart });
           } else {
             const existItemIndex = user.cart.findIndex((item) => {
-              return item.itemId.toString() === value.itemId.toString();
+              return item.itemId?.toString() === value.itemId.toString();
             });
             const updateItem = [...user.cart];
             if (existItemIndex !== -1) {

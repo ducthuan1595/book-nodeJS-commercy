@@ -17,7 +17,7 @@ const schema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "D0", //D0 = delivering, D1 = delivered
+      default: "D0", //D0 = delivering, D1 = delivered, D2 = canceled
     },
     items: [
       {

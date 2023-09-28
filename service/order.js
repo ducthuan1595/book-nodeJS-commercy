@@ -9,7 +9,7 @@ exports.createOrder = (value, req) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findById(req.user._id);
-      if (user && user.role === "F2") {
+      if (user && user.role !== "F1") {
         // add items for order
         const arrCart = user.cart;
         if (arrCart.length) {
@@ -39,36 +39,36 @@ exports.createOrder = (value, req) => {
           // let flashSale;
           const updateCount = async (arr, id, quantity) => {
             const item = arr.find((v) => v._id.toString() === id.toString());
-            if (item.flashSaleId) {
-              const flashSale = await FlashSale?.findById(item.flashSaleId);
-              // update flashsale
-              const quantitySale = flashSale.items.find((v) => {
-                if (v.itemId.toString() === item._id.toString()) {
-                  return v.quantity;
-                }
-              });
-              if (item.flashSaleId) {
-                if (
-                  flashSale &&
-                  flashSale.isActive &&
-                  flashSale.end_date < Date.now() &&
-                  flashSale.start_date > Date.now()
-                ) {
-                  item.pricePay = item.priceInput;
-                  item.flashSaleId = null;
-                } else if (quantitySale < 1) {
-                  item.pricePay = item.priceInput;
-                }
+            // if (item.flashSaleId) {
+            const flashSale = await FlashSale?.findById(item.flashSaleId);
+            // update flashsale
+            const quantitySale = flashSale.items.find((v) => {
+              if (v.itemId.toString() === item._id.toString()) {
+                return v.quantity;
               }
-              amount += item.pricePay;
-
-              const updateFlashSale = flashSale?.items.find(
-                (v) => v.itemId.toString() === item._id.toString()
-              );
-              const newQuantityFlashSale = +quantitySale.quantity - quantity;
-              updateFlashSale.quantity = newQuantityFlashSale;
-              await flashSale.save();
+            });
+            if (item.flashSaleId) {
+              if (
+                flashSale &&
+                flashSale.isActive &&
+                flashSale.end_date < Date.now() &&
+                flashSale.start_date > Date.now()
+              ) {
+                item.pricePay = item.priceInput;
+                item.flashSaleId = null;
+              } else if (quantitySale < 1) {
+                item.pricePay = item.priceInput;
+              }
             }
+            amount += item.pricePay * +quantity;
+
+            const updateFlashSale = flashSale?.items.find(
+              (v) => v.itemId.toString() === item._id.toString()
+            );
+            const newQuantityFlashSale = +quantitySale.quantity - quantity;
+            updateFlashSale.quantity = newQuantityFlashSale;
+            await flashSale.save();
+            // }
             const newQuantity = item.count - quantity;
             item.count = newQuantity;
             await item.save();
@@ -80,6 +80,7 @@ exports.createOrder = (value, req) => {
               +newArrOrder[i].quantity
             );
           }
+          console.log({ amount });
 
           // Apply voucher
           if (value.voucherCode) {
@@ -130,12 +131,15 @@ exports.createOrder = (value, req) => {
   });
 };
 
-exports.getOrder = (page, limit, req) => {
+exports.getOrder = (page, limit, type, column, req) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findById(req.user._id);
       if (user && user.role === "F2") {
-        const orders = await Order.find({ userId: user._id });
+        const orders = await Order.find({ userId: user._id })
+          .populate("userId", "-password")
+          .populate("items.itemId")
+          .sort([[column, type]]);
         if (orders.length) {
           const data = pageSection(page, limit, orders);
 
@@ -153,7 +157,10 @@ exports.getOrder = (page, limit, req) => {
           });
         }
       } else if (user && user.role === "F3") {
-        const orders = await Order.find();
+        const orders = await Order.find()
+          .populate("userId", "-password")
+          .populate("items.itemId")
+          .sort([[column, type]]);
         if (orders.length) {
           const data = pageSection(page, limit, orders);
 

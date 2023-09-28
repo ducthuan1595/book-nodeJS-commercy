@@ -88,3 +88,13 @@ exports.confirmPassword = async (req, res) => {
     }
   }
 };
+
+exports.getUser = async (req, res) => {
+  const page = req.query?.page === "null" ? 1 : req.query.page;
+  const limit = req.query?.limit === "null" ? 10 : req.query.limit;
+  const key = req.query?.key === "null" ? null : req.query.key;
+  const data = await authService.getUser(page, limit, key, req);
+  if (data) {
+    res.status(data.status).json({ message: data.message, data: data?.data });
+  }
+};
