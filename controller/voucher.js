@@ -18,22 +18,10 @@ exports.createVoucher = async (req, res) => {
   }
 };
 
-exports.deleteVoucher = async (req, res) => {
-  const { voucherId } = req.body;
-  if (!voucherId) {
-    res.status(404).json({ message: "Not voucher" });
-  } else {
-    const data = await voucherService.deleteVoucher(voucherId, req);
-    if (data) {
-      res.status(data.status).json({ message: data.message, data: data?.data });
-    }
-  }
-};
-
 exports.getVoucher = async (req, res) => {
   const page = req.query?.page !== "null" ? req.query.page : null;
   const limit = req.query?.limit !== "null" ? req.query.limit : null;
-  const data = await voucherService.getVoucher(page, limit, req);
+  const data = await voucherService.getVoucher(page, limit);
   if (data) {
     res.status(data.status).json({ message: data.message, data: data?.data });
   }

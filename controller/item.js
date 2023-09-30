@@ -29,7 +29,6 @@ exports.createItem = async (req, res) => {
   if (
     !name ||
     !priceInput ||
-    !pricePay ||
     !description ||
     !barcode ||
     !count ||
@@ -44,7 +43,6 @@ exports.createItem = async (req, res) => {
       {
         name,
         priceInput,
-        pricePay,
         slogan,
         description,
         barcode,
@@ -67,7 +65,6 @@ exports.updateItem = async (req, res) => {
   const {
     name,
     priceInput,
-    pricePay,
     slogan,
     description,
     barcode,
@@ -94,7 +91,6 @@ exports.updateItem = async (req, res) => {
   if (
     !name ||
     !priceInput ||
-    !pricePay ||
     !description ||
     !barcode ||
     !count ||
@@ -110,7 +106,6 @@ exports.updateItem = async (req, res) => {
       {
         name,
         priceInput,
-        pricePay,
         slogan,
         description,
         barcode,
@@ -162,5 +157,12 @@ exports.getAllItem = async (req, res) => {
   );
   if (data) {
     res.status(data.status).json({ message: data.message, data: data?.data });
+  }
+};
+
+exports.getAllItemFlashSale = async (req, res) => {
+  const data = await itemService.getAllItemFlashSale();
+  if (data) {
+    res.status(data.status).json({ message: "ok", data: data?.data });
   }
 };

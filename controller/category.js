@@ -1,11 +1,20 @@
 const categoryService = require("../service/category");
 
 exports.getAllCategory = async (req, res) => {
-  const page = req.query?.page;
-  const limit = req.query?.limit;
-  const categoryId = req.query?.categoryId;
+  const page = req.query?.page === "null" ? null : req.query?.page;
+  const limit = req.query?.limit === "null" ? null : req.query?.limit;
+  const type = req.query?.type === "null" ? null : req.query?.type;
+  const column = req.query?.column === "null" ? null : req.query?.column;
+  const categoryId =
+    req.query?.categoryId === "null" ? null : req.query?.categoryId;
 
-  const data = await categoryService.getAllCategory(page, limit, categoryId);
+  const data = await categoryService.getAllCategory(
+    page,
+    limit,
+    categoryId,
+    type,
+    column
+  );
   if (data) {
     res.status(data.status).json({ message: data.message, data: data?.data });
   }

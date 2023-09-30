@@ -7,10 +7,10 @@ const pageSection = require("../suports/pageSection");
 
 const p = path.join("data", "images", "image");
 
-exports.getAllCategory = (page, limit, categoryId) => {
+exports.getAllCategory = (page, limit, categoryId, type, column) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (categoryId !== "null") {
+      if (categoryId) {
         const category = await Category.findById(categoryId);
         if (!category) {
           resolve({
@@ -24,8 +24,10 @@ exports.getAllCategory = (page, limit, categoryId) => {
             data: category,
           });
         }
-      } else if (page === "null" && limit === "null" && categoryId === "null") {
-        const categories = await Category.find();
+      } else if (!page && !limit && !categoryId) {
+        const categories = await Category.find().sort([
+          [column ? column : "name", type ? type : "asc"],
+        ]);
         if (!categories) {
           resolve({
             status: 404,

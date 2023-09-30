@@ -11,38 +11,20 @@ exports.createFlashsale = (value, req) => {
       if (user && user.role === "F3") {
         const flashSale = new Flashsale({
           name: value.name,
-          start_date: value.start,
-          end_date: value.end,
+          start_date: new Date(value.start).getTime(),
+          end_date: new Date(value.end).getTime(),
           discount_percent: value.discountPercent,
           items: value.items,
         });
         const newFlashSale = await flashSale.save();
-        if (
-          newFlashSale &&
-          newFlashSale.start_date > new Date() &&
-          newFlashSale.end_date > newFlashSale.start_date
-        ) {
-          const items = await Item.find();
-          const handleItem = async (arr, id) => {
-            const item = arr.find((item) => {
-              return item._id.toString() === id.toString();
-            });
-            item.pricePay = (
-              item.priceInput -
-              (item.priceInput * +value.discountPercent) / 100
-            ).toFixed(2);
-            item.flashSaleId = newFlashSale._id;
-            await item.save();
-          };
-          value.items.map((item) => {
-            return handleItem(items, item.itemId);
-          });
-        }
+
         const arrItemId = value.items.map((item) => item.itemId);
         scheduleSale(
           newFlashSale.start_date,
           newFlashSale.end_date,
           newFlashSale.discount_percent,
+          newFlashSale._id,
+          value,
           arrItemId
         );
         resolve({

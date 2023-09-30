@@ -90,7 +90,7 @@ exports.createOrder = (value, req) => {
               voucher.quantity > 0 &&
               voucher.isActive === true
             ) {
-              amount = (amount - (amount * +voucher.discount) / 100).toFixed(2);
+              amount = Math.floor(amount - (amount * +voucher.discount) / 100);
               voucher.quantity = voucher.quantity - 1;
               await voucher.save();
             } else {

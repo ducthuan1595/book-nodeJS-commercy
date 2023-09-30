@@ -57,6 +57,7 @@ const init = (app) => {
     itemController.deleteItem
   );
   router.get("/api/get-item", itemController.getAllItem);
+  router.get("/api/get-item-flashsale", itemController.getAllItemFlashSale);
 
   // add cart;
   router.post("/api/add-cart", authMiddleware.protect, cartController.addCart);
@@ -86,16 +87,7 @@ const init = (app) => {
     authMiddleware.protect,
     voucherController.createVoucher
   );
-  router.get(
-    "/api/get-voucher",
-    authMiddleware.protect,
-    voucherController.getVoucher
-  );
-  router.post(
-    "/api/delete-voucher",
-    authMiddleware.protect,
-    voucherController.deleteVoucher
-  );
+  router.get("/api/get-voucher", voucherController.getVoucher);
   router.post(
     "/api/create-flashsale",
     authMiddleware.protect,

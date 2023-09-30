@@ -28,12 +28,18 @@ exports.createItem = (value, req) => {
           });
           return imageName;
         };
-        const pic = handleImage(value.imageArr);
-        const detailPic = handleImage(value.detailPicArr);
+        let pic;
+        if (value.imageArr && value.imageArr[0]) {
+          pic = handleImage(value.imageArr);
+        }
+        let detailPic;
+        if (value.detailPicArr[0]) {
+          detailPic = handleImage(value.detailPicArr);
+        }
         const item = new Item({
           name: value.name,
           priceInput: value.priceInput,
-          pricePay: value.pricePay,
+          pricePay: value.priceInput,
           author: value.author,
           categoryId: value.categoryId,
           slogan: value?.slogan,
@@ -103,7 +109,7 @@ exports.updateItem = (value, req) => {
           }
           product.name = value.name;
           product.priceInput = value.priceInput;
-          product.pricePay = value.pricePay;
+          product.pricePay = value.priceInput;
           product.categoryId = value.categoryId;
           product.slogan = value?.slogan;
           product.description = value.description;
@@ -179,7 +185,28 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column) => {
         const items = await Item.find()
           .populate("categoryId")
           .populate("flashSaleId")
-          .sort([[column, type]]);
+          .sort([[column ? column : "name", type ? type : "asc"]]);
+
+        // console.log({ items });
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].flashSaleId) {
+            const flashSale = await FlashSale.findById(items[i].flashSaleId);
+            if (
+              flashSale &&
+              flashSale.end_date &&
+              flashSale.end_date < Date.now()
+            ) {
+              items[i].pricePay = items[i].priceInput;
+              items[i].flashSaleId = null;
+              await items[i].save();
+            }
+          } else {
+            items[i].pricePay = items[i].priceInput;
+            items[i].flashSaleId = null;
+            await items[i].save();
+          }
+        }
+
         // page section
         if (items.length) {
           const data = pageSection(page, limit, items);
@@ -197,7 +224,13 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column) => {
           });
         }
       } else if (itemId) {
-        const item = await Item.findById(itemId);
+        const item = await Item.findById(itemId).populate("categoryId");
+        const flashSale = await FlashSale.findById(item.flashSaleId);
+        if (flashSale && flashSale.end_date < Date.now()) {
+          item.pricePay = item.priceInput;
+          item.flashSaleId = null;
+          await item.save();
+        }
         if (item) {
           resolve({
             status: 200,
@@ -220,8 +253,10 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column) => {
                 name: f,
               },
             })
-            .sort([[column, key]])
-        : await Item.find().sort([[column, key]]);
+            .sort([[column ? column : "name", type ? type : "asc"]])
+        : await Item.find().sort([
+            [column ? column : "name", type ? type : "asc"],
+          ]);
 
       const filters = f
         ? itemFilter.filter((item) => item.categoryId !== null)
@@ -264,16 +299,55 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column) => {
         }
 
         // page section
-        // const totalPage = Math.ceil(sort.length / limit);
-        // const start = (page - 1) * limit;
-        // const end = page * limit;
-        // const result = sort.slice(start, end);
-        // const totalNumber = sort.length;
-        resolve({
-          status: 200,
-          message: "ok",
-          data: sort,
-        });
+        if (page && limit) {
+          const data = pageSection(page, limit, sort);
+          resolve({
+            status: 200,
+            message: "ok",
+            data: {
+              currPage: page,
+              nextPage: page * limit < sort.length,
+              prevPage: 0 < page - 1,
+              products: data.result,
+              totalPage: data.totalPage,
+              totalNumber: sort.length,
+            },
+          });
+        } else {
+          resolve({
+            message: "ok",
+            status: 200,
+            data: sort,
+          });
+        }
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+exports.getAllItemFlashSale = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const items = await Item.find().populate("flashSaleId");
+      if (items) {
+        let itemFlashSale = items.filter((item) => item.flashSaleId);
+        itemFlashSale = itemFlashSale.filter(
+          (i) => i.flashSaleId.end_date > Date.now()
+        );
+        if (itemFlashSale) {
+          resolve({
+            status: 200,
+            message: "ok",
+            data: itemFlashSale,
+          });
+        } else {
+          resolve({
+            status: 404,
+            message: "Not found",
+          });
+        }
       }
     } catch (err) {
       reject(err);

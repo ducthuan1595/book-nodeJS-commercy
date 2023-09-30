@@ -53,41 +53,33 @@ exports.createVoucher = (expiration, quantity, discount, image, name, req) => {
   });
 };
 
-exports.getVoucher = (page, limit, req) => {
+exports.getVoucher = (page, limit) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
-      if (user) {
-        const vouchers = await Voucher.find();
-        // page section
-        if (page && limit) {
-          const data = pageSection(page, limit, vouchers);
+      const vouchers = await Voucher.find();
+      // page section
+      if (page && limit) {
+        const data = pageSection(page, limit, vouchers);
 
-          if (vouchers) {
-            resolve({
-              status: 200,
-              message: "ok",
-              data: {
-                currPage: page,
-                nextPage: page * limit < vouchers.length,
-                prevPage: 0 < page - 1,
-                vouchers: data.result,
-                totalPage: data.totalPage,
-                totalVoucher: vouchers.length,
-              },
-            });
-          }
-        } else {
+        if (vouchers) {
           resolve({
             status: 200,
             message: "ok",
-            data: vouchers,
+            data: {
+              currPage: page,
+              nextPage: page * limit < vouchers.length,
+              prevPage: 0 < page - 1,
+              vouchers: data.result,
+              totalPage: data.totalPage,
+              totalVoucher: vouchers.length,
+            },
           });
         }
       } else {
         resolve({
-          status: 403,
-          message: "Unauthorized",
+          status: 200,
+          message: "ok",
+          data: vouchers,
         });
       }
     } catch (err) {
@@ -96,29 +88,29 @@ exports.getVoucher = (page, limit, req) => {
   });
 };
 
-exports.deleteVoucher = (voucherId, req) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const user = await User.findById(req.user._id);
-      if (user && user.role === "F3") {
-        const voucher = await Voucher.findByIdAndDelete(voucherId);
-        if (voucher.pic) {
-          const arrPic = [];
-          arrPic.push(voucher.pic);
-          handleFile.deleteFile(arrPic);
-        }
-        resolve({
-          status: 201,
-          message: "ok",
-        });
-      } else {
-        resolve({
-          status: 403,
-          message: "Unauthorized",
-        });
-      }
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
+// exports.deleteVoucher = (voucherId, req) => {
+//   return new Promise(async (resolve, reject) => {
+//     try {
+//       const user = await User.findById(req.user._id);
+//       if (user && user.role === "F3") {
+//         const voucher = await Voucher.findByIdAndDelete(voucherId);
+//         if (voucher.pic) {
+//           const arrPic = [];
+//           arrPic.push(voucher.pic);
+//           handleFile.deleteFile(arrPic);
+//         }
+//         resolve({
+//           status: 201,
+//           message: "ok",
+//         });
+//       } else {
+//         resolve({
+//           status: 403,
+//           message: "Unauthorized",
+//         });
+//       }
+//     } catch (err) {
+//       reject(err);
+//     }
+//   });
+// };
