@@ -66,7 +66,6 @@ const init = (app) => {
     authMiddleware.protect,
     cartController.deleteCart
   );
-  router.get("/api/get-cart", authMiddleware.protect, cartController.getCart);
 
   // order
   router.post(

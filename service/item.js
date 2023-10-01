@@ -224,7 +224,9 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column) => {
           });
         }
       } else if (itemId) {
-        const item = await Item.findById(itemId).populate("categoryId");
+        const item = await Item.findById(itemId)
+          .populate("categoryId")
+          .populate("flashSaleId");
         const flashSale = await FlashSale.findById(item.flashSaleId);
         if (flashSale && flashSale.end_date < Date.now()) {
           item.pricePay = item.priceInput;

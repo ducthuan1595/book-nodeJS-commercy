@@ -4,21 +4,30 @@ const User = require("../model/user");
 exports.addCart = (value, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await User.findById(req.user._id)
+        .populate("cart.itemId")
+        .select("-password");
       if (user) {
         // const cart = await user?.populate("cart.items");
+        let updateUser;
         if (user) {
-          if (!user.cart) {
+          if (user.cart.length < 1) {
             const addCart = [
               {
                 itemId: value.itemId,
                 quantity: value.quantity,
               },
             ];
-            await User.findOneAndUpdate({ _id: user._id }, { cart: addCart });
+
+            user.cart = addCart;
+            updateUser = await user.save();
+            // updateUser = await User.findOneAndUpdate(
+            //   { _id: user._id },
+            //   { cart: addCart }
+            // );
           } else {
             const existItemIndex = user.cart.findIndex((item) => {
-              return item.itemId?.toString() === value.itemId.toString();
+              return item.itemId._id.toString() === value.itemId.toString();
             });
             const updateItem = [...user.cart];
             if (existItemIndex !== -1) {
@@ -34,14 +43,17 @@ exports.addCart = (value, req) => {
             // const updateCart = {
             //   items: updateItem,
             // };
-            await User.findOneAndUpdate(
-              { _id: user._id },
-              { cart: updateItem }
-            );
+            user.cart = updateItem;
+            updateUser = await user.save();
+            // updateUser = await User.findOneAndUpdate(
+            //   { _id: user._id },
+            //   { cart: updateItem }
+            // );
           }
           resolve({
             status: 200,
             message: "ok",
+            data: user,
           });
         } else {
           resolve({
@@ -56,37 +68,21 @@ exports.addCart = (value, req) => {
   });
 };
 
-exports.deleteCart = (itemId, req) => {
+exports.deleteCart = (cartId, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
-      if (user) {
-        const updateCart = user.cart.items.filter(
-          (item) => item.itemId.toString() !== itemId.toString()
+      const user = await User.findById(req.user._id).populate("cart.itemId");
+      if (user && user.cart) {
+        const updateCart = user.cart.filter(
+          (item) => item._id.toString() !== cartId.toString()
         );
-        user.cart.items = updateCart;
-        await user.save();
-        resolve({
-          status: 200,
-          message: "ok",
-        });
-      }
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
+        user.cart = updateCart;
+        const updateUser = await user.save();
 
-exports.getCart = (req) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const user = await User.findById(req.user._id);
-      if (user) {
-        const cart = user.cart.items;
         resolve({
           status: 200,
           message: "ok",
-          data: cart,
+          data: updateUser,
         });
       }
     } catch (err) {

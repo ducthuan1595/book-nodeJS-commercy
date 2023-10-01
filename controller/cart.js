@@ -13,20 +13,13 @@ exports.addCart = async (req, res) => {
 };
 
 exports.deleteCart = async (req, res) => {
-  const { itemId } = req.body;
-  if (!itemId) {
+  const { cartId } = req.body;
+  if (!cartId) {
     res.status(403).json({ message: "Input invalid!" });
   } else {
-    const data = await cartService.deleteCart(itemId, req);
+    const data = await cartService.deleteCart(cartId, req);
     if (data) {
       res.status(data.status).json({ message: data.message, data: data?.data });
     }
-  }
-};
-
-exports.getCart = async (req, res) => {
-  const data = await cartService.getCart(req);
-  if (data) {
-    res.status(data.status).json({ message: data.message, data: data?.data });
   }
 };

@@ -6,7 +6,7 @@ const sendMailer = require("../config/nodemailer");
 exports.login = (email, password) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findOne({ email: email });
+      const user = await User.findOne({ email: email }).populate("cart.itemId");
       if (!user || user.role === "F1") {
         resolve({
           status: 402,
@@ -19,10 +19,11 @@ exports.login = (email, password) => {
             status: 200,
             message: "ok",
             data: {
-              name: user.username,
+              username: user.username,
               email: user.email,
-              token: createToken(user._id),
+              cart: user.cart,
             },
+            token: createToken(user._id),
           });
         } else {
           resolve({

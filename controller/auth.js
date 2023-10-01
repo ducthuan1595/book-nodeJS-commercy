@@ -10,7 +10,7 @@ exports.login = async (req, res) => {
     if (data) {
       res
         .status(data.status)
-        .json({ message: data?.message, data: data?.data });
+        .json({ message: data?.message, data: data?.data, token: data?.token });
     }
   }
 };
