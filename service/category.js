@@ -26,7 +26,7 @@ exports.getAllCategory = (page, limit, categoryId, type, column) => {
         }
       } else if (!page && !limit && !categoryId) {
         const categories = await Category.find().sort([
-          [column ? column : "name", type ? type : "asc"],
+          [column ? column : "position", type ? type : "asc"],
         ]);
         if (!categories) {
           resolve({

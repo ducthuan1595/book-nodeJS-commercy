@@ -73,7 +73,6 @@ exports.createItem = (value, req) => {
 exports.updateItem = (value, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(value.imageArr);
       const user = await User.findById(req.user._id);
       if (user && user.role === "F3") {
         const product = await Item.findById(value.itemId);
@@ -188,28 +187,32 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column) => {
           .sort([[column ? column : "name", type ? type : "asc"]]);
 
         // console.log({ items });
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].flashSaleId) {
-            const flashSale = await FlashSale.findById(items[i].flashSaleId);
-            if (
-              flashSale &&
-              flashSale.end_date &&
-              flashSale.end_date < Date.now()
-            ) {
-              items[i].pricePay = items[i].priceInput;
-              items[i].flashSaleId = null;
-              await items[i].save();
-            }
-          } else {
-            items[i].pricePay = items[i].priceInput;
-            items[i].flashSaleId = null;
-            await items[i].save();
-          }
-        }
 
-        // page section
         if (items.length) {
+          // page section
           const data = pageSection(page, limit, items);
+
+          for (let i = 0; i < data.result.length; i++) {
+            if (data.result[i].flashSaleId) {
+              const flashSale = await FlashSale.findById(
+                data.result[i].flashSaleId
+              );
+
+              if (
+                flashSale &&
+                flashSale.end_date &&
+                flashSale.end_date < Date.now()
+              ) {
+                data.result[i].pricePay = data.result[i].priceInput;
+                data.result[i].flashSaleId = null;
+                await data.result[i].save();
+              }
+            } else {
+              data.result[i].pricePay = data.result[i].priceInput;
+              data.result[i].flashSaleId = null;
+              await data.result[i].save();
+            }
+          }
           resolve({
             status: 200,
             message: "ok",

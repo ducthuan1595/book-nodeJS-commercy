@@ -8,7 +8,6 @@ exports.addCart = (value, req) => {
         .populate("cart.itemId")
         .select("-password");
       if (user) {
-        // const cart = await user?.populate("cart.items");
         let updateUser;
         if (user) {
           if (user.cart.length < 1) {
@@ -24,7 +23,7 @@ exports.addCart = (value, req) => {
             // updateUser = await User.findOneAndUpdate(
             //   { _id: user._id },
             //   { cart: addCart }
-            // );
+            // ).populate("cart.itemId");
           } else {
             const existItemIndex = user.cart.findIndex((item) => {
               return item.itemId._id.toString() === value.itemId.toString();
@@ -40,20 +39,21 @@ exports.addCart = (value, req) => {
                 quantity: value.quantity,
               });
             }
-            // const updateCart = {
-            //   items: updateItem,
-            // };
+
             user.cart = updateItem;
             updateUser = await user.save();
             // updateUser = await User.findOneAndUpdate(
             //   { _id: user._id },
             //   { cart: updateItem }
-            // );
+            // ).populate("cart.itemId");
           }
+          const updateUserCart = await User.findById(req.user._id).populate(
+            "cart.itemId"
+          );
           resolve({
             status: 200,
             message: "ok",
-            data: user,
+            data: updateUserCart,
           });
         } else {
           resolve({

@@ -8,7 +8,9 @@ const pageSection = require("../suports/pageSection");
 exports.createOrder = (value, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await User.findById(req.user._id)
+        .populate("cart.itemId")
+        .select("-password");
       if (user && user.role !== "F1") {
         // add items for order
         const arrCart = user.cart;
@@ -23,7 +25,7 @@ exports.createOrder = (value, req) => {
             (v) => !handleArr(value.arrCartId, v._id)
           );
           user.cart = updateItem;
-          await user.save();
+          const updateUser = await user.save();
 
           // update quantity for order
           const newQuantity = newArrOrder.reduce((a, b) => {
@@ -34,67 +36,63 @@ exports.createOrder = (value, req) => {
           let amount = 0;
 
           // Update count
-          const arrId = newArrOrder.map((item) => item.itemId.toString());
+          const arrId = newArrOrder.map((item) => item.itemId._id.toString());
           const items = await Item.find().where("_id", arrId);
           // let flashSale;
           const updateCount = async (arr, id, quantity) => {
             const item = arr.find((v) => v._id.toString() === id.toString());
-            // if (item.flashSaleId) {
-            const flashSale = await FlashSale?.findById(item.flashSaleId);
-            // update flashsale
-            const quantitySale = flashSale.items.find((v) => {
-              if (v.itemId.toString() === item._id.toString()) {
-                return v.quantity;
-              }
-            });
-            if (item.flashSaleId) {
-              if (
-                flashSale &&
-                flashSale.isActive &&
-                flashSale.end_date < Date.now() &&
-                flashSale.start_date > Date.now()
-              ) {
-                item.pricePay = item.priceInput;
-                item.flashSaleId = null;
-              } else if (quantitySale < 1) {
-                item.pricePay = item.priceInput;
-              }
-            }
-            amount += item.pricePay * +quantity;
+            if (item && item.flashSaleId) {
+              const flashSale = await FlashSale.findById(item.flashSaleId);
+              // update flashsale
+              if (flashSale) {
+                const quantitySale = flashSale.items.find((v) => {
+                  if (v.itemId.toString() === item._id.toString()) {
+                    return v;
+                  }
+                });
+                if (
+                  flashSale &&
+                  flashSale.end_date < Date.now() &&
+                  flashSale.start_date > Date.now() &&
+                  quantitySale.quantity < 1
+                ) {
+                  item.pricePay = item.priceInput;
+                  item.flashSaleId = null;
+                }
+                amount += item.pricePay * +quantity;
 
-            const updateFlashSale = flashSale?.items.find(
-              (v) => v.itemId.toString() === item._id.toString()
-            );
-            const newQuantityFlashSale = +quantitySale.quantity - quantity;
-            updateFlashSale.quantity = newQuantityFlashSale;
-            await flashSale.save();
-            // }
-            const newQuantity = item.count - quantity;
-            item.count = newQuantity;
-            await item.save();
+                const updateFlashSaleItem = flashSale.items.find(
+                  (v) => v.itemId.toString() === item._id.toString()
+                );
+
+                const newQuantityFlashSale = +quantitySale.quantity - +quantity;
+                updateFlashSaleItem.quantity = newQuantityFlashSale;
+                await flashSale.save();
+              }
+              // }
+              // update Item
+              const newQuantity = item.count - quantity;
+              item.count = newQuantity;
+              await item.save();
+            }
           };
           for (let i = 0; i < newArrOrder.length; i++) {
             await updateCount(
               items,
-              newArrOrder[i].itemId,
+              newArrOrder[i].itemId._id,
               +newArrOrder[i].quantity
             );
           }
-          console.log({ amount });
-
           // Apply voucher
           if (value.voucherCode) {
             const voucher = await Voucher.findOne({ code: value.voucherCode });
             if (
-              new Date().getTime() < voucher.expirationDate &&
-              voucher.quantity > 0 &&
-              voucher.isActive === true
+              voucher &&
+              Date.now() < voucher.expirationDate &&
+              voucher.quantity > 0
             ) {
               amount = Math.floor(amount - (amount * +voucher.discount) / 100);
               voucher.quantity = voucher.quantity - 1;
-              await voucher.save();
-            } else {
-              voucher.isActive = false;
               await voucher.save();
             }
           }
@@ -110,7 +108,10 @@ exports.createOrder = (value, req) => {
             resolve({
               status: 200,
               message: "ok",
-              data: updateOrder,
+              data: {
+                updateOrder,
+                updateUser,
+              },
             });
           }
         } else {
