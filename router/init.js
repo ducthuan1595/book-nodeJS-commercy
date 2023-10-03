@@ -20,7 +20,13 @@ const init = (app) => {
   router.post("/api/login", authController.login);
   router.post("/api/login-admin", authController.loginAdmin);
   router.post("/api/forgot-password", authController.forgotPassword);
-  router.post("/api/signup", authController.signup);
+  router.post("/api/signup", authMiddleware.protect, authController.signup);
+
+  router.post(
+    "/api/update-user",
+    authMiddleware.protect,
+    authController.updateUser
+  );
 
   // Category
   router.get("/api/get-all-category", categoryController.getAllCategory);
@@ -58,6 +64,7 @@ const init = (app) => {
   );
   router.get("/api/get-item", itemController.getAllItem);
   router.get("/api/get-item-flashsale", itemController.getAllItemFlashSale);
+  router.get("/api/get-item-follow-price", itemController.getItemFollowPrice);
 
   // add cart;
   router.post("/api/add-cart", authMiddleware.protect, cartController.addCart);

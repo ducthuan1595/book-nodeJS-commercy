@@ -98,3 +98,14 @@ exports.getUser = async (req, res) => {
     res.status(data.status).json({ message: data.message, data: data?.data });
   }
 };
+
+exports.updateUser = async (req, res) => {
+  console.log(req.body);
+  const { accountName, fullname, phone } = req.body;
+  const data = await authService.updateUser(accountName, fullname, phone, req);
+  if (data) {
+    res
+      .status(data.status)
+      .json({ message: data.message, data: data?.data, token: data?.token });
+  }
+};

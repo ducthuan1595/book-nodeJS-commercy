@@ -37,8 +37,7 @@ const scheduleSale = (start, end, percent, saleId, value, arrItemId) => {
         await item.save();
       };
       value.items.map((item) => {
-        console.log("id", item.itemId);
-        return;
+        // console.log("id", item.itemId);
         return handleItem(items, item.itemId);
       });
     }
@@ -54,8 +53,8 @@ const scheduleSale = (start, end, percent, saleId, value, arrItemId) => {
         percent,
         (isPw = false)
       );
-      cronSchedules.stop();
     }
+    cronSchedules.stop();
   });
 };
 

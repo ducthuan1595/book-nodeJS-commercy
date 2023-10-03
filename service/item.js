@@ -177,7 +177,7 @@ exports.deleteItem = (itemId, req) => {
   });
 };
 
-exports.getAllItem = (k, f, s, limit, page, itemId, type, column) => {
+exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (f === null && k === null && s === null && itemId === null) {
@@ -258,14 +258,19 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column) => {
                 name: f,
               },
             })
+            .populate("flashSaleId")
             .sort([[column ? column : "name", type ? type : "asc"]])
         : await Item.find().sort([
             [column ? column : "name", type ? type : "asc"],
           ]);
 
-      const filters = f
+      let filters = f
         ? itemFilter.filter((item) => item.categoryId !== null)
         : itemFilter;
+
+      if (isSale) {
+        filters = filters.filter((i) => i.flashSaleId === null);
+      }
 
       // search
       // console.log("key", k);
@@ -353,6 +358,28 @@ exports.getAllItemFlashSale = () => {
             message: "Not found",
           });
         }
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+exports.getItemFollowPrice = (low, hight) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const items = await Item.find();
+      if (items) {
+        const newItem = items.filter((i) => {
+          if (i.pricePay >= low && i.pricePay <= hight) {
+            return i;
+          }
+        });
+        resolve({
+          status: 200,
+          message: "ok",
+          data: newItem,
+        });
       }
     } catch (err) {
       reject(err);

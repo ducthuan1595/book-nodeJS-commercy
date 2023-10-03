@@ -228,3 +228,33 @@ exports.getUser = (page, limit, key, req) => {
     }
   });
 };
+
+exports.updateUser = (account, fullname, phone, req) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await User.findById(req.user._id).populate("cart.itemId");
+      if (user) {
+        user.accountName = account;
+        user.phoneNumber = phone;
+        user.usernam = fullname;
+
+        const updateUser = await user.save();
+        if (updateUser) {
+          resolve({
+            status: 200,
+            message: "ok",
+            data: updateUser,
+            token: createToken(user._id),
+          });
+        }
+      } else {
+        resolve({
+          status: 403,
+          message: "Unauthorized",
+        });
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};

@@ -137,6 +137,7 @@ exports.deleteItem = async (req, res) => {
 };
 
 exports.getAllItem = async (req, res) => {
+  console.log(req.query);
   const key = req.query.key === "null" ? null : req.query?.key;
   const filter = req.query.filter === "null" ? null : req.query?.filter;
   const sort = req.query.sort === "null" ? null : req.query?.sort;
@@ -145,6 +146,7 @@ exports.getAllItem = async (req, res) => {
   const itemId = req.query?.itemId === "null" ? null : req.query?.itemId;
   const type = req.query?.type === "null" ? null : req.query?.type;
   const column = req.query?.column === "null" ? null : req.query?.column;
+  const isSale = req.query?.isSale === "true" ? true : false;
   const data = await itemService.getAllItem(
     key,
     filter,
@@ -153,7 +155,8 @@ exports.getAllItem = async (req, res) => {
     page,
     itemId,
     type,
-    column
+    column,
+    isSale
   );
   if (data) {
     res.status(data.status).json({ message: data.message, data: data?.data });
@@ -164,5 +167,16 @@ exports.getAllItemFlashSale = async (req, res) => {
   const data = await itemService.getAllItemFlashSale();
   if (data) {
     res.status(data.status).json({ message: "ok", data: data?.data });
+  }
+};
+
+exports.getItemFollowPrice = async (req, res) => {
+  const { low, hight } = req.query;
+  if (!low || !hight) {
+    res.status(404).json({ message: "Input invalid" });
+  }
+  const data = await itemService.getItemFollowPrice(low, hight);
+  if (data) {
+    res.status(data.status).json({ message: data.message, data: data?.data });
   }
 };
