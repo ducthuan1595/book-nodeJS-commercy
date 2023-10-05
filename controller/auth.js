@@ -100,9 +100,14 @@ exports.getUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  console.log(req.body);
-  const { accountName, fullname, phone } = req.body;
-  const data = await authService.updateUser(accountName, fullname, phone, req);
+  const { accountName, fullname, phone, gender } = req.body;
+  const data = await authService.updateUser(
+    accountName,
+    fullname,
+    phone,
+    gender,
+    req
+  );
   if (data) {
     res
       .status(data.status)

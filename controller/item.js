@@ -137,7 +137,7 @@ exports.deleteItem = async (req, res) => {
 };
 
 exports.getAllItem = async (req, res) => {
-  console.log(req.query);
+  // console.log(req.query);
   const key = req.query.key === "null" ? null : req.query?.key;
   const filter = req.query.filter === "null" ? null : req.query?.filter;
   const sort = req.query.sort === "null" ? null : req.query?.sort;
@@ -171,6 +171,7 @@ exports.getAllItemFlashSale = async (req, res) => {
 };
 
 exports.getItemFollowPrice = async (req, res) => {
+  // console.log(req.query);
   const { low, hight } = req.query;
   if (!low || !hight) {
     res.status(404).json({ message: "Input invalid" });

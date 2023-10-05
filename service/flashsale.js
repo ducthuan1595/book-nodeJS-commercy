@@ -49,13 +49,15 @@ exports.getFlashSale = (page, limit, req) => {
     try {
       const user = await User.findById(req.user._id);
       if (user) {
-        const flashSales = await Flashsale.find().populate("items.itemId");
+        const flashSales = await Flashsale.find()
+          .populate("items.itemId")
+          .sort({ createdAt: -1 });
 
         const flashSaleActive = flashSales.filter(
           (f) => f.end_date > Date.now()
         );
 
-        const data = pageSection(page, limit, flashSales);
+        const data = pageSection(page, limit, flashSaleActive);
         if (flashSales) {
           resolve({
             status: 200,

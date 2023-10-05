@@ -186,8 +186,6 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
           .populate("flashSaleId")
           .sort([[column ? column : "name", type ? type : "asc"]]);
 
-        // console.log({ items });
-
         if (items.length) {
           // page section
           const data = pageSection(page, limit, items);
@@ -207,10 +205,6 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
                 data.result[i].flashSaleId = null;
                 await data.result[i].save();
               }
-            } else {
-              data.result[i].pricePay = data.result[i].priceInput;
-              data.result[i].flashSaleId = null;
-              await data.result[i].save();
             }
           }
           resolve({
@@ -371,10 +365,11 @@ exports.getItemFollowPrice = (low, hight) => {
       const items = await Item.find();
       if (items) {
         const newItem = items.filter((i) => {
-          if (i.pricePay >= low && i.pricePay <= hight) {
+          if (i.pricePay >= +low && i.pricePay <= +hight) {
             return i;
           }
         });
+        // console.log({ newItem });
         resolve({
           status: 200,
           message: "ok",

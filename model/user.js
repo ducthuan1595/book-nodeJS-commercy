@@ -9,6 +9,9 @@ const schema = new mongoose.Schema(
     accountName: {
       type: String,
     },
+    gender: {
+      type: String,
+    },
     email: {
       type: String,
       unique: true,
@@ -16,7 +19,6 @@ const schema = new mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      unique: true,
     },
     password: {
       type: String,

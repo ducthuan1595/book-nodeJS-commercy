@@ -20,7 +20,7 @@ const init = (app) => {
   router.post("/api/login", authController.login);
   router.post("/api/login-admin", authController.loginAdmin);
   router.post("/api/forgot-password", authController.forgotPassword);
-  router.post("/api/signup", authMiddleware.protect, authController.signup);
+  router.post("/api/signup", authController.signup);
 
   router.post(
     "/api/update-user",

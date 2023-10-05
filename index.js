@@ -8,7 +8,7 @@ const init = require("./router/init");
 // const sortMiddleware = require("./middleware/sort");
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT ?? "5050";
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -21,6 +21,9 @@ app.use(fileupload());
 
 init(app);
 
+// app.listen(port, () => {
+//   console.log(`Server is running on port: ${port}`);
+// });
 mongoose
   .connect(process.env.DATABASE_URL)
   .then(() => {

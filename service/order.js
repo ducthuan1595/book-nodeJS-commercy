@@ -4,6 +4,7 @@ const User = require("../model/user");
 const Voucher = require("../model/voucher");
 const FlashSale = require("../model/flashsale");
 const pageSection = require("../suports/pageSection");
+const sendMail = require("../config/nodemailer");
 
 exports.createOrder = (value, req) => {
   return new Promise(async (resolve, reject) => {
@@ -70,6 +71,7 @@ exports.createOrder = (value, req) => {
                 await flashSale.save();
               }
               // }
+            } else {
               // update Item
               const newQuantity = item.count - quantity;
               item.count = newQuantity;
@@ -105,6 +107,20 @@ exports.createOrder = (value, req) => {
           });
           if (order) {
             const updateOrder = await order.save();
+            const arrItemId = updateOrder.items.map((i) => i.itemId);
+            sendMail(
+              user.email,
+              user.username,
+              null,
+              arrItemId,
+              null,
+              updateOrder.createdAt,
+              null,
+              null,
+              true,
+              newQuantity,
+              amount
+            );
             resolve({
               status: 200,
               message: "ok",
@@ -137,10 +153,10 @@ exports.getOrder = (page, limit, type, column, req) => {
     try {
       const user = await User.findById(req.user._id);
       if (user && user.role === "F2") {
-        const orders = await Order.find({ userId: user._id })
-          .populate("userId", "-password")
+        const orders = await Order.find({ userId: req.user._id })
+          .populate("userId")
           .populate("items.itemId")
-          .sort([[column, type]]);
+          .sort({ createdAt: -1 });
         if (orders.length) {
           const data = pageSection(page, limit, orders);
 

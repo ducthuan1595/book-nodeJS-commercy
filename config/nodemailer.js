@@ -42,6 +42,63 @@ const HTMLContent = (name, token, isPw) => {
   }
 };
 
+const HTMLOrder = (items, start, name, quantity, amount) => `<html>
+<head>
+<style>
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.bold {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 10px 0;
+}
+.info {
+  margin: 5px 0;
+}
+</style>
+</head>
+<body>
+  <h2>Hi, ${name}</h2>
+  <div>You ordered at our shop at ${new Date(start)}</div>
+  <div>Sum number: ${quantity}</div>
+  <div>Amount: ${amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ</div>
+<div>Detail info</div>
+  <table>
+  <tr>
+    <th>Product's Name</th>
+    <th>Image</th>
+    <th>Price</th>
+  </tr>
+    ${items
+      .map((p) => {
+        const item = p;
+        const originPrice = item?.priceInput
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return `
+        <tr>
+          <td>${item.name}</td>
+          <td><img style="height:100px;" src='cid:${item.pic[0]}' alt=${item.name} /></td>
+          <td>${originPrice}đ</td>
+        </tr>
+      `;
+      })
+      .join("")}
+</table>
+
+  <div>Thanks, We are very happy when to service you!</div>
+</body>
+</html>`;
+
 const HTMLSale = (items, name, start, end, percent) => `<html>
 <head>
 <style>
@@ -80,7 +137,7 @@ table {
   </tr>
     ${items
       .map((p) => {
-        const item = p._doc;
+        const item = p;
         const originPrice = item?.priceInput
           .toString()
           .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -91,8 +148,8 @@ table {
         <tr>
           <td>${item.name}</td>
           <td><img style="height:100px;" src='cid:${item.pic[0]}' alt=${item.name} /></td>
-          <td>${originPrice}$</td>
-          <td>${salePrice}$</td>
+          <td>${originPrice}đ</td>
+          <td>${salePrice}đ</td>
         </tr>
       `;
       })
@@ -103,6 +160,29 @@ table {
 </body>
 </html>`;
 
+const handleShowHTML = (
+  arrItemId,
+  name,
+  token,
+  items,
+  start,
+  end,
+  percent,
+  isPw,
+  isOrder,
+  quantity,
+  amount
+) => {
+  console.log(isOrder, arrItemId);
+  if (arrItemId && !isOrder) {
+    return HTMLSale(items, name, start, end, percent); // html body
+  } else if (isOrder && !isPw) {
+    return HTMLOrder(items, start, name, quantity, amount);
+  } else {
+    return HTMLContent(name, token, isPw);
+  }
+};
+
 // async..await is not allowed in global scope, must use a wrapper
 const sendMailer = async (
   email,
@@ -112,7 +192,10 @@ const sendMailer = async (
   start,
   end,
   percent,
-  isPw
+  isPw,
+  isOrder,
+  quantity,
+  amount
 ) => {
   try {
     // sale
@@ -122,9 +205,19 @@ const sendMailer = async (
       to: email, // list of receivers
       subject: !arrItemId ? "Confirm email ✔" : "Flash sale", // Subject line
       text: "Hello" + name, // plain text body
-      html: !arrItemId
-        ? HTMLContent(name, token, isPw)
-        : HTMLSale(items, name, start, end, percent), // html body
+      html: handleShowHTML(
+        arrItemId,
+        name,
+        token,
+        items,
+        start,
+        end,
+        percent,
+        isPw,
+        isOrder,
+        quantity,
+        amount
+      ),
     });
     await transporter.sendMail(options);
   } catch (err) {

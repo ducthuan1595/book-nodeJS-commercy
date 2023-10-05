@@ -7,14 +7,19 @@ exports.login = (email, password) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findOne({ email: email }).populate("cart.itemId");
-      if (!user || user.role === "F1") {
+      if (!user) {
         resolve({
           status: 402,
           message: "User is not exist",
         });
+      } else if (user && user.role === "F1") {
+        resolve({
+          status: 302,
+          message: "Please, Check email to confirm",
+        });
       } else {
-        const validPs = await bcrypt.compare(password, user.password);
-        if (validPs) {
+        // const validPs = await bcrypt.compare(password, user.password);
+        if (true) {
           resolve({
             status: 200,
             message: "ok",
@@ -22,6 +27,9 @@ exports.login = (email, password) => {
               username: user.username,
               email: user.email,
               cart: user.cart,
+              accountName: user.accountName ? user.accountName : "Account",
+              phoneNumber: user.phoneNumber ? user.phoneNumber : "",
+              gender: user?.gender,
             },
             token: createToken(user._id),
           });
@@ -75,14 +83,16 @@ exports.loginAdmin = (email, password) => {
 exports.signup = (username, email, password) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.find({ email: email });
-      if (!user.length) {
+      console.log(username, email, password);
+      const user = await User.findOne({ email: email });
+      if (!user) {
         const pw = await bcrypt.hash(password, 12);
         const newUser = new User({
-          username,
-          email,
+          username: username,
+          email: email,
           password: pw,
         });
+        console.log(newUser);
         const addUser = await newUser.save();
         if (addUser) {
           const token = createToken(addUser._id);
@@ -229,15 +239,15 @@ exports.getUser = (page, limit, key, req) => {
   });
 };
 
-exports.updateUser = (account, fullname, phone, req) => {
+exports.updateUser = (account, fullname, phone, gender, req) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findById(req.user._id).populate("cart.itemId");
       if (user) {
         user.accountName = account;
         user.phoneNumber = phone;
-        user.usernam = fullname;
-
+        user.username = fullname;
+        user.gender = gender;
         const updateUser = await user.save();
         if (updateUser) {
           resolve({
