@@ -18,8 +18,8 @@ exports.login = (email, password) => {
           message: "Please, Check email to confirm",
         });
       } else {
-        // const validPs = await bcrypt.compare(password, user.password);
-        if (true) {
+        const validPs = await bcrypt.compare(password, user.password);
+        if (validPs) {
           resolve({
             status: 200,
             message: "ok",
