@@ -24,7 +24,9 @@ exports.deleteFile = (images) => {
 exports.sendImage = (req, res) => {
   const imageUrl = req.params.imageUrl;
   // const p1 = path.join(__dirname, "..", "data", "images", imageUrl);
-  const uploadPath = path.join(__dirname, "..", p, imageUrl);
+  // const uploadPath = path.join(__dirname, "..", p, imageUrl);
+  const uploadPath = path.join("/tmp", imageUrl);
+  console.log(uploadPath);
   res.set("Content-Type", "image/png");
   res.sendFile(uploadPath);
 };
