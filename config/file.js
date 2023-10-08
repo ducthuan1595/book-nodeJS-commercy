@@ -9,7 +9,7 @@ const p = path.join(process.env.FOLDER_IMAGE);
 exports.deleteFile = (images) => {
   images.forEach((image) => {
     // const pathname = path.join(process.cwd(), "data", "images", image);
-    const pathname = path.join(process.cwd(), `${p}\\${image}`);
+    const pathname = path.join(process.cwd(), `${p}/${image}`);
     fs.unlink(pathname, (err) => {
       if (err) {
         console.error(err);
@@ -35,7 +35,7 @@ exports.handleSave = async (images) => {
     images.forEach((img) => {
       const pathname = Date.now() + img.name;
       imageName.push("image" + pathname);
-      const uploadPath = `${p}\\image${pathname}`;
+      const uploadPath = path.join(`${p}/image${pathname}`);
       img.mv(uploadPath, (err) => {
         if (err) {
           console.log("Error upload image");
@@ -49,7 +49,7 @@ exports.handleSave = async (images) => {
     const imageName = [];
     const pathname = Date.now() + images.name;
     imageName.push("image" + pathname);
-    const uploadPath = `${p}\\image${pathname}`;
+    const uploadPath = path.join(`${p}/image${pathname}`);
     img.mv(uploadPath, (err) => {
       if (err) {
         console.log("Error upload image");
