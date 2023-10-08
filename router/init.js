@@ -10,6 +10,7 @@ const orderController = require("../controller/order");
 const voucherController = require("../controller/voucher");
 const flashsaleController = require("../controller/flashsale");
 const helpFile = require("../config/file");
+const handlerFile = require("../suports/handleFile");
 
 const router = express.Router();
 
@@ -107,6 +108,7 @@ const init = (app) => {
   router.get("/api/get-user", authMiddleware.protect, authController.getUser);
 
   router.get("/api/image/:imageUrl", helpFile.sendImage);
+  // router.get("/api/image/:imageUrl", handlerFile.sendImage);
 
   return app.use("/", router);
 };

@@ -6,6 +6,7 @@ const handleFile = require("../config/file");
 const pageSection = require("../suports/pageSection");
 
 const p = path.join("data", "images", "image");
+console.log("category", p);
 
 exports.getAllCategory = (page, limit, categoryId, type, column) => {
   return new Promise(async (resolve, reject) => {
@@ -70,18 +71,7 @@ exports.createCategory = (input, req) => {
     try {
       const user = await User.findById(req.user._id);
       if (user && user.role === "F3") {
-        let imageName = [];
-        input.images.forEach((img) => {
-          let pathname = Date.now() + img.name;
-          imageName.push("image" + pathname);
-          img.mv(p + pathname, (err) => {
-            if (err) {
-              console.log("Error upload image");
-            } else {
-              console.log("Upload image successfully");
-            }
-          });
-        });
+        let imageName = await handleFile.handleSave(input.images);
         const category = new Category({
           name: input.name,
           banner: imageName,
@@ -113,19 +103,9 @@ exports.updateCategory = (input, req) => {
       const user = await User.findById(req.user._id);
       if (user && user.role === "F3") {
         const category = await Category.findById(input.categoryId);
-        let imageName = [];
+        let imageName;
         if (input.images[0] !== undefined) {
-          input.images.forEach((img) => {
-            let pathname = Date.now() + img.name;
-            imageName.push("image" + pathname);
-            img.mv(p + pathname, (err) => {
-              if (err) {
-                console.log("Error upload image");
-              } else {
-                console.log("Upload image successfully");
-              }
-            });
-          });
+          imageName = await handleFile.handleSave(input.images);
         }
         if (category) {
           category.name = input.name;

@@ -17,16 +17,7 @@ exports.createVoucher = (expiration, quantity, discount, image, name, req) => {
           count: 1,
           prefix: name + "-",
         });
-        let imageName;
-        let pathname = Date.now() + image.name;
-        imageName = "image" + pathname;
-        image.mv(p + pathname, (err) => {
-          if (err) {
-            console.log("Error upload image");
-          } else {
-            console.log("Upload image successfully");
-          }
-        });
+        let imageName = await handleFile.handleSave(image);
         // console.log(new Date().toLocaleString("vi-VI"));
         const newVoucher = new Voucher({
           code: code[0],

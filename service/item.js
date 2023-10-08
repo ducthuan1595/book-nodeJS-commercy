@@ -5,36 +5,20 @@ const FlashSale = require("../model/flashsale");
 const path = require("path");
 const handleFile = require("../config/file");
 const pageSection = require("../suports/pageSection");
-
-const p = path.join("data", "images", "image");
+// const handlerFile = require("../suports/handleFile");
 
 exports.createItem = (value, req) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findById(req.user._id);
       if (user && user.role === "F3") {
-        const handleImage = (images) => {
-          const imageName = [];
-          images.forEach((img) => {
-            const pathname = Date.now() + img.name;
-            imageName.push("image" + pathname);
-            img.mv(p + pathname, (err) => {
-              if (err) {
-                console.log("Error upload image");
-              } else {
-                console.log("Upload image successfully");
-              }
-            });
-          });
-          return imageName;
-        };
         let pic;
         if (value.imageArr && value.imageArr[0]) {
-          pic = handleImage(value.imageArr);
+          pic = await handleFile.handleSave(value.imageArr);
         }
         let detailPic;
         if (value.detailPicArr[0]) {
-          detailPic = handleImage(value.detailPicArr);
+          detailPic = await handleFile.handleSave(value.detailPicArr);
         }
         const item = new Item({
           name: value.name,
@@ -77,31 +61,15 @@ exports.updateItem = (value, req) => {
       if (user && user.role === "F3") {
         const product = await Item.findById(value.itemId);
         if (product) {
-          const handleImage = (images) => {
-            const imageName = [];
-            images.forEach((img) => {
-              const pathname = Date.now() + img.name;
-              imageName.push("image" + pathname);
-              img.mv(p + pathname, (err) => {
-                if (err) {
-                  console.error(err);
-                  console.log("Error upload image");
-                } else {
-                  console.log("Upload image successfully");
-                }
-              });
-            });
-            return imageName;
-          };
           if (value.imageArr && value.imageArr[0]) {
-            const pic = handleImage(value.imageArr);
+            const pic = await handleFile.handleSave(value.imageArr);
             if (product.pic.length) {
               handleFile.deleteFile(product.pic);
             }
             product.pic = pic;
           }
           if (value.detailPicArr[0]) {
-            const detailPic = handleImage(value.detailPicArr);
+            const detailPic = handleFile.handleSave(value.imageArr);
             if (product.detailPic.length) {
               handleFile.deleteFile(product.detailPic);
             }
@@ -148,8 +116,12 @@ exports.deleteItem = (itemId, req) => {
         if (!orders.length) {
           const item = await Item.findByIdAndDelete(itemId);
           if (item) {
-            handleFile.deleteFile(item.pic);
-            handleFile.deleteFile(item.detailPic);
+            if (item.pic.length) {
+              handleFile.deleteFile(item.pic);
+            }
+            if (item.detailPic.length) {
+              handleFile.deleteFile(item.detailPic);
+            }
             resolve({
               status: 200,
               message: "ok",
