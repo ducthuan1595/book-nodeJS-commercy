@@ -7,6 +7,7 @@ exports.deleteFile = (images) => {
     const p = path.join(process.cwd(), "data", "images", image);
     fs.unlink(p, (err) => {
       if (err) {
+        console.error(err);
         console.log("Delete failure");
       } else {
         console.log("Delete success");

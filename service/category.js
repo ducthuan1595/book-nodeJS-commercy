@@ -115,7 +115,6 @@ exports.updateCategory = (input, req) => {
         const category = await Category.findById(input.categoryId);
         let imageName = [];
         if (input.images[0] !== undefined) {
-          console.log("hello");
           input.images.forEach((img) => {
             let pathname = Date.now() + img.name;
             imageName.push("image" + pathname);

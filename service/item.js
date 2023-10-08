@@ -84,6 +84,7 @@ exports.updateItem = (value, req) => {
               imageName.push("image" + pathname);
               img.mv(p + pathname, (err) => {
                 if (err) {
+                  console.error(err);
                   console.log("Error upload image");
                 } else {
                   console.log("Upload image successfully");
