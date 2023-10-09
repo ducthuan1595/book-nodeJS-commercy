@@ -5,6 +5,8 @@ const FlashSale = require("../model/flashsale");
 const path = require("path");
 const handleFile = require("../config/file");
 const pageSection = require("../suports/pageSection");
+const { destroyCloudinary } = require("../util/cloudinary");
+
 // const handlerFile = require("../suports/handleFile");
 
 exports.createItem = (value, req) => {
@@ -53,6 +55,9 @@ exports.updateItem = (value, req) => {
       if (user && user.role === "F3") {
         const product = await Item.findById(value.itemId);
         if (product) {
+          for (let i = 0; i < product.pic.length; i++) {
+            await destroyCloudinary(product.pic[i].public_id);
+          }
           product.pic = value.pic;
           product.detailPic = value.detailPic;
           product.name = value.name;
@@ -96,6 +101,9 @@ exports.deleteItem = (itemId, req) => {
         if (!orders.length) {
           const item = await Item.findByIdAndDelete(itemId);
           if (item) {
+            for (let i = 0; i < item.pic.length; i++) {
+              await destroyCloudinary(item.pic[i].public_id);
+            }
             resolve({
               status: 200,
               message: "ok",

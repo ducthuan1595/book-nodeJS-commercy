@@ -4,6 +4,7 @@ const User = require("../model/user");
 const path = require("path");
 const handleFile = require("../config/file");
 const pageSection = require("../suports/pageSection");
+const { destroyCloudinary } = require("../util/cloudinary");
 
 const p = path.join("data", "images", "image");
 // console.log("category", p);
@@ -102,7 +103,7 @@ exports.updateCategory = (input, req) => {
       const user = await User.findById(req.user._id);
       if (user && user.role === "F3") {
         const category = await Category.findById(input.categoryId);
-
+        await destroyCloudinary(category.banner.public_id);
         if (category) {
           category.name = input.name;
           category.description = input?.description;
@@ -147,7 +148,7 @@ exports.deleteCategory = (categoryId, req) => {
           });
         } else {
           const category = await Category.findByIdAndDelete(categoryId);
-
+          await destroyCloudinary(category.banner.public_id);
           if (category) {
             resolve({
               status: 200,

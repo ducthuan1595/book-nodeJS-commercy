@@ -21,7 +21,6 @@ exports.getAllCategory = async (req, res) => {
 };
 
 exports.createCategory = async (req, res) => {
-  console.log(req.body);
   const { name } = req.body;
   const description = req.body?.description;
   const banner = req.body.banner;
