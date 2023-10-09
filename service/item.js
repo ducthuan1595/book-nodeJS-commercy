@@ -12,14 +12,6 @@ exports.createItem = (value, req) => {
     try {
       const user = await User.findById(req.user._id);
       if (user && user.role === "F3") {
-        let pic;
-        if (value.imageArr && value.imageArr[0]) {
-          pic = await handleFile.handleSave(value.imageArr);
-        }
-        let detailPic;
-        if (value.detailPicArr[0]) {
-          detailPic = await handleFile.handleSave(value.detailPicArr);
-        }
         const item = new Item({
           name: value.name,
           priceInput: value.priceInput,
@@ -30,8 +22,8 @@ exports.createItem = (value, req) => {
           description: value.description,
           barcode: value.barcode,
           count: value.count,
-          pic: pic,
-          detailPic: detailPic,
+          pic: value.pic,
+          detailPic: value.detailPic,
           weight: value.weight,
         });
         const newItem = await item.save();
@@ -61,20 +53,8 @@ exports.updateItem = (value, req) => {
       if (user && user.role === "F3") {
         const product = await Item.findById(value.itemId);
         if (product) {
-          if (value.imageArr && value.imageArr[0]) {
-            const pic = await handleFile.handleSave(value.imageArr);
-            if (product.pic.length) {
-              handleFile.deleteFile(product.pic);
-            }
-            product.pic = pic;
-          }
-          if (value.detailPicArr[0]) {
-            const detailPic = handleFile.handleSave(value.imageArr);
-            if (product.detailPic.length) {
-              handleFile.deleteFile(product.detailPic);
-            }
-            product.detailPic = detailPic;
-          }
+          product.pic = value.pic;
+          product.detailPic = value.detailPic;
           product.name = value.name;
           product.priceInput = value.priceInput;
           product.pricePay = value.priceInput;
@@ -116,12 +96,6 @@ exports.deleteItem = (itemId, req) => {
         if (!orders.length) {
           const item = await Item.findByIdAndDelete(itemId);
           if (item) {
-            if (item.pic.length) {
-              handleFile.deleteFile(item.pic);
-            }
-            if (item.detailPic.length) {
-              handleFile.deleteFile(item.detailPic);
-            }
             resolve({
               status: 200,
               message: "ok",

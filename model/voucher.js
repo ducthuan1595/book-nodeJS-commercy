@@ -20,8 +20,13 @@ const schema = new mongoose.Schema(
       required: true,
     },
     pic: {
-      type: Object,
-      required: true,
+      url: {
+        type: String,
+        required: true,
+      },
+      public_id: {
+        type: String,
+      },
     },
   },
   { timestamps: true }

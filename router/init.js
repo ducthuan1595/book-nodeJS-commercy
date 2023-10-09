@@ -107,7 +107,7 @@ const init = (app) => {
   );
   router.get("/api/get-user", authMiddleware.protect, authController.getUser);
 
-  router.get("/api/image/:imageUrl", helpFile.sendImage);
+  // router.get("/api/image/:imageUrl", helpFile.sendImage);
   // router.get("/api/image/:imageUrl", handlerFile.sendImage);
 
   return app.use("/", router);

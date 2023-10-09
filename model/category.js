@@ -7,8 +7,13 @@ const schema = new mongoose.Schema(
       required: true,
     },
     banner: {
-      type: Object,
-      required: true,
+      url: {
+        type: String,
+        required: true,
+      },
+      public_id: {
+        type: String,
+      },
     },
     description: {
       type: String,

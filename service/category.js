@@ -6,7 +6,7 @@ const handleFile = require("../config/file");
 const pageSection = require("../suports/pageSection");
 
 const p = path.join("data", "images", "image");
-console.log("category", p);
+// console.log("category", p);
 
 exports.getAllCategory = (page, limit, categoryId, type, column) => {
   return new Promise(async (resolve, reject) => {
@@ -71,10 +71,9 @@ exports.createCategory = (input, req) => {
     try {
       const user = await User.findById(req.user._id);
       if (user && user.role === "F3") {
-        let imageName = await handleFile.handleSave(input.images);
         const category = new Category({
           name: input.name,
-          banner: imageName,
+          banner: input.banner,
           description: input?.description,
           position: Number(input.position),
           active: input.isActive,
@@ -103,21 +102,13 @@ exports.updateCategory = (input, req) => {
       const user = await User.findById(req.user._id);
       if (user && user.role === "F3") {
         const category = await Category.findById(input.categoryId);
-        let imageName;
-        if (input.images[0] !== undefined) {
-          imageName = await handleFile.handleSave(input.images);
-        }
+
         if (category) {
           category.name = input.name;
           category.description = input?.description;
           category.position = input.position;
           category.active = input.isActive;
-          if (imageName.length) {
-            if (category.banner.length) {
-              handleFile.deleteFile(category.banner);
-            }
-            category.banner = imageName;
-          }
+          category.banner = input.banner;
           const newCategory = await category.save();
           resolve({
             status: 200,
@@ -156,9 +147,7 @@ exports.deleteCategory = (categoryId, req) => {
           });
         } else {
           const category = await Category.findByIdAndDelete(categoryId);
-          if (category.banner.length) {
-            handleFile.deleteFile(category.banner);
-          }
+
           if (category) {
             resolve({
               status: 200,

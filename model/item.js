@@ -12,11 +12,26 @@ const schema = new mongoose.Schema(
     },
     pic: [
       {
-        type: Object,
-        required: true,
+        url: {
+          type: String,
+          required: true,
+        },
+        public_id: {
+          type: String,
+        },
       },
     ],
-    detailPic: [{ type: Object, required: false }],
+    detailPic: [
+      {
+        url: {
+          type: String,
+          required: true,
+        },
+        public_id: {
+          type: String,
+        },
+      },
+    ],
     priceInput: {
       type: Number,
       required: true,

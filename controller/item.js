@@ -4,7 +4,6 @@ exports.createItem = async (req, res) => {
   const {
     name,
     priceInput,
-    pricePay,
     slogan,
     description,
     barcode,
@@ -12,20 +11,10 @@ exports.createItem = async (req, res) => {
     categoryId,
     weight,
     author,
+    pic,
+    detailPic,
   } = req.body;
-  const images = req.files.pic;
-  const detailPic = req.files?.detailPic;
-  const handleImg = (images) => {
-    let arrImg = [];
-    if (Array.isArray(images)) {
-      arrImg = images;
-    } else {
-      arrImg.push(images);
-    }
-    return arrImg;
-  };
-  const imageArr = handleImg(images);
-  const detailPicArr = handleImg(detailPic);
+
   if (
     !name ||
     !priceInput ||
@@ -33,7 +22,7 @@ exports.createItem = async (req, res) => {
     !barcode ||
     !count ||
     !categoryId ||
-    !imageArr.length ||
+    !pic ||
     !weight ||
     !author
   ) {
@@ -48,8 +37,8 @@ exports.createItem = async (req, res) => {
         barcode,
         count,
         categoryId,
-        imageArr,
-        detailPicArr,
+        pic,
+        detailPic,
         weight,
         author,
       },
@@ -73,20 +62,9 @@ exports.updateItem = async (req, res) => {
     itemId,
     author,
     weight,
+    pic,
+    detailPic,
   } = req.body;
-  const images = req.files?.pic;
-  const detailPic = req.files?.detailPic;
-  const handleImg = (images) => {
-    let arrImg = [];
-    if (Array.isArray(images)) {
-      arrImg = images;
-    } else {
-      arrImg.push(images);
-    }
-    return arrImg;
-  };
-  const imageArr = handleImg(images);
-  const detailPicArr = handleImg(detailPic);
 
   if (
     !name ||
@@ -96,7 +74,7 @@ exports.updateItem = async (req, res) => {
     !count ||
     !categoryId ||
     !itemId ||
-    !imageArr.length ||
+    !pic ||
     !weight ||
     !author
   ) {
@@ -111,8 +89,8 @@ exports.updateItem = async (req, res) => {
         barcode,
         count,
         categoryId,
-        imageArr,
-        detailPicArr,
+        pic,
+        detailPic,
         itemId,
         weight,
         author,

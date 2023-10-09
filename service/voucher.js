@@ -7,7 +7,7 @@ const pageSection = require("../suports/pageSection");
 
 const p = path.join("data", "images", "image");
 
-exports.createVoucher = (expiration, quantity, discount, image, name, req) => {
+exports.createVoucher = (expiration, quantity, discount, pic, name, req) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findById(req.user._id);
@@ -17,14 +17,14 @@ exports.createVoucher = (expiration, quantity, discount, image, name, req) => {
           count: 1,
           prefix: name + "-",
         });
-        let imageName = await handleFile.handleSave(image);
+        // let imageName = await handleFile.handleSave(image);
         // console.log(new Date().toLocaleString("vi-VI"));
         const newVoucher = new Voucher({
           code: code[0],
-          expirationDate: +expiration,
+          expirationDate: new Date(expiration).getTime(),
           discount: +discount,
           quantity: +quantity,
-          pic: imageName,
+          pic: pic,
         });
         const addVoucher = await newVoucher.save();
         resolve({

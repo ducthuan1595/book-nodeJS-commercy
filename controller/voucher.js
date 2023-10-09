@@ -1,12 +1,11 @@
 const voucherService = require("../service/voucher");
 
 exports.createVoucher = async (req, res) => {
-  const { expiration, quantity, discount, code } = req.body;
-  const pic = req.files.pic;
-  if (!expiration || !quantity || !discount || !pic || !code)
+  const { expirationDate, quantity, discount, code, pic } = req.body;
+  if (!expirationDate || !quantity || !discount || !pic || !code)
     return res.status(404).json({ message: "Input invalid" });
   const data = await voucherService.createVoucher(
-    expiration,
+    expirationDate,
     quantity,
     discount,
     pic,

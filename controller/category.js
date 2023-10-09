@@ -21,11 +21,12 @@ exports.getAllCategory = async (req, res) => {
 };
 
 exports.createCategory = async (req, res) => {
+  console.log(req.body);
   const { name } = req.body;
   const description = req.body?.description;
-  const banner = req.files.banner;
+  const banner = req.body.banner;
   const position = req.body.position;
-  const active = req.body.active;
+  const active = req.body.isActive;
   let isActive;
   if (active) {
     if (active === "1") {
@@ -34,19 +35,13 @@ exports.createCategory = async (req, res) => {
       isActive = false;
     }
   }
-  let images = [];
-  if (Array.isArray(banner)) {
-    images = banner;
-  } else {
-    images.push(banner);
-  }
-  if (!name || !position || !images.length) {
+  if (!name || !position || isActive || !description || !banner) {
     res.status(404).json({ message: "Category is invalid!" });
   } else {
     const data = await categoryService.createCategory(
       {
         name,
-        images,
+        banner,
         description,
         position,
         isActive,
@@ -62,10 +57,9 @@ exports.createCategory = async (req, res) => {
 };
 
 exports.updateCategory = async (req, res) => {
-  const { name, categoryId } = req.body;
+  const { name, categoryId, banner } = req.body;
   const description = req.body?.description;
   const position = req.body.position;
-  const banner = req.files?.banner;
   const active = req.body.isActive;
   let isActive;
   if (active) {
@@ -75,19 +69,13 @@ exports.updateCategory = async (req, res) => {
       isActive = false;
     }
   }
-  let images = [];
-  if (Array.isArray(banner)) {
-    images = banner;
-  } else {
-    images.push(banner);
-  }
-  if (!name || !position || !categoryId) {
+  if (!name || !position || !categoryId || !banner || !description) {
     res.status(404).json({ message: "Category is invalid!" });
   } else {
     const data = await categoryService.updateCategory(
       {
         name,
-        images,
+        banner,
         categoryId,
         description,
         position,
