@@ -3,7 +3,7 @@ const flashsaleService = require("../service/flashsale");
 module.exports = cronJobs = async (req, res) => {
   const { name, startDate, endDate, discountPercent, arrItem } = req.body;
   if (!name || !startDate || !endDate || !discountPercent || !arrItem.length) {
-    return res.status(404).json({ message: "Input invalid!" });
+    return res.status(400).json({ message: "Input invalid!" });
   }
   const start = new Date(startDate).getTime();
   const end = new Date(endDate).getTime();
