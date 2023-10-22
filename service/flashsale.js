@@ -64,11 +64,11 @@ exports.getFlashSale = (page, limit, req) => {
             message: "ok",
             data: {
               currPage: +page,
-              nextPage: +page * +limit < flashSales.length,
+              nextPage: +page * +limit < flashSaleActive.length,
               prevPage: 0 < +page - 1,
               flashSales: data.result,
               totalPage: data.totalPage,
-              totalFlashSale: flashSales.length,
+              totalFlashSale: flashSaleActive.length,
               flashSaleActive,
             },
           });

@@ -47,7 +47,8 @@ exports.createVoucher = (expiration, quantity, discount, pic, name, req) => {
 exports.getVoucher = (page, limit) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const vouchers = await Voucher.find();
+      let vouchers = await Voucher.find();
+      vouchers.filter((v) => v.expirationDate > Date.now());
       // page section
       if (page && limit) {
         const data = pageSection(page, limit, vouchers);
