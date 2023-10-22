@@ -12,14 +12,14 @@ const handleItem = async (arr, id, discountPercent, saleId) => {
     item.priceInput - (item.priceInput * discountPercent) / 100
   );
   item.flashSaleId = saleId;
-  // console.log({ item });
+  console.log({ item });
   await item.save();
 };
 const scheduleSale = (start, end, percent, saleId, value, arrItemId) => {
   const before15 = 15 * 60 * 1000;
 
   const time = start - before15 > Date.now() ? start - before15 : start;
-  const day = new Date(time);
+  const day = new Date();
   const getSecond = day.getSeconds();
   const getMinute = day.getMinutes();
   const getHour = day.getHours();
@@ -40,7 +40,8 @@ const scheduleSale = (start, end, percent, saleId, value, arrItemId) => {
         handleItem(items, item.itemId, +value.discountPercent, saleId);
       }
 
-      if (users) {
+      if (users.length) {
+        // console.log({ users });
         sendMailer(
           emails,
           "you",

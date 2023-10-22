@@ -1,6 +1,7 @@
 const express = require("express");
 
 const authMiddleware = require("../middleware/auth");
+const cronJobs = require("../suports/serverless");
 
 const authController = require("../controller/auth");
 const categoryController = require("../controller/category");
@@ -92,6 +93,7 @@ const init = (app) => {
   router.post(
     "/api/create-voucher",
     authMiddleware.protect,
+    cronJobs,
     voucherController.createVoucher
   );
   router.get("/api/get-voucher", voucherController.getVoucher);
