@@ -173,7 +173,6 @@ const handleShowHTML = (
   quantity,
   amount
 ) => {
-  console.log(isOrder, arrItemId);
   if (arrItemId && !isOrder) {
     return HTMLSale(items, name, start, end, percent); // html body
   } else if (isOrder && !isPw) {
