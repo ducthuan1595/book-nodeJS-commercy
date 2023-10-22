@@ -151,11 +151,7 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
                 data.result[i].flashSaleId
               );
 
-              if (
-                flashSale &&
-                flashSale.end_date &&
-                flashSale.end_date < Date.now()
-              ) {
+              if (!flashSale || flashSale.end_date < Date.now()) {
                 data.result[i].pricePay = data.result[i].priceInput;
                 data.result[i].flashSaleId = null;
                 await data.result[i].save();
@@ -180,7 +176,7 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
           .populate("categoryId")
           .populate("flashSaleId");
         const flashSale = await FlashSale.findById(item.flashSaleId);
-        if (flashSale && flashSale.end_date < Date.now()) {
+        if (!flashSale || flashSale.end_date < Date.now()) {
           item.pricePay = item.priceInput;
           item.flashSaleId = null;
           await item.save();
@@ -243,13 +239,11 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
           })
         : search;
 
-      // console.log("sort", sort);
-
       if (sort) {
         for (let i = 0; i < sort.length; i++) {
           if (sort[i].flashSaleId) {
             const flashSale = await FlashSale.findById(sort[i].flashSaleId);
-            if (flashSale && flashSale.end_date < Date.now()) {
+            if (!flashSale || flashSale.end_date < Date.now()) {
               sort[i].pricePay = sort[i].priceInput;
               sort[i].flashSaleId = null;
               await sort[i].save();
