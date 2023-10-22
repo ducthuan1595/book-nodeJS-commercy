@@ -93,14 +93,14 @@ const init = (app) => {
   router.post(
     "/api/create-voucher",
     authMiddleware.protect,
-    cronJobs,
     voucherController.createVoucher
   );
   router.get("/api/get-voucher", voucherController.getVoucher);
   router.post(
     "/api/create-flashsale",
     authMiddleware.protect,
-    flashsaleController.createFlashsale
+    cronJobs
+    // flashsaleController.createFlashsale
   );
   router.get(
     "/api/get-flashsale",
