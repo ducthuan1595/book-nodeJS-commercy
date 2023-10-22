@@ -11,7 +11,6 @@
 
 # Link deployment
 
-- server: `https://ecomerce-book-server.vercel.app`
 - client: `https://vmo-react-js-commercy.vercel.app`
 - admin: `https://ecommercy-book-admin.vercel.app`
 
