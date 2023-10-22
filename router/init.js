@@ -100,7 +100,7 @@ const init = (app) => {
     "/api/create-flashsale",
     authMiddleware.protect,
     cronJobs
-    // flashsaleController.createFlashsale
+    //flashsaleController.createFlashsale
   );
   router.get(
     "/api/get-flashsale",
