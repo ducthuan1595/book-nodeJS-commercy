@@ -1,7 +1,7 @@
 const express = require("express");
 
 const authMiddleware = require("../middleware/auth");
-const cronJobs = require("../suports/serverless");
+const cronJobs = require("../serverless/cron");
 
 const authController = require("../controller/auth");
 const categoryController = require("../controller/category");
