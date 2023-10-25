@@ -149,12 +149,11 @@ exports.getAllItemFlashSale = async (req, res) => {
 };
 
 exports.getItemFollowPrice = async (req, res) => {
-  // console.log(req.query);
-  const { low, hight } = req.query;
-  if (!low || !hight) {
+  const { low, hight, name } = req.query;
+  if (!low || !hight || !name) {
     res.status(404).json({ message: "Input invalid" });
   }
-  const data = await itemService.getItemFollowPrice(low, hight);
+  const data = await itemService.getItemFollowPrice(low, hight, name);
   if (data) {
     res.status(data.status).json({ message: data.message, data: data?.data });
   }

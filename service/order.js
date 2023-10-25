@@ -42,7 +42,7 @@ exports.createOrder = (value, req) => {
           // let flashSale;
           const updateCount = async (arr, id, quantity) => {
             const item = arr.find((v) => v._id.toString() === id.toString());
-            if (item && item.flashSaleId) {
+            if (item.flashSaleId) {
               const flashSale = await FlashSale.findById(item.flashSaleId);
               // update flashsale
               if (flashSale) {
@@ -72,11 +72,12 @@ exports.createOrder = (value, req) => {
               }
               // }
             } else {
-              // update Item
-              const newQuantity = item.count - quantity;
-              item.count = newQuantity;
-              await item.save();
+              amount += item.pricePay * +quantity;
             }
+            // update Item
+            const newQuantity = item.count - quantity;
+            item.count = newQuantity;
+            await item.save();
           };
           for (let i = 0; i < newArrOrder.length; i++) {
             await updateCount(

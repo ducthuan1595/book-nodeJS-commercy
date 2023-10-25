@@ -139,7 +139,7 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
         const items = await Item.find()
           .populate("categoryId")
           .populate("flashSaleId")
-          .sort([[column ? column : "name", type ? type : "asc"]]);
+          .sort([[column ? column : "updatedAt", type ? type : -1]]);
 
         if (items.length) {
           // page section
@@ -204,9 +204,9 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
               },
             })
             .populate("flashSaleId")
-            .sort([[column ? column : "name", type ? type : "asc"]])
+            .sort([[column ? column : "updatedAt", type ? type : -1]])
         : await Item.find().sort([
-            [column ? column : "name", type ? type : "asc"],
+            [column ? column : "updatedAt", type ? type : -1],
           ]);
 
       let filters = f
@@ -288,7 +288,6 @@ exports.getAllItemFlashSale = () => {
         .sort({ updatedAt: -1 });
       if (items) {
         let itemFlashSale = items.filter((item) => item.flashSaleId !== null);
-        console.log({ itemFlashSale });
 
         itemFlashSale = itemFlashSale.filter(
           (i) => i.flashSaleId.end_date > Date.now()
@@ -312,10 +311,19 @@ exports.getAllItemFlashSale = () => {
   });
 };
 
-exports.getItemFollowPrice = (low, hight) => {
+exports.getItemFollowPrice = (low, hight, name) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const items = await Item.find();
+      let items = await Item.find().populate({
+        path: "categoryId",
+        match: {
+          name: name,
+        },
+        sort: {
+          updatedAt: -1,
+        },
+      });
+      items = items.filter((i) => i.categoryId !== null);
       if (items) {
         const newItem = items.filter((i) => {
           if (i.pricePay >= +low && i.pricePay <= +hight) {
