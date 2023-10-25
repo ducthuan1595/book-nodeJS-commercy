@@ -19,7 +19,7 @@ const scheduleSale = (start, end, percent, saleId, value, arrItemId) => {
   const before15 = 15 * 60 * 1000;
 
   const time = start - before15 > Date.now() ? start - before15 : start;
-  const day = new Date();
+  const day = new Date(time);
   const getSecond = day.getSeconds();
   const getMinute = day.getMinutes();
   const getHour = day.getHours();

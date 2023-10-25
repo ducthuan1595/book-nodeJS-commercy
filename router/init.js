@@ -99,8 +99,8 @@ const init = (app) => {
   router.post(
     "/api/create-flashsale",
     authMiddleware.protect,
-    cronJobs
-    //flashsaleController.createFlashsale
+    // cronJobs
+    flashsaleController.createFlashsale
   );
   router.get(
     "/api/get-flashsale",
