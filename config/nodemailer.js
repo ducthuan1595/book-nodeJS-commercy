@@ -147,7 +147,7 @@ table {
         return `
         <tr>
           <td>${item.name}</td>
-          <td><img style="height:100px;" src='cid:${item.pic[0]}' alt=${item.name} /></td>
+          <td><img style="height:100px;" src='${item.pic[0].url}' alt=${item.name} /></td>
           <td>${originPrice}đ</td>
           <td>${salePrice}đ</td>
         </tr>

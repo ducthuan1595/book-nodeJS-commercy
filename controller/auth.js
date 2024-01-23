@@ -30,6 +30,7 @@ exports.loginAdmin = async (req, res) => {
 };
 
 exports.signup = async (req, res) => {
+  return res.status(201).json({code: 201});
   const { username, email, password } = req.body;
   if (!username && !email && !password) {
     res.status(404).json({ message: "Input invalid!" });

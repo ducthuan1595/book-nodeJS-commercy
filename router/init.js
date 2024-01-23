@@ -10,6 +10,7 @@ const cartController = require("../controller/cart");
 const orderController = require("../controller/order");
 const voucherController = require("../controller/voucher");
 const flashsaleController = require("../controller/flashsale");
+const reviewController = require('../controller/review');
 const helpFile = require("../config/file");
 const handlerFile = require("../suports/handleFile");
 
@@ -108,6 +109,13 @@ const init = (app) => {
     flashsaleController.getFlashSale
   );
   router.get("/api/get-user", authMiddleware.protect, authController.getUser);
+
+  // Review
+  router.post(
+    "/api/v2/review",
+    authMiddleware.protect,
+    reviewController.createReview
+  );
 
   // router.get("/api/image/:imageUrl", helpFile.sendImage);
   // router.get("/api/image/:imageUrl", handlerFile.sendImage);

@@ -43,6 +43,14 @@ const schema = new mongoose.Schema(
         },
       },
     ],
+    picture: {
+      url: {
+        type: String,
+      },
+      public_id: {
+        type: String,
+      },
+    }
   },
   { timestamps: true }
 );

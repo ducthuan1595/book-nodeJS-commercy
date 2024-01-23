@@ -70,6 +70,12 @@ const schema = new mongoose.Schema(
       ref: "Flashsale",
       default: null,
     },
+    pages: {
+      type: Number,
+    },
+    language: {
+      type: String
+    }
   },
   { timestamps: true }
 );
