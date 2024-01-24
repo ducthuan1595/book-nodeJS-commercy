@@ -117,6 +117,13 @@ const init = (app) => {
     reviewController.createReview
   );
 
+  router.get('/api/v2/review', authMiddleware.protect, reviewController.getReview);
+  router.put(
+    "/api/v2/review",
+    authMiddleware.protect,
+    reviewController.updateReview
+  );
+
   // router.get("/api/image/:imageUrl", helpFile.sendImage);
   // router.get("/api/image/:imageUrl", handlerFile.sendImage);
 

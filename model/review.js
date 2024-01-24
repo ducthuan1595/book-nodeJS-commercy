@@ -10,7 +10,7 @@ const schema = new mongoose.Schema({
     type: String,
     require: true
   },
-  item: {
+  itemId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Item',
     require: true
