@@ -9,7 +9,8 @@ exports.createItem = async (req, res) => {
     barcode,
     count,
     categoryId,
-    weight,
+    pages,
+    language,
     author,
     pic,
     detailPic,
@@ -23,7 +24,7 @@ exports.createItem = async (req, res) => {
     !count ||
     !categoryId ||
     !pic ||
-    !weight ||
+    !pages ||
     !author
   ) {
     res.status(404).json({ message: "Input invalid" });
@@ -39,8 +40,9 @@ exports.createItem = async (req, res) => {
         categoryId,
         pic,
         detailPic,
-        weight,
+        pages,
         author,
+        language
       },
       req
     );
@@ -61,7 +63,8 @@ exports.updateItem = async (req, res) => {
     categoryId,
     itemId,
     author,
-    weight,
+    pages,
+    language,
     pic,
     detailPic,
   } = req.body;
@@ -74,8 +77,7 @@ exports.updateItem = async (req, res) => {
     !count ||
     !categoryId ||
     !itemId ||
-    !pic ||
-    !weight ||
+    !pages ||
     !author
   ) {
     res.status(404).json({ message: "Input invalid" });
@@ -92,7 +94,8 @@ exports.updateItem = async (req, res) => {
         pic,
         detailPic,
         itemId,
-        weight,
+        pages,
+        language,
         author,
       },
       req

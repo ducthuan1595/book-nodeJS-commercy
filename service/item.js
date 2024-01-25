@@ -26,7 +26,8 @@ exports.createItem = (value, req) => {
           count: value.count,
           pic: value.pic,
           detailPic: value.detailPic,
-          weight: value.weight,
+          pages: value.pages,
+          language: value.language
         });
         const newItem = await item.save();
         if (newItem) {
@@ -55,10 +56,12 @@ exports.updateItem = (value, req) => {
       if (user && user.role === "F3") {
         const product = await Item.findById(value.itemId);
         if (product) {
-          for (let i = 0; i < product.pic.length; i++) {
-            await destroyCloudinary(product.pic[i].public_id);
+          if(value.pic.length) {
+            for (let i = 0; i < product.pic.length; i++) {
+              await destroyCloudinary(product.pic[i].public_id);
+            }
+            product.pic = value.pic;
           }
-          product.pic = value.pic;
           product.detailPic = value.detailPic;
           product.name = value.name;
           product.priceInput = value.priceInput;
@@ -69,7 +72,8 @@ exports.updateItem = (value, req) => {
           product.barcode = value.barcode;
           product.count = value.count;
           product.author = value.author;
-          product.weight = value.weight;
+          product.pages = value.pages;
+          product.language = value.language;
 
           const newItem = await product.save();
           if (newItem) {

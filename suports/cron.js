@@ -8,11 +8,11 @@ const handleItem = async (arr, id, discountPercent, saleId) => {
   const item = arr.find((item) => {
     return item._id.toString() === id.toString();
   });
+  console.log({item});
   item.pricePay = Math.floor(
     item.priceInput - (item.priceInput * discountPercent) / 100
   );
   item.flashSaleId = saleId;
-  console.log({ item });
   await item.save();
 };
 const scheduleSale = (start, end, percent, saleId, value, arrItemId) => {
@@ -20,7 +20,7 @@ const scheduleSale = (start, end, percent, saleId, value, arrItemId) => {
 
   const time = start - before15 > Date.now() ? start - before15 : start;
   const day = new Date(time);
-  const getSecond = day.getSeconds();
+  // const day = new Date();
   const getMinute = day.getMinutes();
   const getHour = day.getHours();
   const getDay = day.getDate();
@@ -29,7 +29,7 @@ const scheduleSale = (start, end, percent, saleId, value, arrItemId) => {
   const getWeek = daysOfWeek[day.getDay()];
   const timeString = `* ${getMinute} ${getHour} ${getDay} * *`;
   // console.log({ timeString });
-  // const timeString = `* * * * * *`;
+
 
   const cronSchedules = cron.schedule(timeString, async () => {
     const users = await User.find().select("email");

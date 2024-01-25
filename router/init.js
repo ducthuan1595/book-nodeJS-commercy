@@ -116,8 +116,11 @@ const init = (app) => {
     authMiddleware.protect,
     reviewController.createReview
   );
-
   router.get('/api/v2/review', authMiddleware.protect, reviewController.getReview);
+  router.get(
+    "/api/v2/reviews",
+    reviewController.getAllReview
+  );
   router.put(
     "/api/v2/review",
     authMiddleware.protect,

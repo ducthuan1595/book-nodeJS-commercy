@@ -1,11 +1,13 @@
 const Review = require('../model/review');
+const {destroyCloudinary} = require('../util/cloudinary');
 
-exports.createReview = async (comment, stars, itemId, req) => {
+exports.createReview = async (comment, stars, itemId, picture, req) => {
   try{
     const review = new Review({
       comment,
       stars,
       itemId,
+      picture,
       reviewer: req.user._id
     });
     const newReview = await review.save();
@@ -43,10 +45,29 @@ exports.getReview = async (itemId, req) => {
   }
 }
 
-exports.createReview = async (comment, stars, reviewId) => {
+exports.getAllReview = async () => {
+  try {
+    let reviews = await Review.find().populate('reviewer', '-password, -cart').sort({createdAt: -1});
+    return {
+      status: 201,
+      message: "ok",
+      data: reviews,
+    };
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+exports.updateReview = async (comment, stars, reviewId, picture) => {
   try {
     const review = await Review.findById(reviewId);
     if(review) {
+      if(picture.length) {
+        for (let i = 0; i < review.picture.length; i++) {
+          await destroyCloudinary(review.picture[i].public_id);
+        }
+        review.picture = picture;
+      }
       review.comment = comment;
       review.stars = stars;
     }

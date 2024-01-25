@@ -61,9 +61,9 @@ const schema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    weight: {
+    paid: {
       type: Number,
-      required: true,
+      default: 0
     },
     flashSaleId: {
       type: mongoose.Schema.Types.ObjectId,
