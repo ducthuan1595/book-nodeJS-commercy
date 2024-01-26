@@ -15,6 +15,21 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.credential = async(req, res) => {
+  try{
+    const {token, origin} = req.query;
+    if(!token || !origin) {
+      return res.status(401).json({message: 'Not found'})
+    }
+    const data = await authService.credential(token, origin);
+    if(data) {
+      return res.status(data.status).json({message: data.message, data: data.data, token: data.token})
+    }
+  }catch(err) {
+    return res.status(500).json({message: 'Error from server'})
+  }
+}
+
 exports.loginAdmin = async (req, res) => {
   const { email, password } = req.body;
   if (!email && !password) {
@@ -101,12 +116,13 @@ exports.getUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  const { accountName, fullname, phone, gender } = req.body;
+  const { accountName, fullname, phone, gender, address } = req.body;
   const data = await authService.updateUser(
     accountName,
     fullname,
     phone,
     gender,
+    address,
     req
   );
   if (data) {
@@ -115,3 +131,18 @@ exports.updateUser = async (req, res) => {
       .json({ message: data.message, data: data?.data, token: data?.token });
   }
 };
+
+exports.updateAvatar = async(req, res) => {
+  try{
+    const picture = req.body;
+    if(!picture) {
+      return res.status(400).json({message: 'Not found'})
+    }
+    const data = await authService.updateAvatar(picture, req);
+    if(data) {
+      return res.status(data.status).json({message: data.message, data: data.data, token: data.token})
+    }
+  }catch(err) {
+    return res.status(500).json({message: 'Error from server'})
+  }
+}

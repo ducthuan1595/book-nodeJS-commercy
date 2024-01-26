@@ -2,6 +2,7 @@ const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const createToken = require("../config/token");
 const sendMailer = require("../config/nodemailer");
+const { getInfoUserGoogle } = require("../suports/getInfoUserGoogle");
 
 exports.login = (email, password) => {
   return new Promise(async (resolve, reject) => {
@@ -27,8 +28,6 @@ exports.login = (email, password) => {
               username: user.username,
               email: user.email,
               cart: user.cart,
-              accountName: user.accountName ? user.accountName : "Account",
-              phoneNumber: user.phoneNumber ? user.phoneNumber : "",
               gender: user?.gender,
             },
             token: createToken(user._id),
@@ -45,6 +44,45 @@ exports.login = (email, password) => {
     }
   });
 };
+
+exports.credential = async(token, origin) => {
+  try{
+    let user;
+    if(origin === 'google') {
+      user = await getInfoUserGoogle(token);
+    }
+    if(user) {
+      const userExist = await User.findOne({ email: user.emailAddresses[0].value }).populate("cart.itemId");
+      if(userExist) {
+        user = userExist
+      }else {
+        const newUser = new User({
+          email: user.emailAddresses[0].value,
+          username: user.names[0].displayName,
+          accountName : user.names[0].displayName,
+          picture: {
+            url: user.photos[0].url
+          },
+          role: 'F2',
+        });
+        user = await newUser.save();
+      }
+      if(user) {
+        return {
+          status: 201,
+          message: 'ok',
+          data: user,
+          token: createToken(user._id)
+        }
+      }
+    }
+  }catch(err) {
+    return {
+      status: 500,
+      message: 'Error from server'
+    }
+  }
+}
 
 exports.loginAdmin = (email, password) => {
   return new Promise(async (resolve, reject) => {
@@ -83,7 +121,6 @@ exports.loginAdmin = (email, password) => {
 exports.signup = (username, email, password) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(username, email, password);
       const user = await User.findOne({ email: email });
       if (!user) {
         const pw = await bcrypt.hash(password, 12);
@@ -92,7 +129,6 @@ exports.signup = (username, email, password) => {
           email: email,
           password: pw,
         });
-        console.log(newUser);
         const addUser = await newUser.save();
         if (addUser) {
           const token = createToken(addUser._id);
@@ -239,7 +275,7 @@ exports.getUser = (page, limit, key, req) => {
   });
 };
 
-exports.updateUser = (account, fullname, phone, gender, req) => {
+exports.updateUser = (account, fullname, phone, gender, address, req) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findById(req.user._id).populate("cart.itemId");
@@ -248,10 +284,11 @@ exports.updateUser = (account, fullname, phone, gender, req) => {
         user.phoneNumber = phone;
         user.username = fullname;
         user.gender = gender;
+        user.address = address;
         const updateUser = await user.save();
         if (updateUser) {
           resolve({
-            status: 200,
+            status: 201,
             message: "ok",
             data: updateUser,
             token: createToken(user._id),
@@ -268,3 +305,22 @@ exports.updateUser = (account, fullname, phone, gender, req) => {
     }
   });
 };
+
+exports.updateAvatar = async(picture, req) => {
+  try{
+    const user = await User.findById(req.user._id).populate("cart.itemId");
+    user.picture = picture;
+    const updateUser = await user.save();
+    return {
+      status: 201,
+      message: "ok",
+      data: updateUser,
+      token: createToken(updateUser._id),
+    };
+  }catch(err) {
+    return {
+      status: 500,
+      message: 'Error from server'
+    }
+  }
+}

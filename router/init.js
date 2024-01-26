@@ -21,6 +21,7 @@ const init = (app) => {
   router.post("/confirm-password", authController.confirmPassword);
 
   router.post("/api/login", authController.login);
+  router.get('/api/v2/credential', authController.credential)
   router.post("/api/login-admin", authController.loginAdmin);
   router.post("/api/forgot-password", authController.forgotPassword);
   router.post("/api/signup", authController.signup);
@@ -30,6 +31,7 @@ const init = (app) => {
     authMiddleware.protect,
     authController.updateUser
   );
+  router.put('/api/v2/avatar', authMiddleware.protect, authController.updateAvatar);
 
   // Category
   router.get("/api/get-all-category", categoryController.getAllCategory);
@@ -121,6 +123,7 @@ const init = (app) => {
     "/api/v2/reviews",
     reviewController.getAllReview
   );
+   router.get("/api/v2/reviews-with-item", reviewController.getReviewWithItem);
   router.put(
     "/api/v2/review",
     authMiddleware.protect,

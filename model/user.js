@@ -22,7 +22,6 @@ const schema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
     },
     status: {
       type: Boolean,
@@ -50,7 +49,11 @@ const schema = new mongoose.Schema(
       public_id: {
         type: String,
       },
-    }
+    },
+    address:
+      {
+        type: String,
+      },
   },
   { timestamps: true }
 );

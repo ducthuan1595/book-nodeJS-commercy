@@ -1,4 +1,5 @@
 const Review = require('../model/review');
+const pageSection = require('../suports/pageSection');
 const {destroyCloudinary} = require('../util/cloudinary');
 
 exports.createReview = async (comment, stars, itemId, picture, req) => {
@@ -45,18 +46,63 @@ exports.getReview = async (itemId, req) => {
   }
 }
 
-exports.getAllReview = async () => {
+exports.getAllReview = async (page, limit) => {
   try {
     let reviews = await Review.find().populate('reviewer', '-password, -cart').sort({createdAt: -1});
+    if (page !== "undefined" || limit !== "undefined") {
+      const data = pageSection(page, limit, reviews);
+      return {
+        status: 201,
+        message: "ok",
+        data: {
+          data: data.result,
+          totalPage: data.totalPage,
+          totalOrder: reviews.length,
+          currPage: page,
+          nextPage: +page * +limit < reviews.length,
+          prevPage: +page > 1,
+        },
+      };
+    }
     return {
       status: 201,
-      message: "ok",
-      data: reviews,
-    };
+      message: 'ok',
+      data: reviews
+    }
   } catch (err) {
     console.error(err);
   }
 };
+
+exports.getReviewWithItem = async(itemId, page, limit) => {
+  try{
+    let reviews = await Review.find({itemId: itemId})
+      .populate("reviewer", "-password, -cart")
+      .sort({ createdAt: -1 });
+
+    if (page !== "undefined" || limit !== "undefined") {
+      const data = pageSection(page, limit, reviews);
+      return {
+        status: 201,
+        message: "ok",
+        data: {
+          data: data.result,
+          totalPage: data.totalPage,
+          totalOrder: reviews.length,
+          currPage: page,
+          nextPage: +page * +limit < reviews.length,
+          prevPage: +page > 1,
+        },
+      };
+    }
+  }catch(err) {
+    console.log(err);
+    return {
+      status: 500,
+      message: 'Error from server'
+    }
+  }
+}
 
 exports.updateReview = async (comment, stars, reviewId, picture) => {
   try {

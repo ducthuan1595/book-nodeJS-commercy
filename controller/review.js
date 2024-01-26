@@ -25,7 +25,8 @@ exports.getReview = async (req, res) => {
 
 exports.getAllReview = async (req, res) => {
   try {
-    const data = await reviewService.getAllReview();
+    const {page, limit} = req.query;
+    const data = await reviewService.getAllReview(page, limit);
     if (data) {
       return res
         .status(data.status)
@@ -35,6 +36,20 @@ exports.getAllReview = async (req, res) => {
     return res.status(500).json({ message: "Error Server" });
   }
 };
+
+exports.getReviewWithItem = async(req, res) => {
+  try {
+    const { page, limit, itemId } = req.query;
+    const data = await reviewService.getReviewWithItem(itemId, page, limit);
+    if (data) {
+      return res
+        .status(data.status)
+        .json({ message: data.message, data: data.data });
+    }
+  } catch (err) {
+    return res.status(500).json({ message: "Error Server" });
+  }
+}
 
 exports.updateReview = async (req, res) => {
   try {
