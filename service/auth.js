@@ -2,6 +2,7 @@ const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const createToken = require("../config/token");
 const sendMailer = require("../config/nodemailer");
+const confirmMailer = require('../suports/mails/confirmAccount');
 const { getInfoUserGoogle } = require("../suports/getInfoUserGoogle");
 
 exports.login = (email, password) => {
@@ -118,7 +119,7 @@ exports.loginAdmin = (email, password) => {
   });
 };
 
-exports.signup = (username, email, password) => {
+exports.signup = (username, email, password, urlOrigin) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findOne({ email: email });
@@ -132,19 +133,9 @@ exports.signup = (username, email, password) => {
         const addUser = await newUser.save();
         if (addUser) {
           const token = createToken(addUser._id);
-          sendMailer(
-            email,
-            username,
-            token,
-            null,
-            null,
-            null,
-            null,
-            (isPw = false),
-            () => {
-              console.log("Send email successfully");
-            }
-          );
+          confirmMailer(email, username, token, urlOrigin, null, () => {
+            console.log("Send email successfully");
+          });
           resolve({
             status: 200,
             message: "ok",
@@ -181,7 +172,7 @@ exports.confirm = (id) => {
   });
 };
 
-exports.forgotPassword = (email) => {
+exports.forgotPassword = (email, urlOrigin) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findOne({ email: email });
@@ -190,17 +181,9 @@ exports.forgotPassword = (email) => {
           message: "User invalid",
         });
       } else {
-        console.log("user", user._id);
-        sendMailer(
-          email,
-          user.username,
-          user._id,
-          null,
-          null,
-          null,
-          null,
-          (isPw = true)
-        );
+        confirmMailer(email, user.username, null, urlOrigin, user._id.toString(), () => {
+          console.log('Send email successfully!');
+        });
         resolve({
           status: 201,
           message: "ok",

@@ -39,8 +39,12 @@ exports.getAllReview = async (req, res) => {
 
 exports.getReviewWithItem = async(req, res) => {
   try {
-    const { page, limit, itemId } = req.query;
-    const data = await reviewService.getReviewWithItem(itemId, page, limit);
+    const { page, limit, itemId, rateStar } = req.query;
+    if(!itemId) {
+      return res.status(400).json({message: 'Not found!'})
+    }
+    const data = await reviewService.getReviewWithItem(itemId,
+      rateStar, page, limit);
     if (data) {
       return res
         .status(data.status)

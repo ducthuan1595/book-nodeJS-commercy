@@ -81,13 +81,13 @@ table {
     ${items
       .map((p) => {
         const item = p;
-        const originPrice = item?.priceInput
+        const originPrice = item.pricePay
           .toString()
           .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         return `
         <tr>
           <td>${item.name}</td>
-          <td><img style="height:100px;" src='cid:${item.pic[0]}' alt=${item.name} /></td>
+          <td><img style="height:100px;" src='${item.pic[0].url}' alt=${item.name} /></td>
           <td>${originPrice}đ</td>
         </tr>
       `;
@@ -95,7 +95,10 @@ table {
       .join("")}
 </table>
 
-  <div>Thanks, We are very happy when to service you!</div>
+  <div>
+    <div>We'll effort deliver orders as soon as. Please, attention your phone when servicer arrived!</div>
+    <div>Thanks, We are very happy when to service you!</div>
+  </div>
 </body>
 </html>`;
 
@@ -200,7 +203,7 @@ const sendMailer = async (
     // sale
     const items = await Item.find().where("_id", arrItemId);
     const options = await transporter.sendMail({
-      from: '"Fred Foo 👻" <foo@example.com>', // sender address
+      from: '"Tìm Gì Thế - Book📚" <foo@example.com>', // sender address
       to: email, // list of receivers
       subject: !arrItemId ? "Confirm email ✔" : "Flash sale", // Subject line
       text: "Hello" + name, // plain text body

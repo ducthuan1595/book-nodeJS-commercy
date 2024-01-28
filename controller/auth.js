@@ -1,5 +1,6 @@
 const authService = require("../service/auth");
 const authMiddleware = require("../middleware/auth");
+require("dotenv").config();
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
@@ -45,12 +46,12 @@ exports.loginAdmin = async (req, res) => {
 };
 
 exports.signup = async (req, res) => {
-  return res.status(201).json({code: 201});
   const { username, email, password } = req.body;
+  const urlOrigin = req.protocol + "://" + req.get("host");
   if (!username && !email && !password) {
     res.status(404).json({ message: "Input invalid!" });
   } else {
-    const data = await authService.signup(username, email, password);
+    const data = await authService.signup(username, email, password, urlOrigin);
     if (data) {
       res
         .status(data.status)
@@ -60,7 +61,7 @@ exports.signup = async (req, res) => {
 };
 
 exports.confirm = async (req, res) => {
-  const token = req?.query.token;
+  const token = req.query?.token;
   const id = await authMiddleware.verifyToken(token);
   if (id) {
     const data = await authService.confirm(id);
@@ -77,10 +78,11 @@ exports.confirm = async (req, res) => {
 
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
+  const urlOrigin = req.protocol + "://" + req.get("host");
   if (!email) {
     res.status(404).json({ message: "Not found" });
   } else {
-    const data = await authService.forgotPassword(email);
+    const data = await authService.forgotPassword(email, urlOrigin);
     if (data) {
       res.status(data.status).json({ message: data.message, data: data?.data });
     }
@@ -97,9 +99,9 @@ exports.confirmPassword = async (req, res) => {
       res
         .status(data.status)
         .redirect(
-          data.data.role === "F2"
-            ? "http://localhost:3000/login"
-            : "http://localhost:3001/login"
+          data.data.role === "F3"
+            ? process.env.CLIENT_ADMIN_1
+            : process.env.CLIENT_1
         );
     }
   }

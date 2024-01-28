@@ -88,6 +88,7 @@ exports.createOrder = (value, req) => {
             );
           }
           // Apply voucher
+          let voucherId;
           if (value.voucherCode) {
             const voucher = await Voucher.findOne({ code: value.voucherCode });
             if (
@@ -97,6 +98,7 @@ exports.createOrder = (value, req) => {
             ) {
               amount = Math.floor(amount - (amount * +voucher.discount) / 100);
               voucher.quantity = voucher.quantity - 1;
+              voucherId = voucher._id;
               await voucher.save();
             }
           }
@@ -106,6 +108,7 @@ exports.createOrder = (value, req) => {
             amount: amount,
             quantity: newQuantity,
             items: newArrOrder,
+            voucherId: voucherId ?? null
           });
           if (order) {
             const updateOrder = await order.save();

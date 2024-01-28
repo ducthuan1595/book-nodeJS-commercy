@@ -74,9 +74,36 @@ exports.getAllReview = async (page, limit) => {
   }
 };
 
-exports.getReviewWithItem = async(itemId, page, limit) => {
+exports.getReviewWithItem = async(itemId, rateStar, page, limit) => {
   try{
-    let reviews = await Review.find({itemId: itemId})
+    let start = 1;
+    let end = 100;
+      
+    if(rateStar == '5') {
+      start = 80;
+      end = 100;
+    }
+    if(rateStar == '4') {
+      start = 60;
+      end = 80;
+    }
+    if(rateStar == '3') {
+      start = 40;
+      end = 60;
+    }
+    if(rateStar == '2') {
+      start = 20;
+      end = 40;
+    }
+    if(rateStar == '1') {
+      start = 0;
+      end = 20;
+    }
+
+    let reviews = await Review.find({
+      itemId: itemId,
+      stars: { $gte: start, $lte: end },
+    })
       .populate("reviewer", "-password, -cart")
       .sort({ createdAt: -1 });
 
@@ -95,6 +122,11 @@ exports.getReviewWithItem = async(itemId, page, limit) => {
         },
       };
     }
+    return {
+      status: 201,
+      message: 'ok',
+      data: reviews
+    }
   }catch(err) {
     console.log(err);
     return {
@@ -108,7 +140,7 @@ exports.updateReview = async (comment, stars, reviewId, picture) => {
   try {
     const review = await Review.findById(reviewId);
     if(review) {
-      if(picture.length) {
+      if(picture?.length) {
         for (let i = 0; i < review.picture.length; i++) {
           await destroyCloudinary(review.picture[i].public_id);
         }
