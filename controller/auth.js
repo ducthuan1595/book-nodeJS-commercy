@@ -18,11 +18,11 @@ exports.login = async (req, res) => {
 
 exports.credential = async(req, res) => {
   try{
-    const {token, origin} = req.query;
-    if(!token || !origin) {
+    const {value, origin} = req.query;
+    if(!value || !origin) {
       return res.status(401).json({message: 'Not found'})
     }
-    const data = await authService.credential(token, origin);
+    const data = await authService.credential(value, origin);
     if(data) {
       return res.status(data.status).json({message: data.message, data: data.data, token: data.token})
     }

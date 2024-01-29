@@ -46,11 +46,15 @@ exports.login = (email, password) => {
   });
 };
 
-exports.credential = async(token, origin) => {
+exports.credential = async(value, origin) => {
   try{
     let user;
     if(origin === 'google') {
-      user = await getInfoUserGoogle(token);
+      user = await getInfoUserGoogle(value);
+    }else {
+      console.log(value);
+      
+      
     }
     if(user) {
       const userExist = await User.findOne({ email: user.emailAddresses[0].value }).populate("cart.itemId");
