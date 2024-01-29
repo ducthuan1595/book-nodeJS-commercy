@@ -159,7 +159,7 @@ exports.getOrder = (page, limit, type, column, req) => {
       const user = await User.findById(req.user._id);
       if (user && user.role === "F2") {
         const orders = await Order.find({ userId: req.user._id })
-          .populate("userId")
+          .populate("userId", '-password')
           .populate("items.itemId")
           .sort({ createdAt: -1 });
 

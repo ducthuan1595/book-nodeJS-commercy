@@ -100,8 +100,8 @@ exports.confirmPassword = async (req, res) => {
         .status(data.status)
         .redirect(
           data.data.role === "F3"
-            ? process.env.CLIENT_ADMIN_1
-            : process.env.CLIENT_1
+            ? process.env.CLIENT_ADMIN_1_REDIRECT
+            : process.env.CLIENT_1_REDIRECT
         );
     }
   }

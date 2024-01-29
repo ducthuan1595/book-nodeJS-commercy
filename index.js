@@ -2,9 +2,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const fileupload = require("express-fileupload");
+const configFacebook = require('./config/credential/facebook');
 require("dotenv").config();
 
 const init = require("./router/init");
+const web = require('./router/web');
 // const sortMiddleware = require("./middleware/sort");
 
 const app = express();
@@ -24,6 +26,8 @@ app.use(
 app.use(fileupload());
 
 init(app);
+web(app);
+configFacebook();
 
 // app.listen(port, () => {
 //   console.log(`Server is running on port: ${port}`);

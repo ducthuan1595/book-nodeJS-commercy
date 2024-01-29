@@ -52,8 +52,7 @@ exports.credential = async(value, origin) => {
     if(origin === 'google') {
       user = await getInfoUserGoogle(value);
     }else {
-      console.log(value);
-      
+     
       
     }
     if(user) {
