@@ -5,6 +5,7 @@ const fileupload = require("express-fileupload");
 require("dotenv").config();
 
 const init = require("./router/init");
+const web = require('./router/web');
 // const sortMiddleware = require("./middleware/sort");
 
 const app = express();
@@ -24,10 +25,9 @@ app.use(
 app.use(fileupload());
 
 init(app);
+web(app);
 
-// app.listen(port, () => {
-//   console.log(`Server is running on port: ${port}`);
-// });
+
 mongoose
   .connect(process.env.DATABASE_URL)
   .then(() => {
