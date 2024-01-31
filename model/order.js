@@ -37,6 +37,9 @@ const schema = new mongoose.Schema(
       ref: "Voucher",
       default: null,
     },
+    methodPay: {
+      type: String,
+    }
   },
   { timestamps: true }
 );

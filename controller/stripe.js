@@ -12,9 +12,10 @@ exports.getPublishKey = async (req, res) => {
 
 exports.createPayment = async(req, res) => {
   try{
+    const {pay} = req.body;
     const payment = await stripe.paymentIntents.create({
-      currency: "usd",
-      amount: 50,
+      currency: "vnd",
+      amount: +pay,
       automatic_payment_methods: { enabled: true },
     });
     res.status(200).json({message: 'ok', data: {

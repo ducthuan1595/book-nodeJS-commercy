@@ -77,7 +77,9 @@ exports.createOrder = (value, req) => {
             }
             // update Item
             const newQuantity = item.count - quantity;
+            const newPaid = item.paid + quantity;
             item.count = newQuantity;
+            item.paid = newPaid;;
             await item.save();
           };
           for (let i = 0; i < newArrOrder.length; i++) {
@@ -108,7 +110,8 @@ exports.createOrder = (value, req) => {
             amount: amount,
             quantity: newQuantity,
             items: newArrOrder,
-            voucherId: voucherId ?? null
+            voucherId: voucherId ?? null,
+            methodPay: value.methodPay,
           });
           if (order) {
             const updateOrder = await order.save();
