@@ -8,15 +8,36 @@
   process
 - Allow admin to manage users, items, flashsales,
   vouchers,...
+- Review and feedback products
+- authentication with google, facebook, email
+- Pay online with cards
+
 
 # Link deployment
 
-- client: `https://vmo-react-js-commercy.vercel.app`
+- client: `https://tim-gi-the-book.vercel.app/`
 - admin: `https://ecommercy-book-admin.vercel.app`
+
+# MAIN STRUCTURE PAGE
+
+- client: 
+  + home:
+  + category:
+  + cart:
+  + payment:
+  + ordered:
+  + Account information:
+
+- admin: 
+  + dashboard:
+  + list product:
+  + vouchers:
+  + flash sale:
+
 
 # MAIN TECHNOLOGY
 
-- client: javascript, reactJs, tailwind
+- client: javascript, reactJs, tailwind, redux, stripe
 - admin: typescript, reactJs, tailwind
 - server: nodeJs, javascript, express
 - database: mongoDB, mongoose
