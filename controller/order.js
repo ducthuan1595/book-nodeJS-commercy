@@ -1,13 +1,13 @@
 const orderService = require("../service/order");
 
 exports.createOrder = async (req, res) => {
-  const { arrCartId } = req.body;
+  const { arrCartId, methodPay } = req.body;
   const voucherCode = req.body?.voucherCode;
   if (!arrCartId) {
     res.status(404).json({ message: "Input invalid" });
   } else {
     const data = await orderService.createOrder(
-      { arrCartId, voucherCode },
+      { arrCartId, voucherCode, methodPay },
       req
     );
     if (data) {

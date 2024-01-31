@@ -10,6 +10,7 @@
   vouchers,...
 - Review and feedback products
 - authentication with google, facebook, email
+- Pay online with cards
 
 
 # Link deployment
@@ -36,7 +37,7 @@
 
 # MAIN TECHNOLOGY
 
-- client: javascript, reactJs, tailwind
+- client: javascript, reactJs, tailwind, redux, stripe
 - admin: typescript, reactJs, tailwind
 - server: nodeJs, javascript, express
 - database: mongoDB, mongoose

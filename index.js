@@ -27,11 +27,7 @@ app.use(fileupload());
 
 init(app);
 web(app);
-configFacebook();
 
-// app.listen(port, () => {
-//   console.log(`Server is running on port: ${port}`);
-// });
 mongoose
   .connect(process.env.DATABASE_URL)
   .then(() => {
