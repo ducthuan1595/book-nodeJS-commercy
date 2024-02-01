@@ -8,9 +8,9 @@
   process
 - Allow admin to manage users, items, flashsales,
   vouchers,...
+- The chart compares income by monthly and yearly
 - Review and feedback products
 - authentication with google, facebook, email
-- Pay online with cards
 
 
 # Link deployment
@@ -37,7 +37,7 @@
 
 # MAIN TECHNOLOGY
 
-- client: javascript, reactJs, tailwind, redux, stripe
+- client: javascript, reactJs, tailwind
 - admin: typescript, reactJs, tailwind
 - server: nodeJs, javascript, express
 - database: mongoDB, mongoose

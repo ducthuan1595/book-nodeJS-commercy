@@ -1,7 +1,6 @@
 const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const createToken = require("../config/token");
-const sendMailer = require("../config/nodemailer");
 const confirmMailer = require('../suports/mails/confirmAccount');
 const { getInfoUserGoogle } = require("../suports/getInfoUserGoogle");
 

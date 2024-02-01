@@ -92,6 +92,8 @@ const init = (app) => {
     orderController.getOrder
   );
 
+  router.get('/api/v2/get-revenue-month', orderController.getRevenue)
+
   // voucher and flashsale
   router.post(
     "/api/create-voucher",

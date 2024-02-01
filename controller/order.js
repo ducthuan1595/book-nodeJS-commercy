@@ -26,3 +26,14 @@ exports.getOrder = async (req, res) => {
     res.status(data.status).json({ message: data.message, data: data?.data });
   }
 };
+
+exports.getRevenue = async(req, res) => {
+  try{
+    const type = req.query.type;
+    const year = req.query.year;
+    const data = await orderService.getRevenue(type, year);
+    res.status(data.status).json({message: data.message, data: data.data})
+  }catch(err) {
+    res.status(500).json({message: 'Error from server'})
+  }
+}

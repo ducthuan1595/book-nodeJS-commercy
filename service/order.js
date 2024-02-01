@@ -4,8 +4,9 @@ const User = require("../model/user");
 const Voucher = require("../model/voucher");
 const FlashSale = require("../model/flashsale");
 const pageSection = require("../suports/pageSection");
-const sendMail = require("../config/nodemailer");
+const sendMail = require("../suports/mails/orderInfo");
 const Review = require("../model/review");
+const { getFormatMonth, getFormatYear } = require("../util/format");
 
 exports.createOrder = (value, req) => {
   return new Promise(async (resolve, reject) => {
@@ -119,13 +120,8 @@ exports.createOrder = (value, req) => {
             sendMail(
               user.email,
               user.username,
-              null,
               arrItemId,
-              null,
               updateOrder.createdAt,
-              null,
-              null,
-              true,
               newQuantity,
               amount
             );
@@ -214,3 +210,57 @@ exports.getOrder = (page, limit, type, column, req) => {
     }
   });
 };
+
+exports.getRevenue = async(type, year) => {
+  try{
+    const orders = await Order.find();
+    const newArray = [];
+    const result = {};
+    const totalMount = orders.reduce((a,b) => a + b.amount , 0);
+    if(type === 'month') {
+      for(const value of orders) {
+        let object = {};
+        if(+year != getFormatYear(value.createdAt)) continue;
+        const key = getFormatMonth(value.createdAt)
+        object[key] = value.amount;
+        newArray.push(object)
+      }
+      let sum = 0;
+      for (const value of newArray) {
+        const key = Object.keys(value);
+        const values = Object.values(value);
+        sum += +values;
+        result[key] = sum;
+      }
+    }else {
+      for (const value of orders) {
+        let object = {};
+        const key = getFormatYear(value.createdAt);
+        object[key] = value.amount;
+        newArray.push(object);
+      }
+      let sum = 0;
+      for(const value of newArray) {
+        const key = Object.keys(value);
+        const values = Object.values(value);
+        sum += +values
+        result[key] = sum;
+      }
+    }
+    if (result) {
+      return {
+        status: 201,
+        message: "ok",
+        data: {
+          totalMount,
+          result
+        },
+      };
+    }
+  }catch(err) {
+    return {
+      status: 500,
+      message: 'Error from server'
+    }
+  }
+}
