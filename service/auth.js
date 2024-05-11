@@ -1,10 +1,10 @@
 const User = require("../model/user");
 const bcrypt = require("bcrypt");
-const createToken = require("../config/token");
+const { createToken, createRefreshToken } = require("../config/token");
 const confirmMailer = require('../suports/mails/confirmAccount');
 const { getInfoUserGoogle } = require("../suports/getInfoUserGoogle");
 
-exports.login = (email, password) => {
+exports.login = (email, password, res) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findOne({ email: email }).populate("cart.itemId");
@@ -21,8 +21,22 @@ exports.login = (email, password) => {
       } else {
         const validPs = await bcrypt.compare(password, user.password);
         if (validPs) {
+          const refresh_token = await createRefreshToken(user._id.toString());
+          const access_token = await createToken(user._id.toString());
+
+          res.cookie('access_token', access_token, {
+            maxAge: 365 * 24 * 60 * 60 * 100,
+            httpOnly: true,
+            //secure: true;
+          });
+          res.cookie('refresh_token', refresh_token, {
+            maxAge: 365 * 24 * 60 * 60 * 100,
+            httpOnly: true,
+            //secure: true;
+          })
+
           resolve({
-            status: 200,
+            status: 201,
             message: "ok",
             data: {
               username: user.username,
@@ -30,7 +44,10 @@ exports.login = (email, password) => {
               cart: user.cart,
               gender: user?.gender,
             },
-            token: createToken(user._id),
+            token: {
+              access_token,
+              refresh_token
+            }
           });
         } else {
           resolve({
@@ -99,13 +116,26 @@ exports.loginAdmin = (email, password) => {
       } else {
         const validPs = await bcrypt.compare(password, user.password);
         if (validPs) {
+          const refresh_token = await createRefreshToken(user._id.toString());
+          const access_token = await createToken(user._id.toString());
+
+          res.cookie('access_token', access_token, {
+            maxAge: 365 * 24 * 60 * 60 * 100,
+            httpOnly: true,
+            //secure: true;
+          });
+          res.cookie('refresh_token', refresh_token, {
+            maxAge: 365 * 24 * 60 * 60 * 100,
+            httpOnly: true,
+            //secure: true;
+          })
+
           resolve({
-            status: 200,
+            status: 201,
             message: "ok",
             data: {
               name: user.username,
               email: user.email,
-              token: createToken(user._id),
             },
           });
         } else {

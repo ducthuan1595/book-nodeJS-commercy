@@ -1,15 +1,16 @@
 const jwt = require("jsonwebtoken");
 const User = require("../model/user");
+const {redisClient} = require('../dbs/init.redis')
 
 const protect = async (req, res, next) => {
-  let token;
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
-      token = req.headers.authorization.split(" ")[1];
-      const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
+      const tokenId = req.headers.authorization.split(" ")[1];
+      const token = await redisClient.get(tokenId);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
       req.user = await User.findById(decoded.id).select("-password");
       next();
     } catch (err) {
@@ -17,14 +18,17 @@ const protect = async (req, res, next) => {
       res.status(403).json({ message: "Not authorized" });
     }
   } else {
-    res.status(404).json({ message: "Not found token" });
+    res.status(401).json({ message: "Unauthorized" });
   }
 };
 
-const verifyToken = async (token) => {
+const verifyToken = async (tokenId) => {
   try {
-    const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
-    return decoded.id;
+    const token = await redisClient.get(tokenId);
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_REFRESH_TOKEN);
+    const user = await User.findById(decoded.id);
+    return user._id;
   } catch (err) {
     console.error(err);
   }

@@ -26,6 +26,8 @@ const init = (app) => {
   router.post("/api/forgot-password", authController.forgotPassword);
   router.post("/api/signup", authController.signup);
 
+  router.post('/api/refresh-token', authController.refreshToken);
+
   router.post(
     "/api/update-user",
     authMiddleware.protect,

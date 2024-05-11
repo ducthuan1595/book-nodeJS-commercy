@@ -1,5 +1,7 @@
 const authService = require("../service/auth");
 const authMiddleware = require("../middleware/auth");
+const {verifyToken} = require('../middleware/auth');
+const {createRefreshToken, createToken} = require('../config/token');
 require("dotenv").config();
 
 exports.login = async (req, res) => {
@@ -7,7 +9,7 @@ exports.login = async (req, res) => {
   if (!email && !password) {
     res.status(403).json({ message: "You are not authentication" });
   } else {
-    const data = await authService.login(email, password);
+    const data = await authService.login(email, password, res);
     if (data) {
       res
         .status(data.status)
@@ -59,6 +61,22 @@ exports.signup = async (req, res) => {
     }
   }
 };
+
+exports.refreshToken = async(req, res) => {
+  const {refresh_token} = req.body;
+  if(refresh_token) {
+    const user_id = await verifyToken(refresh_token);
+    if(user_id) {
+      const refresh_token = await createRefreshToken(user_id.toString());
+      const access_token = await createToken(user_id.toString());
+
+      res.status(200).json({message: 'ok', data: {
+        access_token,
+        refresh_token
+      }})
+    }
+  }
+}
 
 exports.confirm = async (req, res) => {
   const token = req.query?.token;
