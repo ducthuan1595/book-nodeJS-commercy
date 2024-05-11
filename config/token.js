@@ -11,7 +11,6 @@ async function createToken(id) {
     const token = jwt.sign({id}, process.env.JWT_SECRET_TOKEN, {
       expiresIn: time + 's'
     })
-    console.log(token, key, 'create token');
     // save token to redis store
     await redisClient.set(key, token);
     const expires = new Date().getTime() + parseInt(time) * 1000;

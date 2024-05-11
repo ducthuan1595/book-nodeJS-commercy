@@ -62,7 +62,7 @@ exports.login = (email, password, res) => {
   });
 };
 
-exports.credential = async(value, origin) => {
+exports.credential = async(value, origin, res) => {
   try{
     let user;
     if(origin === 'google') {
@@ -72,7 +72,7 @@ exports.credential = async(value, origin) => {
       
     }
     if(user) {
-      const userExist = await User.findOne({ email: user.emailAddresses[0].value }).populate("cart.itemId");
+      const userExist = await User.findOne({ email: user.emailAddresses[0].value }).populate("cart.itemId", '-password');
       if(userExist) {
         user = userExist
       }else {
@@ -88,11 +88,28 @@ exports.credential = async(value, origin) => {
         user = await newUser.save();
       }
       if(user) {
+
+        const refresh_token = await createRefreshToken(user._id.toString());
+        const access_token = await createToken(user._id.toString());
+
+        res.cookie('access_token', access_token, {
+          maxAge: 365 * 24 * 60 * 60 * 100,
+          httpOnly: true,
+          //secure: true;
+        });
+        res.cookie('refresh_token', refresh_token, {
+          maxAge: 365 * 24 * 60 * 60 * 100,
+          httpOnly: true,
+          //secure: true;
+        })
         return {
           status: 201,
           message: 'ok',
           data: user,
-          token: createToken(user._id)
+          token: {
+            access_token,
+            refresh_token
+          }
         }
       }
     }

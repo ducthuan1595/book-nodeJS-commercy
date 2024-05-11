@@ -24,7 +24,7 @@ exports.credential = async(req, res) => {
     if(!value || !origin) {
       return res.status(401).json({message: 'Not found'})
     }
-    const data = await authService.credential(value, origin);
+    const data = await authService.credential(value, origin, res);
     if(data) {
       return res.status(data.status).json({message: data.message, data: data.data, token: data.token})
     }
