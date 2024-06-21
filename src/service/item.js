@@ -1,20 +1,19 @@
-const User = require("../model/user");
-const Item = require("../model/item");
-const Order = require("../model/order");
-const FlashSale = require("../model/flashsale");
+const _User = require("../model/user.model.js");
+const _Item = require("../model/item.model.js");
+const _Order = require("../model/order");
+const _FlashSale = require("../model/flashsale");
 const path = require("path");
 const handleFile = require("../config/file");
-const pageSection = require("../suports/pageSection");
+const pageSection = require("../support/pageSection");
 const { destroyCloudinary } = require("../util/cloudinary");
 
-// const handlerFile = require("../suports/handleFile");
 
 exports.createItem = (value, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await _User.findById(req.user._id);
       if (user && user.role === "F3") {
-        const item = new Item({
+        const item = new _Item({
           name: value.name,
           priceInput: value.priceInput,
           pricePay: value.priceInput,
@@ -52,9 +51,9 @@ exports.createItem = (value, req) => {
 exports.updateItem = (value, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await _User.findById(req.user._id);
       if (user && user.role === "F3") {
-        const product = await Item.findById(value.itemId);
+        const product = await _Item.findById(value.itemId);
         if (product) {
           if(value.pic.length) {
             for (let i = 0; i < product.pic.length; i++) {
@@ -99,11 +98,11 @@ exports.updateItem = (value, req) => {
 exports.deleteItem = (itemId, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await _User.findById(req.user._id);
       if (user && user.role === "F3") {
-        const orders = await Order.find().where("items.itemId", itemId);
+        const orders = await _Order.find().where("items.itemId", itemId);
         if (!orders.length) {
-          const item = await Item.findByIdAndDelete(itemId);
+          const item = await _Item.findByIdAndDelete(itemId);
           if (item) {
             for (let i = 0; i < item.pic.length; i++) {
               await destroyCloudinary(item.pic[i].public_id);
@@ -140,7 +139,7 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (f === null && k === null && s === null && itemId === null) {
-        const items = await Item.find()
+        const items = await _Item.find()
           .populate("categoryId")
           .populate("flashSaleId")
           .sort([[column ? column : "updatedAt", type ? type : -1]]);
@@ -151,7 +150,7 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
 
           for (let i = 0; i < data.result.length; i++) {
             if (data.result[i].flashSaleId) {
-              const flashSale = await FlashSale.findById(
+              const flashSale = await _FlashSale.findById(
                 data.result[i].flashSaleId
               );
 
@@ -176,10 +175,10 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
           });
         }
       } else if (itemId) {
-        const item = await Item.findById(itemId)
+        const item = await _Item.findById(itemId)
           .populate("categoryId")
           .populate("flashSaleId");
-        const flashSale = await FlashSale.findById(item.flashSaleId);
+        const flashSale = await _FlashSale.findById(item.flashSaleId);
         if (!flashSale || flashSale.end_date < Date.now()) {
           item.pricePay = item.priceInput;
           item.flashSaleId = null;
@@ -200,7 +199,7 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
       }
       // filter
       const itemFilter = f
-        ? await Item.find()
+        ? await _Item.find()
             .populate({
               path: "categoryId",
               match: {
@@ -209,7 +208,7 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
             })
             .populate("flashSaleId")
             .sort([[column ? column : "updatedAt", type ? type : -1]])
-        : await Item.find().sort([
+        : await _Item.find().sort([
             [column ? column : "updatedAt", type ? type : -1],
           ]);
 
@@ -246,7 +245,7 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
       if (sort) {
         for (let i = 0; i < sort.length; i++) {
           if (sort[i].flashSaleId) {
-            const flashSale = await FlashSale.findById(sort[i].flashSaleId);
+            const flashSale = await _FlashSale.findById(sort[i].flashSaleId);
             if (!flashSale || flashSale.end_date < Date.now()) {
               sort[i].pricePay = sort[i].priceInput;
               sort[i].flashSaleId = null;
@@ -287,7 +286,7 @@ exports.getAllItem = (k, f, s, limit, page, itemId, type, column, isSale) => {
 exports.getAllItemFlashSale = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const items = await Item.find()
+      const items = await _Item.find()
         .populate("flashSaleId")
         .sort({ updatedAt: -1 });
       if (items) {
@@ -318,7 +317,7 @@ exports.getAllItemFlashSale = () => {
 exports.getItemFollowPrice = (low, hight, name) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let items = await Item.find().populate({
+      let items = await _Item.find().populate({
         path: "categoryId",
         match: {
           name: name,

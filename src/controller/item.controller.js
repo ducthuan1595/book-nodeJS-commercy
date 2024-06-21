@@ -118,7 +118,6 @@ exports.deleteItem = async (req, res) => {
 };
 
 exports.getAllItem = async (req, res) => {
-  // console.log(req.query);
   const key = req.query.key === "null" ? null : req.query?.key;
   const filter = req.query.filter === "null" ? null : req.query?.filter;
   const sort = req.query.sort === "null" ? null : req.query?.sort;

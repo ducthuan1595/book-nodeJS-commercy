@@ -1,8 +1,8 @@
 const cron = require("node-cron");
 
-const sendMailer = require("../suports/mails/saleInfo");
-const User = require("../model/user");
-const Item = require("../model/item");
+const sendMailer = require("../support/mails/saleInfo");
+const _User = require("../model/user.model.js");
+const _Item = require("../model/item.model.js");
 
 const handleItem = async (arr, id, discountPercent, saleId) => {
   const item = arr.find((item) => {
@@ -31,10 +31,10 @@ const scheduleSale = (start, end, percent, saleId, value, arrItemId) => {
   // console.log({ timeString });
 
   const cronSchedules = cron.schedule(timeString, async () => {
-    const users = await User.find().select("email");
+    const users = await _User.find().select("email");
     const emails = users.map((u) => u.email);
     if (end > start) {
-      const items = await Item.find();
+      const items = await _Item.find();
       for (const item of value.items) {
         handleItem(items, item.itemId, +value.discountPercent, saleId);
       }

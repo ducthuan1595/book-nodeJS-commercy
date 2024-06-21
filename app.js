@@ -4,17 +4,21 @@ const fileupload = require("express-fileupload");
 const session = require('express-session');
 let RedisStore = require('connect-redis')(session)
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
+const helmet = require('helmet');
 
 
 const { initRedis, redisClient } = require('./src/dbs/init.redis');
-const init = require("./src/router/init");
-const web = require('./src/router/web');
+const logEvents = require('./src/support/logEvents');
+const routes = require('./src/router');
 
 const app = express();
 
 
 app.set("view engine", "ejs");
 app.set("views", "views");
+app.use(helmet());
+app.use(morgan('common'));
 
 // app.use(sortMiddleware());
 app.use(express.json());
@@ -52,7 +56,15 @@ app.get('/', (req, res, next) => {
     res.send('Home Page!')
 })
 
-init(app);
-web(app);
+app.use('/', routes);
+
+app.use((err, req, res, next) => {
+  logEvents(`${req.url} -- ${req.method} -- ${err.message}`);
+  res.status(err.status || 500);
+  res.json({
+      status: err.status || 500,
+      message: err.message
+  })
+})
 
 module.exports = app;

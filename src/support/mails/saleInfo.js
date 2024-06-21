@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
-const Item = require("../../model/item");
+const _Item = require("../../model/item.model.js");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -76,7 +76,7 @@ table {
 
 const sendMailer = async (emails, name, arrItemId, start, end, percent) => {
   try {
-    const items = await Item.find().where("_id", arrItemId);
+    const items = await _Item.find().where("_id", arrItemId);
     const options = await transporter.sendMail({
       from: '"Tìm Gì Thế - Book📚" <foo@example.com>', // sender address
       to: emails,

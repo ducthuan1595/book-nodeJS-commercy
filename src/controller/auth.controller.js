@@ -1,6 +1,5 @@
-const authService = require("../service/auth");
-const authMiddleware = require("../middleware/auth");
-const {verifyToken} = require('../middleware/auth');
+const authService = require("../service/auth.service");
+const {verifyToken} = require("../middleware/auth.middleware");
 const {createRefreshToken, createToken} = require('../config/token');
 require("dotenv").config();
 
@@ -57,7 +56,7 @@ exports.signup = async (req, res) => {
     if (data) {
       res
         .status(data.status)
-        .json({ message: data?.message, data: data?.data, token: data?.token });
+        .json({ message: data?.message, data: data?.data });
     }
   }
 };

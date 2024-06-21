@@ -1,13 +1,13 @@
-const Flashsale = require("../model/flashsale");
-const Item = require("../model/item");
-const User = require("../model/user");
-const scheduleSale = require("../suports/cron");
-const pageSection = require("../suports/pageSection");
+const _Flashsale = require("../model/flashsale");
+const _Item = require("../model/item.model.js");
+const _User = require("../model/user.model.js");
+const scheduleSale = require("../support/cron");
+const pageSection = require("../support/pageSection");
 
 exports.createFlashsale = (value, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await _User.findById(req.user._id);
       if (user && user.role === "F3") {
         const flashSale = new Flashsale({
           name: value.name,
@@ -47,9 +47,9 @@ exports.createFlashsale = (value, req) => {
 exports.getFlashSale = (page, limit, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await _User.findById(req.user._id);
       if (user) {
-        const flashSales = await Flashsale.find()
+        const flashSales = await _Flashsale.find()
           .populate("items.itemId")
           .sort({ createdAt: -1 });
 

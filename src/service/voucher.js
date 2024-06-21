@@ -1,16 +1,16 @@
 const voucher_codes = require("voucher-code-generator");
-const Voucher = require("../model/voucher");
-const User = require("../model/user");
+const _Voucher = require("../model/voucher");
+const _User = require("../model/user.model.js");
 const path = require("path");
 const handleFile = require("../config/file");
-const pageSection = require("../suports/pageSection");
+const pageSection = require("../support/pageSection");
 
 const p = path.join("data", "images", "image");
 
 exports.createVoucher = (expiration, quantity, discount, pic, name, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await _User.findById(req.user._id);
       if (user && user.role === "F3") {
         const code = voucher_codes.generate({
           length: 8,
@@ -19,7 +19,7 @@ exports.createVoucher = (expiration, quantity, discount, pic, name, req) => {
         });
         // let imageName = await handleFile.handleSave(image);
         // console.log(new Date().toLocaleString("vi-VI"));
-        const newVoucher = new Voucher({
+        const newVoucher = new _Voucher({
           code: code[0],
           expirationDate: new Date(expiration).getTime(),
           discount: +discount,
@@ -47,7 +47,7 @@ exports.createVoucher = (expiration, quantity, discount, pic, name, req) => {
 exports.getVoucher = (page, limit) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let vouchers = await Voucher.find();
+      let vouchers = await _Voucher.find();
       vouchers = vouchers.filter((v) => v.expirationDate > Date.now());
       // page section
       if (page && limit) {

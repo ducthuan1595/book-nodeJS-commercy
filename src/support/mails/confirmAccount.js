@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const HTMLContent = (name, token, urlOrigin, userId) => {
+const HTMLContent = (name, otp, urlOrigin, userId) => {
   if (userId) {
     return `
     <html>
@@ -33,9 +33,10 @@ const HTMLContent = (name, token, urlOrigin, userId) => {
   } else {
     return `
     <html>
-      <h1>Xin chào! ${name} vui lòng xác thực tài khoản với email đã đăng ký</h1>
-      <div>Xác thực tài khoản bằng cách click vào đường link bên dưới!</div>
-      <div><a style="font-size: 18px;" href="${urlOrigin}/confirm?token=${token}" >Confirm</a></div>
+      <h1>Hello! ${name}</h1>
+      <div>You just registed a account at TimGiThe</div>
+      <div>The Below is the OTP code you need to must confirm. It'll expire in 5 minutes</div>
+      <span style="text-align:'center'; border: 1px solid blue; border-radius: 8px; padding: 2px 6px; margin: 10px auto;">${otp}</span>
     </html>
   `;
   }
@@ -44,7 +45,7 @@ const HTMLContent = (name, token, urlOrigin, userId) => {
 const sendMailer = async (
   email,
   name,
-  token,
+  otp,
   urlOrigin,
   userId
 ) => {
@@ -52,9 +53,9 @@ const sendMailer = async (
     const options = await transporter.sendMail({
       from: '"Tìm Gì Thế - Book📚" <foo@example.com>', // sender address
       to: email,
-      subject: userId ? "Lấy lại mật khẩu" : "Xác thực tài khoản",
-      text: "Xin chào!" + name,
-      html: HTMLContent(name, token, urlOrigin, userId),
+      subject: userId ? "Lấy lại mật khẩu" : "Confirm account",
+      text: "Hi!" + name,
+      html: HTMLContent(name, otp, urlOrigin, userId),
     });
     await transporter.sendMail(options);
   } catch (err) {

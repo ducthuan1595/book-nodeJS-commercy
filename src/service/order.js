@@ -1,17 +1,17 @@
-const Item = require("../model/item");
-const Order = require("../model/order");
-const User = require("../model/user");
-const Voucher = require("../model/voucher");
-const FlashSale = require("../model/flashsale");
-const pageSection = require("../suports/pageSection");
-const sendMail = require("../suports/mails/orderInfo");
-const Review = require("../model/review");
+const _Item = require("../model/item.model.js");
+const _Order = require("../model/order");
+const _User = require("../model/user.model.js");
+const _Voucher = require("../model/voucher");
+const _Review = require("../model/review.model.js");
+const _FlashSale = require("../model/flashsale");
+const pageSection = require("../support/pageSection");
+const sendMail = require("../support/mails/orderInfo");
 const { getFormatMonth, getFormatYear } = require("../util/format");
 
 exports.createOrder = (value, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id)
+      const user = await _User.findById(req.user._id)
         .populate("cart.itemId")
         .select("-password");
       if (user && user.role !== "F1") {
@@ -40,12 +40,12 @@ exports.createOrder = (value, req) => {
 
           // Update count
           const arrId = newArrOrder.map((item) => item.itemId._id.toString());
-          const items = await Item.find().where("_id", arrId);
+          const items = await _Item.find().where("_id", arrId);
           // let flashSale;
           const updateCount = async (arr, id, quantity) => {
             const item = arr.find((v) => v._id.toString() === id.toString());
             if (item.flashSaleId) {
-              const flashSale = await FlashSale.findById(item.flashSaleId);
+              const flashSale = await _FlashSale.findById(item.flashSaleId);
               // update flashsale
               if (flashSale) {
                 const quantitySale = flashSale.items.find((v) => {
@@ -93,7 +93,7 @@ exports.createOrder = (value, req) => {
           // Apply voucher
           let voucherId;
           if (value.voucherCode) {
-            const voucher = await Voucher.findOne({ code: value.voucherCode });
+            const voucher = await _Voucher.findOne({ code: value.voucherCode });
             if (
               voucher &&
               Date.now() < voucher.expirationDate &&
@@ -106,7 +106,7 @@ exports.createOrder = (value, req) => {
             }
           }
 
-          const order = new Order({
+          const order = new _Order({
             userId: user._id,
             amount: amount,
             quantity: newQuantity,
@@ -155,9 +155,9 @@ exports.createOrder = (value, req) => {
 exports.getOrder = (page, limit, type, column, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await _User.findById(req.user._id);
       if (user && user.role === "F2") {
-        const orders = await Order.find({ userId: req.user._id })
+        const orders = await _Order.find({ userId: req.user._id })
           .populate("userId", '-password')
           .populate("items.itemId")
           .sort({ createdAt: -1 });
@@ -213,7 +213,7 @@ exports.getOrder = (page, limit, type, column, req) => {
 
 exports.getRevenue = async(type, year) => {
   try{
-    const orders = await Order.find();
+    const orders = await _Order.find();
     const newArray = [];
     const result = {};
     const totalMount = orders.reduce((a,b) => a + b.amount , 0);

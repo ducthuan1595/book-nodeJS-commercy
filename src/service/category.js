@@ -1,9 +1,9 @@
-const Category = require("../model/category");
-const Item = require("../model/item");
-const User = require("../model/user");
+const _Category = require("../model/category");
+const _Item = require("../model/item.model.js");
+const _User = require("../model/user.model.js");
 const path = require("path");
 const handleFile = require("../config/file");
-const pageSection = require("../suports/pageSection");
+const pageSection = require("../support/pageSection");
 const { destroyCloudinary } = require("../util/cloudinary");
 
 const p = path.join("data", "images", "image");
@@ -13,7 +13,7 @@ exports.getAllCategory = (page, limit, categoryId, type, column) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (categoryId) {
-        const category = await Category.findById(categoryId);
+        const category = await _Category.findById(categoryId);
         if (!category) {
           resolve({
             status: 404,
@@ -27,7 +27,7 @@ exports.getAllCategory = (page, limit, categoryId, type, column) => {
           });
         }
       } else if (!page && !limit && !categoryId) {
-        const categories = await Category.find().sort([
+        const categories = await _Category.find().sort([
           [column ? column : "position", type ? type : "asc"],
         ]);
         if (!categories) {
@@ -43,7 +43,7 @@ exports.getAllCategory = (page, limit, categoryId, type, column) => {
           });
         }
       } else {
-        const categories = await Category.find();
+        const categories = await _Category.find();
         const data = pageSection(page, limit, categories);
 
         if (categories) {
@@ -70,7 +70,7 @@ exports.getAllCategory = (page, limit, categoryId, type, column) => {
 exports.createCategory = (input, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await _User.findById(req.user._id);
       if (user && user.role === "F3") {
         const category = new Category({
           name: input.name,
@@ -100,7 +100,7 @@ exports.createCategory = (input, req) => {
 exports.updateCategory = (input, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await _User.findById(req.user._id);
       if (user && user.role === "F3") {
         const category = await Category.findById(input.categoryId);
         await destroyCloudinary(category.banner.public_id);
@@ -137,7 +137,7 @@ exports.updateCategory = (input, req) => {
 exports.deleteCategory = (categoryId, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await _User.findById(req.user._id);
       if (user && user.role === "F3") {
         const items = await Item.find({ categoryId: categoryId });
         if (items.length) {
@@ -147,7 +147,7 @@ exports.deleteCategory = (categoryId, req) => {
             data: items,
           });
         } else {
-          const category = await Category.findByIdAndDelete(categoryId);
+          const category = await _Category.findByIdAndDelete(categoryId);
           await destroyCloudinary(category.banner.public_id);
           if (category) {
             resolve({

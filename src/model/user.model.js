@@ -28,8 +28,8 @@ const schema = new mongoose.Schema(
       default: false,
     },
     role: {
-      type: String,
-      default: "F1",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Permission'
     },
     cart: [
       {

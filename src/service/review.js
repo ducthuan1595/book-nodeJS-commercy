@@ -1,10 +1,10 @@
-const Review = require('../model/review');
-const pageSection = require('../suports/pageSection');
+const _Review = require('../model/review.model.js');
+const pageSection = require('../support/pageSection');
 const {destroyCloudinary} = require('../util/cloudinary');
 
 exports.createReview = async (comment, stars, itemId, picture, req) => {
   try{
-    const review = new Review({
+    const review = new _Review({
       comment,
       stars,
       itemId,
@@ -26,7 +26,7 @@ exports.createReview = async (comment, stars, itemId, picture, req) => {
 
 exports.getReview = async (itemId, req) => {
   try{
-    let reviews = await Review.find({
+    let reviews = await _Review.find({
       reviewer: req.user._id});
     
     if (itemId !== "undefined") {
@@ -48,7 +48,7 @@ exports.getReview = async (itemId, req) => {
 
 exports.getAllReview = async (page, limit) => {
   try {
-    let reviews = await Review.find().populate('reviewer', '-password, -cart').sort({createdAt: -1});
+    let reviews = await _Review.find().populate('reviewer', '-password, -cart').sort({createdAt: -1});
     if (page !== "undefined" || limit !== "undefined") {
       const data = pageSection(page, limit, reviews);
       return {
@@ -138,7 +138,7 @@ exports.getReviewWithItem = async(itemId, rateStar, page, limit) => {
 
 exports.updateReview = async (comment, stars, reviewId, picture) => {
   try {
-    const review = await Review.findById(reviewId);
+    const review = await _Review.findById(reviewId);
     if(review) {
       if(picture?.length) {
         for (let i = 0; i < review.picture.length; i++) {

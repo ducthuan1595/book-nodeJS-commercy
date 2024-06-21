@@ -1,10 +1,10 @@
-const Item = require("../model/item");
-const User = require("../model/user");
+const _Item = require("../model/item.model.js");
+const _User = require("../model/user.model.js");
 
 exports.addCart = (value, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id)
+      const user = await _User.findById(req.user._id)
         .populate("cart.itemId")
         .select("-password");
       if (user) {
@@ -47,7 +47,7 @@ exports.addCart = (value, req) => {
             //   { cart: updateItem }
             // ).populate("cart.itemId");
           }
-          const updateUserCart = await User.findById(req.user._id).populate(
+          const updateUserCart = await _User.findById(req.user._id).populate(
             "cart.itemId"
           );
           resolve({
@@ -71,7 +71,7 @@ exports.addCart = (value, req) => {
 exports.deleteCart = (cartId, req) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findById(req.user._id).populate("cart.itemId");
+      const user = await _User.findById(req.user._id).populate("cart.itemId");
       if (user && user.cart) {
         const updateCart = user.cart.filter(
           (item) => item._id.toString() !== cartId.toString()

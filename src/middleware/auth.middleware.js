@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../model/user");
+const User = require("../model/user.model.js");
 const {redisClient} = require('../dbs/init.redis')
 
 const protect = async (req, res, next) => {
