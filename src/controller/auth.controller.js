@@ -1,19 +1,25 @@
 const authService = require("../service/auth.service");
 const {verifyToken} = require("../middleware/auth.middleware");
 const {createRefreshToken, createToken} = require('../config/token');
+const { loginValidate, signUpValidate } = require('../support/validation/user.validation');
 require("dotenv").config();
 
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email && !password) {
-    res.status(403).json({ message: "You are not authentication" });
-  } else {
-    const data = await authService.login(email, password, res);
-    if (data) {
-      res
-        .status(data.status)
-        .json({ message: data?.message, data: data?.data, token: data?.token });
+  try{
+    const { email, password } = req.body;
+    const { error } = loginValidate(req.body);
+    if (error) {
+      res.status(403).json({ message: error.details[0].message });
+    } else {
+      const data = await authService.login(email, password, res);
+      if (data) {
+        res
+          .status(data.status)
+          .json({ message: data?.message, data: data?.data, token: data?.token });
+      }
     }
+  }catch(err) {
+    console.error(err);
   }
 };
 
@@ -34,8 +40,9 @@ exports.credential = async(req, res) => {
 
 exports.loginAdmin = async (req, res) => {
   const { email, password } = req.body;
-  if (!email && !password) {
-    res.status(403).json({ message: "You are not authentication" });
+  const { error } = loginValidate(req.body);
+  if (error) {
+    res.status(403).json({ message: error.details[0].message });
   } else {
     const data = await authService.loginAdmin(email, password);
     if (data) {
@@ -47,17 +54,22 @@ exports.loginAdmin = async (req, res) => {
 };
 
 exports.signup = async (req, res) => {
-  const { username, email, password } = req.body;
-  const urlOrigin = req.protocol + "://" + req.get("host");
-  if (!username && !email && !password) {
-    res.status(404).json({ message: "Input invalid!" });
-  } else {
-    const data = await authService.signup(username, email, password, urlOrigin);
-    if (data) {
-      res
-        .status(data.status)
-        .json({ message: data?.message, data: data?.data });
+  try{
+    const { username, email, password } = req.body;
+    const urlOrigin = req.protocol + "://" + req.get("host");
+    const {error} = signUpValidate(req.body);
+    if (error) {
+      res.status(404).json({ message: error.details[0].message, code: 404 });
+    } else {
+      const data = await authService.signup(username, email, password, urlOrigin);
+      if (data) {
+        res
+          .status(data.status)
+          .json({ message: data?.message, data: data?.data });
+      }
     }
+  }catch(err) {
+    console.error(err);
   }
 };
 

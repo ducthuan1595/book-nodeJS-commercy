@@ -36,7 +36,9 @@ const HTMLContent = (name, otp, urlOrigin, userId) => {
       <h1>Hello! ${name}</h1>
       <div>You just registed a account at TimGiThe</div>
       <div>The Below is the OTP code you need to must confirm. It'll expire in 5 minutes</div>
-      <span style="text-align:'center'; border: 1px solid blue; border-radius: 8px; padding: 2px 6px; margin: 10px auto;">${otp}</span>
+      <div style="text-align:'center';">
+        <span style="border: 1px solid blue; border-radius: 8px; padding: 2px 6px; margin: 10px auto;">${otp}</span>
+      </div>
     </html>
   `;
   }

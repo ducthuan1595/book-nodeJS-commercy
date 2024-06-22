@@ -13,11 +13,13 @@ const OtpSchema = new Schema({
         type: Date,
         default: Date.now(),
         index: {
-            expires: 300
+            expires: 60
         }
     }
 }, {
     collection: 'otp'
 })
+
+// OtpSchema.index({ time: 1 }, { expireAfterSeconds: 60 });
 
 module.exports = model('Otp', OtpSchema);

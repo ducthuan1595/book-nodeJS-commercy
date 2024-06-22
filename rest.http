@@ -1,37 +1,37 @@
-POST http://localhost:8000/api/login
+POST http://localhost:8000/api/v2/auth/user/login
 Content-Type: application/json
 
 {
-    "email": "test1@gmail.com",
+    "email": "thuantd@funix.edu.vn",
     "password": "123456789"
 }
 
 ###
 
-POST http://localhost:8000/api/v2/signup
+POST http://localhost:8000/api/v2/auth/signup
 Content-Type: application/json
 
 {
     "email": "thuantd@funix.edu.vn",
-    "password": "123456789",
+    "password": "123",
     "username": "thuantd"
 }
 
 ###
 
 
-POST http://localhost:8000/api/v2/verify-otp
+POST http://localhost:8000/api/v2/otp/verify-otp
 Content-Type: application/json
 
 {
     "email": "thuantd@funix.edu.vn",
-    "otp": "684418"
+    "otp": "328629"
 }
 
 ###
 
 
-POST http://localhost:8000/api/v2/send-otp-again
+POST http://localhost:8000/api/v2/otp/send-otp-again
 Content-Type: application/json
 
 {
@@ -40,4 +40,4 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8000/api/v2/get-item
+GET http://localhost:8000/api/v2/product/get-item

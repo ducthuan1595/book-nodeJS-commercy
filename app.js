@@ -6,6 +6,7 @@ let RedisStore = require('connect-redis')(session)
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const createError = require('http-errors')
 
 
 const { initRedis, redisClient } = require('./src/dbs/init.redis');
@@ -57,6 +58,10 @@ app.get('/', (req, res, next) => {
 })
 
 app.use('/', routes);
+
+app.use((req, res, next) => {
+  next(createError(404, 'Not found'))
+})
 
 app.use((err, req, res, next) => {
   logEvents(`${req.url} -- ${req.method} -- ${err.message}`);

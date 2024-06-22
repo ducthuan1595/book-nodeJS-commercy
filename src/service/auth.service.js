@@ -18,11 +18,13 @@ var that = module.exports = {
             status: 402,
             message: "User is not exist",
           });
-        } else if (user && user.role === "F1") {
-          resolve({
-            status: 302,
-            message: "Please, Check email to confirm",
-          });
+        }
+        const permit = await _Permission.findById(user?.role);
+        if (permit && !permit.user) {
+            resolve({
+              status: 302,
+              message: "Please, Check email to confirm",
+            });
         } else {
           const validPs = await bcrypt.compare(password, user.password);
           if (validPs) {
@@ -32,11 +34,13 @@ var that = module.exports = {
             res.cookie('access_token', access_token, {
               maxAge: 365 * 24 * 60 * 60 * 100,
               httpOnly: true,
+              sameSite: 'Lax',
               //secure: true;
             });
             res.cookie('refresh_token', refresh_token, {
               maxAge: 365 * 24 * 60 * 60 * 100,
               httpOnly: true,
+              sameSite: 'Lax',
               //secure: true;
             })
   
@@ -77,7 +81,7 @@ var that = module.exports = {
         
       }
       if(user) {
-        const userExist = await User.findOne({ email: user.emailAddresses[0].value }).populate("cart.itemId", '-password');
+        const userExist = await _User.findOne({ email: user.emailAddresses[0].value }).populate("cart.itemId", '-password');
         if(userExist) {
           user = userExist
         }else {
@@ -178,8 +182,8 @@ var that = module.exports = {
       try {
         const user = await _User.findOne({ email: email });
         if (!user) {
-         
-          const pw = await bcrypt.hash(password, 12);
+          const salt = await bcrypt.genSalt(10);
+          const pw = await bcrypt.hash(password, salt);
           let newUser = new _User({
             username: username,
             email: email,
