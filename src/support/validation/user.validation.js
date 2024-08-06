@@ -2,9 +2,9 @@ const Joi = require('joi');
 
 const signUpValidate = data => {
     const userSchema = Joi.object({
-        email: Joi.string().email().lowercase().required(),
-        password: Joi.string().min(6).max(32).required(),
-        username: Joi.string().min(2).required()
+        user_email: Joi.string().email().lowercase().required(),
+        user_password: Joi.string().min(6).max(32).required(),
+        user_name: Joi.string().min(2).required()
     });
 
     return userSchema.validate(data);
@@ -12,8 +12,8 @@ const signUpValidate = data => {
 
 const loginValidate = data => {
     const userSchema = Joi.object({
-        email: Joi.string().email().lowercase().required(),
-        password: Joi.string().min(6).max(32).required(),
+        user_email: Joi.string().email().lowercase().required(),
+        user_password: Joi.string().min(6).max(32).required(),
     });
 
     return userSchema.validate(data);

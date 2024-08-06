@@ -9,9 +9,9 @@ const helmet = require('helmet');
 const createError = require('http-errors')
 
 
-const { initRedis, redisClient } = require('./src/dbs/init.redis');
-const logEvents = require('./src/support/logEvents');
-const routes = require('./src/router');
+const { initRedis, redisClient } = require('./dbs/init.redis');
+const logEvents = require('./support/logEvents');
+const routes = require('./router');
 
 const app = express();
 

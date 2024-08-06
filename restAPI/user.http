@@ -1,0 +1,22 @@
+@url_dev=http://localhost:8000/v1/api
+
+POST {{url_dev}}/user/signup
+Content-Type: application/json
+x-api-key: 948e083179a5bea048cf06919ab6d2c7cefeef3d6bf671e9c08a71e81b9980f4
+
+{
+    "user_name": "user001",
+    "user_email": "user001@gmail.com",
+    "user_password": "123456"
+}
+
+###
+
+POST {{url_dev}}/user/login
+Content-Type: application/json
+x-api-key: 948e083179a5bea048cf06919ab6d2c7cefeef3d6bf671e9c08a71e81b9980f4
+
+{
+    "user_email": "user001@gmail.com",
+    "user_password": "123456"
+}

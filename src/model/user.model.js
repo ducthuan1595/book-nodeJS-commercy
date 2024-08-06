@@ -1,37 +1,45 @@
+'use strict'
+
 const mongoose = require("mongoose");
+
+const COLLECTION_NAME = 'users'
+const DOCUMENT_NAME = 'User'
 
 const schema = new mongoose.Schema(
   {
-    username: {
+    user_name: {
       type: String,
       required: true,
     },
-    accountName: {
+    user_account: {
       type: String,
     },
-    gender: {
+    user_gender: {
       type: String,
     },
-    email: {
+    user_email: {
       type: String,
       unique: true,
       required: true,
     },
-    phoneNumber: {
+    user_phone: {
       type: String,
+      unique: true
     },
-    password: {
+    user_password: {
       type: String,
+      require: true
     },
-    status: {
-      type: Boolean,
-      default: false,
+    user_status: {
+      type: String,
+      default: 'inactive',
+      enum: ['active', 'inactive']
     },
-    role: {
+    user_role: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Permission'
     },
-    cart: [
+    user_cart: [
       {
         itemId: {
           type: mongoose.Schema.Types.ObjectId,
@@ -42,20 +50,21 @@ const schema = new mongoose.Schema(
         },
       },
     ],
-    picture: {
+    user_avatar: {
       url: {
         type: String,
       },
       public_id: {
         type: String,
       },
+      default: Buffer
     },
-    address:
+    user_address:
       {
         type: String,
       },
   },
-  { timestamps: true }
+  { timestamps: true, collection: COLLECTION_NAME }
 );
 
-module.exports = mongoose.model("User", schema);
+module.exports = mongoose.model(DOCUMENT_NAME, schema);
