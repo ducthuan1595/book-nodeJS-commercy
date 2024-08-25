@@ -13,21 +13,17 @@ const transporter = nodemailer.createTransport({
 });
 
 const HTMLContent = (name, otp, urlOrigin, userId) => {
+  
   if (userId) {
     return `
     <html>
       <h1>Xin chào! ${name} đây là email dùng để lấy lại mật khẩu</h1>
       <div style="margin: 20px 0;">Làm ơn! đừng chia sẽ điều này cho bất kỳ ai để tránh rũi ro!</div>
-      <form method="POST" action="${urlOrigin}/confirm-password">
       <div>Please, reset your password here!</div>
 
-      <div>
-      <label>New Password</label><br>
-        <input type='password' name="password" /><br>
-        <input type='hidden' name="user_id" value="${userId}" /><br>
+      <div style="text-align:'center';">
+        <span style="border: 1px solid blue; border-radius: 8px; padding: 2px 6px; margin: 10px auto;">${otp}</span>
       </div>
-      <div><button type="submit" style="cursor:'pointer'" >Lấy lại mật khẩu</button></div>
-      </form>
     </html>
   `;
   } else {

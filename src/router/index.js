@@ -9,6 +9,7 @@ const route = express.Router();
 route.use(apiKey)
 route.use(permission('0000'))
 
+route.use('/v1/api/access', require('./access'))
 route.use('/v1/api/user', require('./user'))
 route.use('/v1/api/cart', require('./cart'))
 route.use('/v1/api/product', require('./product'))

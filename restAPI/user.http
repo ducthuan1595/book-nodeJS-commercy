@@ -1,22 +1,69 @@
 @url_dev=http://localhost:8000/v1/api
 
-POST {{url_dev}}/user/signup
+POST {{url_dev}}/access/signup
 Content-Type: application/json
-x-api-key: 948e083179a5bea048cf06919ab6d2c7cefeef3d6bf671e9c08a71e81b9980f4
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
 
 {
-    "user_name": "user001",
-    "user_email": "user001@gmail.com",
+    "user_name": "hitim",
+    "user_email": "hi.tim.gi.the@gmail.com",
     "user_password": "123456"
 }
 
 ###
 
-POST {{url_dev}}/user/login
+POST {{url_dev}}/access/login
 Content-Type: application/json
-x-api-key: 948e083179a5bea048cf06919ab6d2c7cefeef3d6bf671e9c08a71e81b9980f4
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
 
 {
-    "user_email": "user001@gmail.com",
+    "user_email": "hi.tim.gi.the@gmail.com",
     "user_password": "123456"
 }
+
+###
+POST {{url_dev}}/otp/verify-otp
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+
+{
+    "email": "hi.tim.gi.the@gmail.com",
+    "otp": "520229"
+}
+
+###
+POST {{url_dev}}/otp/send-otp-again
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+
+{
+    "email": "hi.tim.gi.the@gmail.com"
+}
+
+###
+POST {{url_dev}}/otp/forgot-password
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+
+{
+    "email": "hi.tim.gi.the@gmail.com"
+}
+
+###
+PUT {{url_dev}}/user/change-password
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-client-id: 66caedd4533d3eefd8d16cc2
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI0NjAxMTQyLCJleHAiOjE3MjQ3NzM5NDJ9.X-n3SywHg6FedcMwIj5hJEipANLqj2QhHiDMA0cXDAo
+
+{
+    "password": "123456"
+}
+
+###
+GET {{url_dev}}/user/refresh-token
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-client-id: 66caedd4533d3eefd8d16cc2
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI0NjA1OTkzLCJleHAiOjE3MjQ3Nzg3OTN9.ZVyNAa3qYV9IlrS_CNwBkku-fFBB2w0_BtxBvmRH4I0
+refresh-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI0NjA1OTkzLCJleHAiOjE3MjUyMTA3OTN9.I6mfoJeZ4Fu0I0d07tSIInX0jAkM47iCulrJVu7sUiU

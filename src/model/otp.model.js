@@ -13,7 +13,7 @@ const OtpSchema = new Schema({
         type: Date,
         default: Date.now(),
         index: {
-            expires: 60
+            expires: '5m'
         }
     }
 }, {

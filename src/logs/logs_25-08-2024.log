@@ -1,0 +1,53 @@
+25-08-2024	07:02:15---------/v1/api/access/login -- POST -- Cannot destructure property 'id' of 'undefined' as it is undefined.
+25-08-2024	06:12:15---------/v1/api/access/signup -- POST -- Email already exist!
+25-08-2024	09:12:15---------/v1/api/access/login -- POST -- Cannot destructure property 'id' of 'undefined' as it is undefined.
+25-08-2024	21:21:15---------/v1/api/access/login -- POST -- Please, check email to confirm
+25-08-2024	47:35:15---------/v1/api/access/signup -- POST -- E11000 duplicate key error collection: book-ecommercy.users index: user_phone_1 dup key: { user_phone: null }
+25-08-2024	17:38:15---------/v1/api/access/signup -- POST -- E11000 duplicate key error collection: book-ecommercy.users index: user_phone_1 dup key: { user_phone: null }
+25-08-2024	47:32:16---------/v1/api/access/login -- POST -- Please, check email to confirm
+25-08-2024	07:26:19---------/v1/api/otp/verify-otp -- POST -- Not found!
+25-08-2024	24:26:19---------/v1/api/otp/verify-otp -- POST -- Cannot read properties of undefined (reading 'refreshToken')
+25-08-2024	20:33:20---------/v1/api/access/login -- POST -- Cannot read properties of undefined (reading 'refreshToken')
+25-08-2024	34:33:20---------/v1/api/access/login -- POST -- Cannot read properties of undefined (reading 'refreshToken')
+25-08-2024	00:47:20---------/v1/api/user/change-password -- PUT -- findByUserId is not defined
+25-08-2024	51:48:20---------/v1/api/user/change-password -- PUT -- Parameter "filter" to findOne() must be an object, got "66caedd4533d3eefd8d16cc2" (type string)
+25-08-2024	20:50:20---------/v1/api/user/change-password -- PUT -- Parameter "filter" to findOne() must be an object, got "66caedd4533d3eefd8d16cc2" (type string)
+25-08-2024	03:55:20---------/v1/api/user/change-password -- PUT -- Not found
+25-08-2024	22:56:20---------/v1/api/user/change-password -- PUT -- secret or public key must be provided
+25-08-2024	10:57:20---------/v1/api/user/change-password -- PUT -- secret or public key must be provided
+25-08-2024	46:58:20---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	44:01:21---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	06:02:21---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	54:02:21---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	17:11:21---------/v1/api/user/change-password -- PUT -- Invalid Token
+25-08-2024	12:12:21---------/v1/api/user/change-password -- PUT -- Cannot destructure property 'refreshToken' of 'req.headers[HEADERS.REFRESH_TOKEN]' as it is undefined.
+25-08-2024	00:13:21---------/v1/api/user/change-password -- PUT -- Cannot destructure property 'refreshToken' of 'req.headers[(intermediate value)]' as it is undefined.
+25-08-2024	42:13:21---------/v1/api/user/change-password -- PUT -- Cannot destructure property 'refreshToken' of '(req.headers[HEADERS.REFRESH_TOKEN] || null)' as it is null.
+25-08-2024	06:14:21---------/v1/api/user/change-password -- PUT -- Invalid Token
+25-08-2024	08:15:21---------/v1/api/user/change-password -- PUT -- Invalid Token
+25-08-2024	55:15:21---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	30:17:21---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	59:17:21---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	55:18:21---------/v1/api/user/change-password -- PUT -- Invalid Token
+25-08-2024	41:19:21---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	14:22:21---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	04:24:21---------/v1/api/user/change-password -- PUT -- Cannot read properties of undefined (reading 'userId')
+25-08-2024	17:26:21---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	42:08:22---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	38:14:22---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	33:18:22---------/v1/api/access/login -- POST -- Cannot access 'publicKey' before initialization
+25-08-2024	39:20:22---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	56:21:22---------/v1/api/user/change-password -- PUT -- Password Invalid!
+25-08-2024	57:25:22---------/v1/api/user/change-password -- PUT -- Password Invalid!
+25-08-2024	14:27:22---------/v1/api/user/change-password -- PUT -- Password Invalid!
+25-08-2024	23:28:22---------/v1/api/user/change-password -- PUT -- authService is not defined
+25-08-2024	14:29:22---------/v1/api/user/change-password -- PUT -- bcrypt is not defined
+25-08-2024	04:30:22---------/v1/api/user/change-password -- PUT -- Cannot read properties of undefined (reading 'message')
+25-08-2024	57:36:22---------/v1/api/access/login -- POST -- Password incorrect!
+25-08-2024	09:37:22---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	08:38:22---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	51:39:22---------/v1/api/user/change-password -- PUT -- invalid signature
+25-08-2024	52:45:22---------/v1/api/user/change-password -- PUT -- Cannot read properties of undefined (reading 'userId')
+25-08-2024	30:49:22---------/v1/api/user/change-password -- PUT -- JsonWebTokenError: invalid signature
+25-08-2024	38:52:22---------/v1/api/user/change-password -- PUT -- JsonWebTokenError: invalid signature
+25-08-2024	17:54:22---------/v1/api/access/login -- POST -- Password incorrect!

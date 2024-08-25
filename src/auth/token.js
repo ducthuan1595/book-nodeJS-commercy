@@ -9,7 +9,7 @@ const createToken = async(payload, publicKey, privateKey) => {
             expiresIn: '2 days'
         })
         const refreshToken = await JWT.sign(payload, privateKey, {
-            expiresIn: '2 days'
+            expiresIn: '7 days'
         })
 
         return {

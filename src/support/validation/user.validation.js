@@ -19,7 +19,25 @@ const loginValidate = data => {
     return userSchema.validate(data);
 }
 
+const emailValidate = email => {
+    const emailSchema = Joi.object({
+        email: Joi.string().email().required()
+    })
+
+    return emailSchema.validate(email)
+}
+
+const pwValidate = pw => {
+    const pwSchema = Joi.object({
+        password: Joi.string().min(6).required()
+    })
+
+    return pwSchema.validate(pw)
+}
+
 module.exports = {
     signUpValidate,
-    loginValidate
+    loginValidate,
+    emailValidate,
+    pwValidate
 }

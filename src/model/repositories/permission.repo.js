@@ -3,7 +3,7 @@
 const _Permission = require('../permission.model')
 const { convertObjectIdMongoDb } = require('../../util')
 
-const findByIdFromPermission = async({id}) => {
+const findByIdFromPermission = async(id) => {
     return await _Permission.findOne(convertObjectIdMongoDb(id))
 }
 

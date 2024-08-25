@@ -22,10 +22,6 @@ const schema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-    user_phone: {
-      type: String,
-      unique: true
-    },
     user_password: {
       type: String,
       require: true
@@ -65,6 +61,7 @@ const schema = new mongoose.Schema(
       },
   },
   { timestamps: true, collection: COLLECTION_NAME }
+  
 );
 
 module.exports = mongoose.model(DOCUMENT_NAME, schema);
