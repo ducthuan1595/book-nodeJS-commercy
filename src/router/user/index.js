@@ -6,7 +6,8 @@ const {
     updateAvatar,
     updateUser,
     getUser,
-    changePassword
+    changePassword,
+    refreshToken
 } = require('../../controller/user.controller');
 const {protect} = require('../../middleware/auth.middleware')
 const { asyncHandler } = require('../../support/asyncHandle')
@@ -16,7 +17,7 @@ const router = express.Router();
 router.use(protect)
 
 router.put(
-    "/update-user",
+    "",
     asyncHandler(updateUser)
 );
 router.put('/avatar', asyncHandler(updateAvatar));

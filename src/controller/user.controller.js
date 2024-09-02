@@ -1,7 +1,7 @@
 const userService = require("../service/user.service");
 const { SuccessResponse } = require("../core/success.response");
 const { ErrorResponse, BadRequestError, NotFoundError } = require("../core/error.response");
-const { pwValidate } = require("../support/validation/user.validation");
+const { pwValidate, updateUserValidate } = require("../support/validation/user.validation");
 require("dotenv").config();
 
 class UserController {
@@ -17,46 +17,44 @@ class UserController {
   };
 
   updateUser = async (req, res) => {
-    const { accountName, fullname, phone, gender, address } = req.body;
-    const data = await userService.updateUser(
-      accountName,
-      fullname,
-      phone,
-      gender,
-      address,
-      req
-    );
-    if (data) {
-      res
-        .status(data.status)
-        .json({ message: data.message, data: data?.data, token: data?.token });
+    const { user_account, user_name, user_gender, user_address } = req.body;
+    const {error} = updateUserValidate(req.body)
+    if(error) {
+      throw new NotFoundError(error.details[0].message)
     }
+    const data = await userService.updateUser({
+      user_account,
+      user_name,
+      user_gender,
+      user_address,
+      user: req.user
+    })
+
+    new SuccessResponse({
+      message: data.message,
+      metadata: data.data
+    }).send(res)
   };
 
   updateAvatar = async (req, res) => {
-    try {
-      const picture = req.body;
-      if (!picture) {
-        return res.status(400).json({ message: "Not found" });
-      }
-      const data = await userService.updateAvatar(picture, req);
-      if (data) {
-        return res
-          .status(data.status)
-          .json({ message: data.message, data: data.data, token: data.token });
-      }
-    } catch (err) {
-      return res.status(500).json({ message: "Error from server" });
+    const picture = req.body;
+    if (!picture) {
+      throw new NotFoundError('Not found image')
     }
-  };
+    const data = await userService.updateAvatar(picture, req.user.userId);
+    new SuccessResponse({
+      message: data.message,
+      metadata: data.data
+    }).send(res)
+  }
 
   changePassword = async (req, res) => {
     const { password } = req.body;
     const {error} = pwValidate(req.body)
     if (error) {
-      throw new NotFoundError('Password Invalid!')
+      throw new NotFoundError(error.details[0].message)
     }
-    const data = await userService.changePassword(password, req)
+    const data = await userService.changePassword(password, req.user)
     new SuccessResponse({
       message: data.message,
       metadata: data.data
@@ -64,12 +62,12 @@ class UserController {
   };
 
   refreshToken = async (req, res) => {
-    const { keyStore, user } = req
+    const { keyStore, user, refreshToken } = req
     if(!keyStore || !user) {
       throw new ErrorResponse('Invalid refresh token')
     }
 
-    const data = await userService.handleRefreshToken(user, keyStore, refresh_token)
+    const data = await userService.handleRefreshToken(user, keyStore, refreshToken, res)
     new SuccessResponse({
       message: data.message,
       metadata: data.data

@@ -35,9 +35,20 @@ const pwValidate = pw => {
     return pwSchema.validate(pw)
 }
 
+const updateUserValidate = user => {
+    const userSchema = Joi.object({
+        user_gender: Joi.string(),
+        user_name: Joi.string(),
+        user_account: Joi.string(),
+        user_address: Joi.string()
+    })
+    return userSchema.validate(user)
+}
+
 module.exports = {
     signUpValidate,
     loginValidate,
     emailValidate,
-    pwValidate
+    pwValidate,
+    updateUserValidate
 }

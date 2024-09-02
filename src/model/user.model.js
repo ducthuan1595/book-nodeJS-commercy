@@ -47,12 +47,7 @@ const schema = new mongoose.Schema(
       },
     ],
     user_avatar: {
-      url: {
-        type: String,
-      },
-      public_id: {
-        type: String,
-      },
+      link: Object,
       default: Buffer
     },
     user_address:

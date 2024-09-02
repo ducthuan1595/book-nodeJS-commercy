@@ -1,0 +1,15 @@
+02-09-2024	40:44:09---------/v1/api/user/refresh-token -- GET -- TokenExpiredError: jwt expired
+02-09-2024	32:45:09---------/v1/api/user/refresh-token -- GET -- Not found
+02-09-2024	01:50:09---------/v1/api/user/refresh-token -- GET -- refresh_token is not defined
+02-09-2024	19:51:09---------/v1/api/user/refresh-token -- GET -- Invalid Token
+02-09-2024	03:53:09---------/v1/api/user/refresh-token -- GET -- publicKey is not defined
+02-09-2024	37:54:09---------/v1/api/user/refresh-token -- GET -- KeyTokenService is not defined
+02-09-2024	17:55:09---------/v1/api/user/refresh-token -- GET -- res is not defined
+02-09-2024	04:06:10---------/v1/api/user/refresh-token -- GET -- JsonWebTokenError: invalid signature
+02-09-2024	21:07:10---------/v1/api/user/change-password -- PUT -- JsonWebTokenError: invalid signature
+02-09-2024	28:09:10---------/v1/api/access/login -- POST -- Cast to [string] failed for value "[ [] ]" (type string) at path "key_token_refreshTokenUsed.0" because of "CastError"
+02-09-2024	35:14:10---------/v1/api/user/refresh-token -- GET -- Cannot read properties of null (reading 'includes')
+02-09-2024	53:16:10---------/v1/api/user/refresh-token -- GET -- Cannot read properties of null (reading 'includes')
+02-09-2024	20:48:10---------/v1/api/user/avatar -- PUT -- User validation failed: user_avatar.url: Cast to string failed for value "{ picture: 'image.png' }" (type Object) at path "user_avatar.url"
+02-09-2024	27:13:11---------/v1/api/user -- PUT -- resolve is not defined
+02-09-2024	40:18:11---------/v1/api/user -- PUT -- user_account is not defined

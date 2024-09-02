@@ -30,8 +30,9 @@ const protect = asyncHandler( async (req, res, next) => {
 
       if(userId !== decoded.userId) throw new AuthorizedFailError('Invalid User')
       req.refreshToken = refreshToken
-      return next()
+      req.user = decoded
     })
+    return next()
   }
   
   const accessToken = req.headers[HEADERS.AUTHORIZATION]

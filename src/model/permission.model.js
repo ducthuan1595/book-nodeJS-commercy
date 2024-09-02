@@ -21,6 +21,10 @@ const schema = new Schema(
             type: Boolean,
             default: true
         },
+        permit_shop: {
+            type: Boolean,
+            default: false
+        },
         permit_userId: {
             type: Schema.Types.ObjectId,
             ref: 'User'

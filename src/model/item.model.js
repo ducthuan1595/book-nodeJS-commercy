@@ -1,89 +1,153 @@
 const mongoose = require("mongoose");
+const slugify = require('slugify')
 
-const schema = new mongoose.Schema(
+const productSchema = new mongoose.Schema(
   {
-    name: {
+    product_name: {
       type: String,
       required: true,
     },
-    author: {
+    product_thumb: {
+      type: Array,
+      required: true,
+    },
+    product_description: {
       type: String,
       required: true,
     },
-    pic: [
-      {
-        url: {
-          type: String,
-          required: true,
-        },
-        public_id: {
-          type: String,
-        },
-      },
-    ],
-    detailPic: [
-      {
-        url: {
-          type: String,
-          required: true,
-        },
-        public_id: {
-          type: String,
-        },
-      },
-    ],
-    priceInput: {
-      type: Number,
-      required: true,
-    },
-    pricePay: {
-      type: Number,
-      required: true,
-    },
-    categoryId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-      required: true,
-    },
-    slogan: {
+    product_slogan: {
       type: String,
       required: false,
     },
-    description: {
-      type: String,
-      required: true,
+    product_slug: {
+      type: Number,
     },
-    barcode: {
-      type: String,
-      required: true,
+    product_price: {
+      origin: {
+        type: Number,
+        required: true,
+      },
+      sale: {
+        type: Number,
+        default: null
+      }
     },
-    count: {
+    product_quantity: {
       type: Number,
       required: true,
     },
-    paid: {
-      type: Number,
-      default: 0
+    product_attributes: {
+      type: mongoose.Schema.Types.Mixed,
+      required: true,
     },
-    flashSaleId: {
+    product_ratingAverage: {
+      type: Number,
+      default: 4.5,
+      min: [1, 'Rating must be above 1'],
+      max: [5, 'Rating must be below 5'],
+      set: (val) =>  Math.round(val * 10) / 10
+    },
+    product_flashSaleId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Flashsale",
       default: null,
     },
-    pages: {
-      type: Number,
+    product_variation: {
+      type: Array,
+      default: []
     },
-    language: {
-      type: String
+    product_type: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+      required: true
     },
-    reviews: [
+    product_reviews: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Review'
       }
-    ]
+    ],
+    isDraft: {
+      type: Boolean,
+      default: true,
+      index: true,
+      select: false
+    },
+    isPublished: {
+      type: Boolean,
+      default: false,
+      index: true,
+      select: false
+    },
   },
   { timestamps: true }
-);
+)
 
-module.exports = mongoose.model("Item", schema);
+productSchema.index({product_name: 'text', product_description: 'text'})
+productSchema.pre('save', function(next) {
+  this.product_slug = slugify(this.product_name, {lower: true})
+  next()
+})
+
+
+const clothingSchema = new mongoose.Schema({
+  brand: {
+    type: String,
+    required: true
+  },
+  size: String,
+  material: String,
+  product_shop: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  origin_from: String
+}, {
+  collection: 'clothes',
+  timestamps: true
+})
+
+const electronicsSchema = new mongoose.Schema({
+  manufacture: {
+    type: String,
+    required: true
+  },
+  model: String,
+  color: String,
+  product_shop: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  origin_from: String
+}, {
+  collection: 'electronics',
+  timestamps: true
+})
+
+const bookSchema = new mongoose.Schema({
+  author: {
+    type: String,
+    required: true
+  },
+  sheets: Number,
+  publishing_house: String,
+  language: String,
+  product_shop: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  }
+}, {
+  collection: 'books',
+  timestamps: true
+})
+
+
+module.exports = {
+  _Product: mongoose.model("Item", productSchema),
+  _Clothing: mongoose.model("Clothes", clothingSchema),
+  _Electronic: mongoose.model('Electronic', electronicsSchema),
+  _Book: mongoose.model('Book', bookSchema)
+}

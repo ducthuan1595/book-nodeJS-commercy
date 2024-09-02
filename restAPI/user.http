@@ -54,7 +54,7 @@ PUT {{url_dev}}/user/change-password
 Content-Type: application/json
 x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
 x-client-id: 66caedd4533d3eefd8d16cc2
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI0NjAxMTQyLCJleHAiOjE3MjQ3NzM5NDJ9.X-n3SywHg6FedcMwIj5hJEipANLqj2QhHiDMA0cXDAo
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI1MjQ3MjU0LCJleHAiOjE3MjU0MjAwNTR9.-cusvTZdXmV8H_ae95S843kZCDKLR3Yzhzm5KztbmmA
 
 {
     "password": "123456"
@@ -65,5 +65,28 @@ GET {{url_dev}}/user/refresh-token
 Content-Type: application/json
 x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
 x-client-id: 66caedd4533d3eefd8d16cc2
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI0NjA1OTkzLCJleHAiOjE3MjQ3Nzg3OTN9.ZVyNAa3qYV9IlrS_CNwBkku-fFBB2w0_BtxBvmRH4I0
-refresh-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI0NjA1OTkzLCJleHAiOjE3MjUyMTA3OTN9.I6mfoJeZ4Fu0I0d07tSIInX0jAkM47iCulrJVu7sUiU
+refresh-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI1MjQ3MTI4LCJleHAiOjE3MjU4NTE5Mjh9.Ct0YR0KbuAtTKgSiBumvmS8cageMLC6IlCz75PxLve4
+
+###
+PUT {{url_dev}}/user/avatar
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-client-id: 66caedd4533d3eefd8d16cc2
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI1MjQ3MjU0LCJleHAiOjE3MjU0MjAwNTR9.-cusvTZdXmV8H_ae95S843kZCDKLR3Yzhzm5KztbmmA
+
+{
+    "picture": "image01.png"
+}
+
+###
+PUT {{url_dev}}/user
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-client-id: 66caedd4533d3eefd8d16cc2
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI1MjQ3MjU0LCJleHAiOjE3MjU0MjAwNTR9.-cusvTZdXmV8H_ae95S843kZCDKLR3Yzhzm5KztbmmA
+
+{
+    "user_account": "hi.tim",
+    "user_address": "thanh hoa",
+    "user_gender": "male"
+}
