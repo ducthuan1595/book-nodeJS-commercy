@@ -1,0 +1,9 @@
+@url_dev=http://localhost:8000/v1/api/product
+
+###
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-client-id: 66caedd4533d3eefd8d16cc2
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI1MjQ3MjU0LCJleHAiOjE3MjU0MjAwNTR9.-cusvTZdXmV8H_ae95S843kZCDKLR3Yzhzm5KztbmmA
+
+

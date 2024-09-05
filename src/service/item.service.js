@@ -1,3 +1,6 @@
+'use strict'
+
+const { BadRequestError } = require('../core/error.response.js')
 const _User = require("../model/user.model.js");
 const _Item = require("../model/item.model.js");
 const _Order = require("../model/order");
@@ -6,47 +9,137 @@ const path = require("path");
 const handleFile = require("../config/file");
 const pageSection = require("../support/pageSection");
 const { destroyCloudinary } = require("../util/cloudinary");
+const { findAllProduct, findProduct, publishProductByShop, unpublishProductByShop, searchProductByUser, updateProductById } = require('../model/repositories/item.repo.js')
+const { insertInventory } = require('../model/repositories/inventory.repo.js')
 
+class ProductFactory {
+  static productRegistry = {}
+  static registerProductType(type, classRef) {
+    ProductFactory.productRegistry[type] = classRef
+  }
 
-exports.createItem = (value, req) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const user = await _User.findById(req.user._id);
-      if (user && user.role === "F3") {
+  static async createProduct(type, payload) {
+    const productClass = ProductFactory.productRegistry[type]
+    if(!productClass) throw new BadRequestError('Invalid type product')
+
+    return new productClass(payload).createProduct()
+  }
+
+  static async updateProduct(type, product_id, payload) {
+    const productClass = ProductFactory.productRegistry[type]
+    if(!productClass) throw new BadRequestError('Invalid type product')
+
+    return new productClass(payload).updateProduct(product_id)
+  }
+
+  static async findAllDraftsForShop({product_shop, limit=50, skip=0}) {
+    const query = { product_shop, isDraft: true }
+    return await findAllDraftsForShop({query, limit, skip})
+  }
+
+  static async findAllPublishedForShop({product_shop, limit=50, skip=0}) {
+    const query = { product_shop, isPublished: true }
+    return await this.findAllPublishedForShop({query, limit, skip})
+  }
+
+  static async getAllProduct({limit=50, sort='ctime', page=1, filter={isPublished: true}}) {
+    return await findAllProduct({limit, sort, page, filter, select: ['product_name', 'product_price', 'product_thumb']})
+  }
+
+  static async getProduct({product_id}) {
+    return await findProduct({product_id, unselect: ['__v']})
+  }
+
+  static async publishProductByShop({product_shop, product_id}) {
+    return await publishProductByShop({product_shop, product_id})
+  }
+
+  static async unpublishProductByShop({product_shop, product_id}) {
+    return await unpublishProductByShop({product_shop, product_id})
+  }
+
+  static async searchProduct(keySearch) {
+    return await searchProductByUser(keySearch)
+  }
+}
+
+class Product {
+  constructor({
+    product_name,
+    product_thumb,
+    product_description,
+    product_price,
+    product_type,
+    product_shop,
+    product_attributes,
+    product_quantity
+  }) {
+    this.product_name = product_name
+    this.product_thumb = product_thumb
+    this.product_description = product_description
+    this.product_price = product_price
+    this.product_type = product_type
+    this.product_shop = product_shop
+    this.product_attributes = product_attributes
+    this.product_quantity = product_quantity
+  }
+
+  async createProduct(product_id) {
+    const newProduct = await _Product.create({...this, _id: product_id})
+    if(newProduct) {
+      await insertInventory({
+        productId: newProduct._id,
+        shopId: this.product_shop,
+        stock: this.product_quantity
+      })
+
+    }
+    return newProduct
+  }
+
+  async updateProduct(product_id, payload) {
+    return await updateProductById({product_id, payload, model: _Product})
+  }
+}
+
+  const createItem = async({data, user}) => {
+
+    const user = await _User.findById(req.user._id);
+    if (user && user.role === "F3") {
         const item = new _Item({
-          name: value.name,
-          priceInput: value.priceInput,
-          pricePay: value.priceInput,
-          author: value.author,
-          categoryId: value.categoryId,
-          slogan: value?.slogan,
-          description: value.description,
-          barcode: value.barcode,
-          count: value.count,
-          pic: value.pic,
-          detailPic: value.detailPic,
-          pages: value.pages,
-          language: value.language
+        name: value.name,
+        priceInput: value.priceInput,
+        pricePay: value.priceInput,
+        author: value.author,
+        categoryId: value.categoryId,
+        slogan: value?.slogan,
+        description: value.description,
+        barcode: value.barcode,
+        count: value.count,
+        pic: value.pic,
+        detailPic: value.detailPic,
+        pages: value.pages,
+        language: value.language
         });
         const newItem = await item.save();
         if (newItem) {
-          resolve({
+        resolve({
             status: 200,
             message: "ok",
             data: newItem,
-          });
-        }
-      } else {
-        resolve({
-          message: "Unauthorized",
-          status: 402,
         });
-      }
-    } catch (err) {
-      reject(err);
+        }
+    } else {
+        resolve({
+        message: "Unauthorized",
+        status: 402,
+        });
     }
-  });
-};
+  }
+
+
+module.exports = ProductFactory
+
 
 exports.updateItem = (value, req) => {
   return new Promise(async (resolve, reject) => {

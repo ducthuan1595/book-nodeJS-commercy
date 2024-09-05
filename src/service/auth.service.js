@@ -2,8 +2,6 @@
 
 const bcrypt = require("bcrypt");
 const _User = require("../model/user.model.js");
-const _Permission = require("../model/permission.model.js")
-const _Key = require('../model/keytoken.model.js')
 
 const { createToken } = require('../auth/token.js')
 const confirmMailer = require("../support/mails/confirmAccount");
@@ -17,13 +15,10 @@ const {
   NotFoundError,
   AuthorizedFailError,
 } = require("../core/error.response.js");
-const { createApiKey } = require("./apiKey.service.js");
 const { findOneUserWithEmail, updatePermissionForUser } = require("../model/repositories/user.repo.js");
 const {
   findByIdFromPermission,
-  insertPermission,
 } = require("../model/repositories/permission.repo.js");
-const { findByIdAndUpdateFromUser } = require("../model/repositories/user.repo.js");
 const KeyTokenService = require("./keyToken.service.js");
 const { getInfoData, setCookies, publicKey, privateKey } = require("../util/index.js");
 

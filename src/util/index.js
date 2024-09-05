@@ -34,11 +34,20 @@ const privateKey = () => {
     return crypto.randomBytes(32).toString('hex')
 }
 
+const getSelectData = ({fields = [], object = {}}) => {
+    return _.pick(object, fields)
+}
+
+const unGetSelectData = (select = []) => {
+    return Object.fromEntries(select.map(el => [el, 0]))
+}
 
 module.exports = {
     convertObjectIdMongoDb,
     getInfoData,
     setCookies,
     publicKey,
-    privateKey
+    privateKey,
+    getSelectData,
+    unGetSelectData
 }

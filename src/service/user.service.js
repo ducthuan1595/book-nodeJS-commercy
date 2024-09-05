@@ -6,9 +6,7 @@ const bcrypt = require('bcrypt')
 const { createToken } = require('../auth/token.js')
 const {
   ErrorResponse,
-  BadRequestError,
   ForbiddenError,
-  NotFoundError,
 } = require("../core/error.response.js")
 const { publicKey, privateKey, getInfoData , setCookies} = require("../util/index.js");
 const KeyTokenService = require("./keyToken.service.js");
