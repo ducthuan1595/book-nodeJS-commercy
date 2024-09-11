@@ -12,6 +12,7 @@ const protect = asyncHandler( async (req, res, next) => {
   if(!userId) {
       throw new AuthorizedFailError('Invalid Request')
   }
+  
   // get access token
   const keyStore = await _Key.findOne({key_token_userId: userId})
   

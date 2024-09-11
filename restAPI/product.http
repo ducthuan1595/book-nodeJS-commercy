@@ -1,9 +1,114 @@
 @url_dev=http://localhost:8000/v1/api/product
 
 ###
+POST {{url_dev}}
 Content-Type: application/json
 x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
 x-client-id: 66caedd4533d3eefd8d16cc2
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI1MjQ3MjU0LCJleHAiOjE3MjU0MjAwNTR9.-cusvTZdXmV8H_ae95S843kZCDKLR3Yzhzm5KztbmmA
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI2MDM3NDM2LCJleHAiOjE3MjYyMTAyMzZ9.73H14TkoO4RL-6kUpgTDAthnVDrGCU2VvmXeIANvLgk
 
+{
+    "product_name": "test 001",
+    "product_thumb": [{
+        "url": "image.png",
+        "public_id": "12bn324"
+    }],
+    "product_description": "this is desc",
+    "product_slogan": "this is slogan",
+    "product_price": {
+        "origin": 12,
+        "sale": 10
+    },
+    "product_type": "book",
+    "product_shop": "66caedd4533d3eefd8d16cc2",
+    "product_attributes": {
+        "author": "thhuian",
+        "sheets": 123,
+        "publishing_house": "Van hoc",
+        "language": "vi"
+    },
+    "product_quantity": "1000"
+}
+
+###
+PATCH {{url_dev}}/66e1531e6d1a1218bdfc6a10
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-client-id: 66caedd4533d3eefd8d16cc2
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI2MDM3NDM2LCJleHAiOjE3MjYyMTAyMzZ9.73H14TkoO4RL-6kUpgTDAthnVDrGCU2VvmXeIANvLgk
+
+{
+    "product_name": "test 002",
+    "product_thumb": [{
+        "url": "image.png",
+        "public_id": "12bn324"
+    }],
+    "product_description": "this is desc",
+    "product_slogan": "this is slogan",
+    "product_price": {
+        "sale": 9
+    },
+    "product_type": "book",
+    "product_shop": "66caedd4533d3eefd8d16cc2",
+    "product_attributes": {
+        "author": "thhuian12"
+    },
+    "product_quantity": "1000"
+}
+
+###
+
+GET {{url_dev}}
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+
+###
+
+GET {{url_dev}}/flashsale/all
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+
+###
+
+GET {{url_dev}}/66e143f85a30edf447af3fd9
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+
+###
+
+GET {{url_dev}}/draft/all
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-client-id: 66caedd4533d3eefd8d16cc2
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI2MDM3NDM2LCJleHAiOjE3MjYyMTAyMzZ9.73H14TkoO4RL-6kUpgTDAthnVDrGCU2VvmXeIANvLgk
+
+###
+
+GET {{url_dev}}/published/all
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-client-id: 66caedd4533d3eefd8d16cc2
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI2MDM3NDM2LCJleHAiOjE3MjYyMTAyMzZ9.73H14TkoO4RL-6kUpgTDAthnVDrGCU2VvmXeIANvLgk
+
+###
+
+PUT {{url_dev}}/published/66e143f85a30edf447af3fd9
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-client-id: 66caedd4533d3eefd8d16cc2
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI2MDM3NDM2LCJleHAiOjE3MjYyMTAyMzZ9.73H14TkoO4RL-6kUpgTDAthnVDrGCU2VvmXeIANvLgk
+
+###
+
+PUT {{url_dev}}/unpublished/66e143f85a30edf447af3fd9
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-client-id: 66caedd4533d3eefd8d16cc2
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI2MDM3NDM2LCJleHAiOjE3MjYyMTAyMzZ9.73H14TkoO4RL-6kUpgTDAthnVDrGCU2VvmXeIANvLgk
+
+###
+
+GET {{url_dev}}/search/test
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
 

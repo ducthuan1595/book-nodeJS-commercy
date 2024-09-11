@@ -1,20 +1,36 @@
 "use strict";
 
-const express = require("express");
+const express = require("express")
 
-const itemController = require("../../controller/item.controller");
-const { protect } = require("../../middleware/auth.middleware");
+const {
+    createItem, 
+    getItems, 
+    getItemsDraftForShop, 
+    getItemsPublishedForShop,
+    getItem,
+    updateItem,
+    publishedItemForShop,
+    unpublishedItemForShop,
+    searchProduct,
+    getItemWithFlashSale
+} = require("../../controller/item.controller")
+const { protect } = require("../../middleware/auth.middleware")
+const { asyncHandler } = require('../../support/asyncHandle')
 
 const router = express.Router();
 
-router.get("/get-item", itemController.getAllItem);
-router.get("/get-item-flashsale", itemController.getAllItemFlashSale);
-router.get("/get-item-follow-price", itemController.getItemFollowPrice);
+router.get("", asyncHandler(getItems))
+router.get("/flashsale/all", asyncHandler(getItemWithFlashSale))
+router.get("/search/:keySearch", asyncHandler(searchProduct))
+router.get("/:id", asyncHandler(getItem))
 
-router.use(protect);
+router.use(protect)
 
-router.post("", itemController.createItem);
-router.patch("", itemController.updateItem);
-router.delete("", itemController.deleteItem);
+router.post('', asyncHandler(createItem))
+router.patch('/:id', asyncHandler(updateItem))
+router.get("/draft/all", asyncHandler(getItemsDraftForShop))
+router.get("/published/all", asyncHandler(getItemsPublishedForShop))
+router.put('/published/:id', asyncHandler(publishedItemForShop))
+router.put('/unpublished/:id', asyncHandler(unpublishedItemForShop))
 
 module.exports = router;

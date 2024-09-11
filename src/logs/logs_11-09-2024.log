@@ -1,0 +1,47 @@
+11-09-2024	24:50:13---------/v1/api/product -- POST -- TokenExpiredError: jwt expired
+11-09-2024	50:23:14---------/v1/api/product -- GET -- Cannot read properties of undefined (reading 'limit')
+11-09-2024	45:25:14---------/v1/api/product -- GET -- Cannot read properties of undefined (reading 'limit')
+11-09-2024	51:27:14---------/v1/api/product -- GET -- Cannot read properties of undefined (reading 'limit')
+11-09-2024	19:39:14---------/v1/api/product/draft -- GET -- findAllDraftsForShop is not defined
+11-09-2024	52:01:15---------/v1/api/product/published -- GET -- Cannot read properties of undefined (reading 'findAllProductForShop')
+11-09-2024	29:02:15---------/v1/api/product/published -- GET -- Cannot read properties of undefined (reading 'findAllProductForShop')
+11-09-2024	36:02:15---------/v1/api/product/published -- GET -- Cannot read properties of undefined (reading 'findAllProductForShop')
+11-09-2024	04:07:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	39:07:15---------/v1/api/product/published -- GET -- Cast to ObjectId failed for value "published" (type string) at path "_id" for model "Item"
+11-09-2024	23:08:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	51:11:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	05:16:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	35:17:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	46:19:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	00:21:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	04:22:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	32:23:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	09:24:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	30:24:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	43:27:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	48:30:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	28:32:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	46:34:15---------/v1/api/product/66e143f85a30edf447af3fd9 -- GET -- Invalid Request
+11-09-2024	03:35:15---------/v1/api/product/66e143f85a30edf447af3fd9 -- GET -- Invalid Request
+11-09-2024	20:35:15---------/v1/api/product/draft -- GET -- Cast to ObjectId failed for value "draft" (type string) at path "_id" for model "Item"
+11-09-2024	30:41:15---------/v1/api/product -- PATCH -- Cast to Number failed for value "{ origin: 12, sale: 10 }" (type Object) at path "product_price.origin"
+11-09-2024	32:42:15---------/v1/api/product -- PATCH -- Not found
+11-09-2024	42:44:15---------/v1/api/product -- PATCH -- Not found
+11-09-2024	02:46:15---------/v1/api/product -- PATCH -- Not found
+11-09-2024	26:47:15---------/v1/api/product -- PATCH -- Not found
+11-09-2024	47:47:15---------/v1/api/product -- PATCH -- Not found
+11-09-2024	04:49:15---------/v1/api/product -- PUT -- Not found
+11-09-2024	53:49:15---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Cast to Number failed for value "{ origin: 12, sale: 10 }" (type Object) at path "product_price.origin"
+11-09-2024	58:52:15---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Cast to Number failed for value "{ origin: 12, sale: 5 }" (type Object) at path "product_price.origin"
+11-09-2024	48:54:15---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Cast to Number failed for value "{ origin: 12, sale: 5 }" (type Object) at path "product_price.origin"
+11-09-2024	15:58:15---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Cast to Number failed for value "{ origin: 12, sale: 5 }" (type Object) at path "product_price.origin"
+11-09-2024	33:01:16---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Cast to Number failed for value "{ origin: 12, sale: 5 }" (type Object) at path "product_price.origin"
+11-09-2024	38:03:16---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Spread syntax requires ...iterable[Symbol.iterator] to be a function
+11-09-2024	07:04:16---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Cast to Number failed for value "{ origin: 12, sale: 5 }" (type Object) at path "product_price.origin"
+11-09-2024	02:05:16---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Cast to Number failed for value "{ origin: 12, sale: 5 }" (type Object) at path "product_price.origin"
+11-09-2024	30:05:16---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Cast to Number failed for value "{ origin: 12, sale: 5 }" (type Object) at path "product_price.origin"
+11-09-2024	27:10:16---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Cast to Number failed for value "{ origin: 12, sale: 5 }" (type Object) at path "product_price.origin"
+11-09-2024	51:21:16---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Expected double-quoted property name in JSON at position 410
+11-09-2024	38:22:16---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Expected double-quoted property name in JSON at position 410
+11-09-2024	27:25:17---------/v1/api/product/flashsale/all -- GET -- Cast to ObjectId failed for value "true" (type boolean) at path "product_flashSaleId" for model "Item"
+11-09-2024	34:26:17---------/v1/api/product/flashsale/all -- GET -- Cast to ObjectId failed for value "true" (type boolean) at path "product_flashSaleId" for model "Item"

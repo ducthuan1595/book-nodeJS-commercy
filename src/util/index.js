@@ -42,6 +42,30 @@ const unGetSelectData = (select = []) => {
     return Object.fromEntries(select.map(el => [el, 0]))
 }
 
+const removeUndefinedObject = (obj) => {
+    Object.keys(obj).forEach(k => {
+        if(obj[k] === null) {
+            delete obj[k]
+        }
+    })
+    return obj
+}
+
+const updateNestParser = obj => {
+    const final = {}
+    Object.keys(obj).forEach(k => {
+        if(typeof obj[k] === 'object' && !Array.isArray(obj[k])) {
+            const res = updateNestParser(obj[k])
+            Object.keys(res).forEach(a => {
+                final[`${k}.${a}`] = res[a]
+            })
+        }else {
+            final[k] = obj[k]
+        }
+    })
+    return final
+}
+
 module.exports = {
     convertObjectIdMongoDb,
     getInfoData,
@@ -49,5 +73,7 @@ module.exports = {
     publicKey,
     privateKey,
     getSelectData,
-    unGetSelectData
+    unGetSelectData,
+    removeUndefinedObject,
+    updateNestParser
 }

@@ -57,9 +57,13 @@ const productSchema = new mongoose.Schema(
       default: []
     },
     product_type: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category',
-      required: true
+      type: String,
+      required: true,
+      enum: [
+        'book',
+        'clothing',
+        'electronic'
+      ]
     },
     product_reviews: [
       {
@@ -67,6 +71,11 @@ const productSchema = new mongoose.Schema(
         ref: 'Review'
       }
     ],
+    product_shop: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     isDraft: {
       type: Boolean,
       default: true,
@@ -97,11 +106,6 @@ const clothingSchema = new mongoose.Schema({
   },
   size: String,
   material: String,
-  product_shop: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
   origin_from: String
 }, {
   collection: 'clothes',
@@ -115,11 +119,6 @@ const electronicsSchema = new mongoose.Schema({
   },
   model: String,
   color: String,
-  product_shop: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
   origin_from: String
 }, {
   collection: 'electronics',
@@ -134,11 +133,6 @@ const bookSchema = new mongoose.Schema({
   sheets: Number,
   publishing_house: String,
   language: String,
-  product_shop: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  }
 }, {
   collection: 'books',
   timestamps: true

@@ -33,25 +33,25 @@ app.use(
 app.use(fileupload());
 
 // init redis
-(async() => {
-  await initRedis();
-  const redisStore = new RedisStore({
-    client: redisClient
-  })
+// (async() => {
+//   await initRedis();
+//   const redisStore = new RedisStore({
+//     client: redisClient
+//   })
   
-  // save session
-  app.use(session({
-    secret: 'book-app',
-    resave: false,
-    store: redisStore,
-    saveUninitialized: true,
-    cookie: {
-      secure: false,
-      httpOnly: true,
-      maxAge: 5 * 60 * 1000
-    }
-  }))
-})();
+//   // save session
+//   app.use(session({
+//     secret: 'book-app',
+//     resave: false,
+//     store: redisStore,
+//     saveUninitialized: true,
+//     cookie: {
+//       secure: false,
+//       httpOnly: true,
+//       maxAge: 5 * 60 * 1000
+//     }
+//   }))
+// })();
 
 app.get('/', (req, res, next) => {
     res.send('Home Page!')

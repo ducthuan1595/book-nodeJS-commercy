@@ -4,7 +4,7 @@ const { Types } = require('mongoose')
 const { _Product, _Electronic, _Book, _Clothing } = require('../../model/item.model')
 const { getSelectData, unGetSelectData } = require('../../util')
 
-const findAllProduct = async({limit, sort, filter, select}) => {
+const findAllProduct = async({limit, sort, filter, select, page}) => {
     const skip = (page - 1) * limit
     const sortBy = sort === 'ctime' ? {_id: -1} : {_id: 1}
     const products = await _Product.find(filter)
@@ -15,6 +15,16 @@ const findAllProduct = async({limit, sort, filter, select}) => {
         .lean()
 
     return products
+}
+
+const findAllProductWithQuery = async({query, limit, skip}) => {  
+    return await _Product.find(query)
+        .populate('product_shop', '-user_password')
+        .sort({updatedAt: -1})
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec()
 }
 
 const findProduct = async({product_id, unselect}) => {
@@ -47,7 +57,7 @@ const unpublishProductByShop = async({product_shop, product_id}) => {
 
 const searchProductByUser = async(keySearch) => {
     const regexSearch = new RegExp(keySearch, 'i')
-    const result = await _Product.find({
+    let result = await _Product.find({
         isPublished: true,
         $text: { $search: regexSearch }
     }, {
@@ -55,6 +65,8 @@ const searchProductByUser = async(keySearch) => {
     })
     .sort({score: { $meta: 'textScore' }})
     .lean()
+
+    //result = await _Product.find({ entityData: { $elemMatch: { key: regexSearch, value: /^Ky/i, }, }, })
 
     return result
 }
@@ -70,4 +82,5 @@ module.exports = {
     unpublishProductByShop,
     searchProductByUser,
     updateProductById,
+    findAllProductWithQuery,
 }
