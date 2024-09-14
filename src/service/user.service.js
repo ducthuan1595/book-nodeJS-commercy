@@ -7,47 +7,36 @@ const { createToken } = require('../auth/token.js')
 const {
   ErrorResponse,
   ForbiddenError,
+  NotFoundError,
+  AuthorizedFailError,
 } = require("../core/error.response.js")
-const { publicKey, privateKey, getInfoData , setCookies} = require("../util/index.js");
+const { publicKey, privateKey, getInfoData , setCookies} = require("../util/index.js")
+const { updatePermissionWithAdmin } = require('../model/repositories/permission.repo.js')
+const  { findAllUser } = require('../model/repositories/user.repo.js')
 const KeyTokenService = require("./keyToken.service.js");
 
 class UserService {
-  static getUser (page, limit, key, req)  {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const user = await _User.findById(req.user._id);
-        if (user && user.role !== "F1") {
-          if (key) {
-            const users = await _User
-              .find({ username: key })
-              .select("-password");
-            if (users) {
-              resolve({
-                status: 200,
-                message: "ok",
-                data: users,
-              });
-            } else {
-              resolve({
-                status: 404,
-                message: "Not found",
-              });
-            }
-          } else {
-            const users = await _User.find().select("-password");
-            if (users) {
-              resolve({
-                status: 200,
-                message: "ok",
-                data: users,
-              });
-            }
-          }
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
+  static async getInfoUser (user)  {
+    const userInfo = await _User.findById(user.userId).select('-password')
+    if(!userInfo) throw new NotFoundError('Invalid User')
+
+    return {
+      message: 'ok',
+      data: userInfo
+    }
+  }
+
+  static async getAllUser ({limit=50, sort='ctime', page=1, filter, user}) {
+    if(!user.permit.permit_admin) throw new AuthorizedFailError('Invalid permit')
+
+    return await findAllUser({limit, sort, page, filter})
+  }
+
+  // update permission for user with admin
+  static async updatePermissionWithAdmin ({user, payload, userId}) {
+    if(!user.permit.permit_admin) throw new AuthorizedFailError('Invalid permit')
+
+    return await updatePermissionWithAdmin(payload, userId)
   }
 
   static async updateUser ({user_name, user_account, user_gender, user_address, user}) {
@@ -61,7 +50,6 @@ class UserService {
     const updateUser = await _User.findByIdAndUpdate(user.userId, update, options)
     
     return {
-      status: 201,
       message: "ok",
       data: {
         user: getInfoData({fields: ['_id', 'user_name', 'user_email', 'user_cart', 'user_gender', 'user_avatar', 'user_account', 'user_address'], object: updateUser}),
@@ -74,7 +62,6 @@ class UserService {
       user.user_avatar.link = picture;
       const updateUser = await user.save();
       return {
-        status: 201,
         message: "ok",
         data: {
           user: getInfoData({fields: ['_id', 'user_name', 'user_email', 'user_cart', 'user_gender', 'user_avatar', 'user_account', 'user_address'], object: updateUser}),
@@ -91,7 +78,6 @@ class UserService {
     }, {new: true})
     
     return {
-      status: 200,
       message: "ok",
       data: updateUser ? 1 : 0,
     };

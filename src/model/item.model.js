@@ -65,12 +65,10 @@ const productSchema = new mongoose.Schema(
         'electronic'
       ]
     },
-    product_reviews: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Review'
-      }
-    ],
+    product_category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category'
+    },
     product_shop: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

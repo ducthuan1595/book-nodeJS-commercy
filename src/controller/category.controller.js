@@ -1,103 +1,39 @@
-const categoryService = require("../service/category");
+'use strict'
 
-exports.getAllCategory = async (req, res) => {
-  const page = req.query?.page === "null" ? null : req.query?.page;
-  const limit = req.query?.limit === "null" ? null : req.query?.limit;
-  const type = req.query?.type === "null" ? null : req.query?.type;
-  const column = req.query?.column === "null" ? null : req.query?.column;
-  const categoryId =
-    req.query?.categoryId === "null" ? null : req.query?.categoryId;
+const {
+  createCategory,
+  getAllCategory,
+  updateCategory,
+  deleteCategory
+} = require("../service/category.service")
+const { OK } = require('../core/success.response')
 
-  const data = await categoryService.getAllCategory(
-    page,
-    limit,
-    categoryId,
-    type,
-    column
-  );
-  if (data) {
-    res.status(data.status).json({ message: data.message, data: data?.data });
+class CategoryController {
+  createCategory = async (req, res) => {
+    const data = await createCategory({user: req.user, payload: req.body})
+    new OK({
+      message: 'ok',
+      metadata: data
+    }).send(res)
   }
-};
 
-exports.createCategory = async (req, res) => {
-  const { name } = req.body;
-  const description = req.body?.description;
-  const banner = req.body.banner;
-  const position = req.body.position;
-  const active = req.body.isActive;
-  let isActive;
-  if (active) {
-    if (active === "1") {
-      isActive = true;
-    } else {
-      isActive = false;
-    }
+  getAllCategory = async (req, res) => {
+    new OK({
+      metadata: await getAllCategory()
+    }).send(res)
   }
-  if (!name || !position || isActive || !description || !banner) {
-    res.status(404).json({ message: "Category is invalid!" });
-  } else {
-    const data = await categoryService.createCategory(
-      {
-        name,
-        banner,
-        description,
-        position,
-        isActive,
-      },
-      req
-    );
-    if (data) {
-      res
-        .status(data.status)
-        .json({ message: data?.message, data: data?.data });
-    }
-  }
-};
 
-exports.updateCategory = async (req, res) => {
-  const { name, categoryId, banner } = req.body;
-  const description = req.body?.description;
-  const position = req.body.position;
-  const active = req.body.isActive;
-  let isActive;
-  if (active) {
-    if (active === "1") {
-      isActive = true;
-    } else {
-      isActive = false;
-    }
+  updateCategory = async (req, res) => {
+    new OK({
+      metadata: await updateCategory({user: req.user, payload: req.body, categoryId: req.params.id})
+    }).send(res)
   }
-  if (!name || !position || !categoryId || !banner || !description) {
-    res.status(404).json({ message: "Category is invalid!" });
-  } else {
-    const data = await categoryService.updateCategory(
-      {
-        name,
-        banner,
-        categoryId,
-        description,
-        position,
-        isActive,
-      },
-      req
-    );
-    if (data) {
-      res
-        .status(data.status)
-        .json({ message: data?.message, data: data?.data });
-    }
-  }
-};
 
-exports.deleteCategory = async (req, res) => {
-  const { categoryId } = req.body;
-  if (!categoryId) {
-    res.status(403).json({ message: "Not found" });
-  } else {
-    const data = await categoryService.deleteCategory(categoryId, req);
-    if (data) {
-      res.status(data.status).json({ message: data.message, data: data?.data });
-    }
+  deleteCategory = async (req, res) => {
+    new OK({
+      metadata: await deleteCategory({user: req.user, categoryId: req.params.id})
+    }).send(res)
   }
-};
+}
+
+module.exports = new CategoryController()

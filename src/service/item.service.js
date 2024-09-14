@@ -1,12 +1,7 @@
 'use strict'
 
-const { BadRequestError } = require('../core/error.response.js')
-const _User = require("../model/user.model.js");
+const { BadRequestError, NotFoundError } = require('../core/error.response.js')
 const {_Product, _Electronic, _Clothing, _Book} = require("../model/item.model.js");
-const _Order = require("../model/order");
-const _FlashSale = require("../model/flashsale");
-const pageSection = require("../support/pageSection");
-const { destroyCloudinary } = require("../util/cloudinary");
 const { 
   findAllProduct, 
   findProduct, 
@@ -14,10 +9,11 @@ const {
   unpublishProductByShop, 
   searchProductByUser, 
   updateProductById, 
-  findAllProductWithQuery 
+  findAllProductWithQuery,
 } = require('../model/repositories/item.repo.js')
 const { insertInventory } = require('../model/repositories/inventory.repo.js');
 const { removeUndefinedObject, updateNestParser } = require('../util/index.js');
+const { uploadImage, removeImage, removeAndUpdateImage } = require('./upload.service.js');
 
 class ProductFactory {
   static productRegistry = {}
@@ -37,6 +33,13 @@ class ProductFactory {
     if(!productClass) throw new BadRequestError('Invalid type product')
 
     return new productClass(payload).updateProduct(product_id)
+  }
+
+  static async removeProduct({product_id, product_shop, product_type}) {
+    const classes = ProductFactory.productRegistry[product_type]
+    if(!classes) throw new BadRequestError('Invalid type product')
+    
+    return new classes({}).removeProduct(product_id, product_shop)
   }
 
   static async findAllDraftsForShop({product_shop, limit=50, skip=0}) {
@@ -100,7 +103,12 @@ class Product {
   }
 
   async createProduct(product_id) {
-    const newProduct = await _Product.create({...this, _id: product_id})
+    const images = []
+    for(let url of this.product_thumb) {
+      const img = await uploadImage({url, name: this.product_name})
+      images.push(img)
+    }
+    const newProduct = await _Product.create({...this, _id: product_id, product_thumb: images})
     if(newProduct) {
       await insertInventory({
         productId: newProduct._id,
@@ -113,16 +121,37 @@ class Product {
   }
 
   async updateProduct(product_id, payload) {
-    console.log({...payload})
+    const product = await _Product.findById(product_id)
+    if(!product) throw NotFoundError('Product invalid!')
 
+    let images = []
+    if(this.product_thumb && this.product_thumb.length > 0) {
+      images = await removeAndUpdateImage(product.product_thumb, this.product_thumb, this.product_name)
+    }
+    payload.product_thumb = images
     return await updateProductById({product_id, payload, model: _Product})
+  }
+
+  async removeProduct(product_id, product_shop) {
+    const product = await _Product.findOne({
+      product_shop,
+      _id: product_id
+    })
+    if(!product) throw NotFoundError('Product invalid!')
+
+    if(product.product_thumb.length > 0) {
+      for(let url of product.product_thumb) {
+        await removeImage(url.public_id)
+      }
+    }
+    return await product.deleteOne() ? 1 : 0
   }
 }
 
 class Clothing extends Product {
   async createProduct () {
     try{
-      const newClothing = await _Clothing.create({...this.product_attributes, shopId: this.product_shop})
+      const newClothing = await _Clothing.create({...this.product_attributes})
       if(!newClothing) throw new BadRequestError('Create new clothing error')
 
       const newProduct = await super.createProduct(newClothing._id)
@@ -144,12 +173,20 @@ class Clothing extends Product {
     const updateProduct = await super.updateProduct(product_id, updateNestParser(objectParams))
     return updateProduct
   }
+
+  async removeProduct (product_id, product_shop) {
+    const product = await _Clothing.findByIdAndDelete(product_id)
+    if(!product) throw new BadRequestError('Remove product error')
+
+    const result = await super.removeProduct(product_id, product_shop)
+    return result ? 1 : 0
+  }
 }
 
 class Book extends Product {
   async createProduct () {
     try{
-      const newBook = await _Book.create({...this.product_attributes, shopId: this.product_shop})
+      const newBook = await _Book.create({...this.product_attributes})
       if(!newBook) throw new BadRequestError('Create new book error')
 
       const newProduct = await super.createProduct(newBook._id)
@@ -172,12 +209,20 @@ class Book extends Product {
     const updateProduct = await super.updateProduct(product_id, updateNestParser(objectParams))
     return updateProduct
   }
+
+  async removeProduct (product_id, product_shop) {
+    const product = await _Book.findByIdAndDelete(product_id)
+    if(!product) throw new BadRequestError('Remove product error')
+
+    const result = await super.removeProduct(product_id, product_shop)
+    return result ? 1 : 0
+  }
 }
 
 class Electronic extends Product {
   async createProduct () {
     try{
-      const newElectronic = await _Electronic.create({...this.product_attributes, shopId: this.product_shop})
+      const newElectronic = await _Electronic.create({...this.product_attributes})
       if(!newElectronic) throw new BadRequestError('Create new clothing error')
 
       const newProduct = await super.createProduct(newElectronic._id)
@@ -198,6 +243,14 @@ class Electronic extends Product {
     }
     const updateProduct = await super.updateProduct(product_id, updateNestParser(objectParams))
     return updateProduct
+  }
+
+  async removeProduct (product_id, product_shop) {
+    const product = await _Electronic.findByIdAndDelete(product_id)
+    if(!product) throw new BadRequestError('Remove product error')
+
+    const result = await super.removeProduct(product_id, product_shop)
+    return result ? 1 : 0
   }
 }
 

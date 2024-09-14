@@ -45,3 +45,25 @@
 11-09-2024	38:22:16---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Expected double-quoted property name in JSON at position 410
 11-09-2024	27:25:17---------/v1/api/product/flashsale/all -- GET -- Cast to ObjectId failed for value "true" (type boolean) at path "product_flashSaleId" for model "Item"
 11-09-2024	34:26:17---------/v1/api/product/flashsale/all -- GET -- Cast to ObjectId failed for value "true" (type boolean) at path "product_flashSaleId" for model "Item"
+11-09-2024	13:36:19---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- removeAndUpdateImage is not defined
+11-09-2024	53:36:19---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Assignment to constant variable.
+11-09-2024	40:37:19---------/v1/api/product/66e1531e6d1a1218bdfc6a10 -- PATCH -- Assignment to constant variable.
+11-09-2024	41:52:19---------/v1/api/product/66e187db540f23987a512b69 -- DELETE -- Cast to ObjectId failed for value "{ _id: undefined, product_shop: undefined }" (type Object) at path "_id" for model "Item"
+11-09-2024	42:53:19---------/v1/api/product/66e187db540f23987a512b69 -- DELETE -- Cast to ObjectId failed for value "{ _id: undefined, product_shop: undefined }" (type Object) at path "_id" for model "Item"
+11-09-2024	30:04:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot read properties of undefined (reading 'findByIdAndDelete')
+11-09-2024	20:06:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot read properties of undefined (reading 'productRegistry')
+11-09-2024	04:09:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- type is not defined
+11-09-2024	19:09:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot read properties of undefined (reading 'findByIdAndDelete')
+11-09-2024	00:31:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- classes.removeProduct is not a constructor
+11-09-2024	39:31:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.
+11-09-2024	51:32:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.
+11-09-2024	45:33:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.
+11-09-2024	19:38:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.
+11-09-2024	30:38:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- classes.removeProduct is not a function
+11-09-2024	49:38:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.
+11-09-2024	07:39:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.
+11-09-2024	07:49:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.
+11-09-2024	24:49:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.
+11-09-2024	28:49:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.
+11-09-2024	53:52:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.
+11-09-2024	22:53:20---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.

@@ -3,17 +3,22 @@
 const express = require("express");
 
 const {
-  getFlashSale,
-  createFlashsale,
-} = require("../../controller/flashsale.controller");
-const { protect } = require("../../middleware/auth.middleware");
+  createFlashSaleByAdmin,
+  updateFlashSale,
+  addProductToFlashSale,
+  getAllFlashSale
+} = require("../../controller/flashsale.controller")
+const { asyncHandler } = require('../../support/asyncHandle')
+const { protect } = require("../../middleware/auth.middleware")
 
 const router = express.Router();
 
-router.use(protect);
+router.get('', asyncHandler(getAllFlashSale))
 
-router.get("", getFlashSale);
+router.use(protect)
 
-router.post("", createFlashsale);
+router.post("", asyncHandler(createFlashSaleByAdmin))
+router.put("/:id", asyncHandler(updateFlashSale))
+router.patch("/:id", asyncHandler(addProductToFlashSale))
 
 module.exports = router;

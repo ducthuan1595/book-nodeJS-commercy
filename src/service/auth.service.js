@@ -38,7 +38,7 @@ var that = (module.exports = {
           throw new ForbiddenError("Password incorrect!");
         }
         const strPublicKey = publicKey(), strPrivateKey = privateKey()
-        const tokens = await createToken({userId: user._id, email: user.user_email}, strPublicKey, strPrivateKey)
+        const tokens = await createToken({userId: user._id, email: user.user_email, permit}, strPublicKey, strPrivateKey)
 
         const keyStore = await KeyTokenService.createKeyToken({
           userId: user._id,

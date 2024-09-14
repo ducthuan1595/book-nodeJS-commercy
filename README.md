@@ -1,6 +1,6 @@
-# PROJECT: BOOK_ECOMMERCY
+# PROJECT: TIM_GI_THE_ECOMMERCY
 
-# OVERVIEW
+## OVERVIEW
 
 - Create an online buying book
 - It has client and admin website
@@ -13,12 +13,12 @@
 - authentication with google, facebook, email
 
 
-# Link deployment
+## Link deployment
 
 - client: `https://tim-gi-the-book.vercel.app/`
 - admin: `https://ecommercy-book-admin.vercel.app`
 
-# MAIN STRUCTURE PAGE
+## MAIN STRUCTURE PAGE
 
 - client: 
   + home:
@@ -35,15 +35,20 @@
   + flash sale:
 
 
-# MAIN TECHNOLOGY
+## MAIN TECHNOLOGY
 
 - client: javascript, reactJs, tailwind
 - admin: typescript, reactJs, tailwind
 - server: nodeJs, javascript, express,
 - database: mongoDB, mongoose, redis
 
-# FUTURE FEATURES
+## FUTURE FEATURES
 
 - Add role support person
 - Chat support user
 - ...
+
+
+### Run the project
+  `npm install` // install libraries
+  `npm start` // initial project

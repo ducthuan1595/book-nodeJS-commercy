@@ -10,7 +10,8 @@ const {
   publishProductByShop,
   unpublishProductByShop,
   searchProduct,
-  getProductWithFlashSale
+  getProductWithFlashSale,
+  removeProduct
 } = require("../service/item.service")
 const { createItemValidate } = require('../support/validation/item.validation')
 const { NotFoundError } = require('../core/error.response')
@@ -108,6 +109,18 @@ class ProductController {
 
   searchProduct = async (req, res) => {
     const data = await searchProduct(req.params.keySearch)
+    new SuccessResponse({
+      message: 'ok',
+      metadata: data
+    }).send(res)
+  }
+
+  removeProductById = async (req, res) => {
+    const data = await removeProduct({
+      product_id: req.params.id,
+      product_shop: req.user.userId,
+      product_type: req.params.type
+    })
     new SuccessResponse({
       message: 'ok',
       metadata: data

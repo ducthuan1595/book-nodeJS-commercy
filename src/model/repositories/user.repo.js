@@ -1,7 +1,6 @@
 'use strict'
 
 const _User = require('../user.model')
-const { convertObjectIdMongoDb } = require('../../util')
 const { insertPermission } = require('./permission.repo')
 
 const findOneUserWithEmail = async({user_email}) => {    
@@ -24,8 +23,50 @@ const updatePermissionForUser = async(user, payload) => {
     }
 }
 
+async function findAllUser({limit, sort, page, filter}) {
+    const sortBy = sort === 'ctime' ? {_id: -1} : {_id: 1}
+    const users = await _User.aggregate([
+        {
+            $lookup: {
+                from: 'permissions',
+                localField: 'user_role',
+                foreignField: '_id',
+                as: 'user_role'
+            }
+        },
+        {
+            $unwind: {
+                path: '$user_role',
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $match: {
+                [`user_role.${filter}`]: true
+            }
+        },
+        {
+            $project: {
+                user_password: 0
+            }
+        },
+        {
+            $sort: sortBy
+        },
+        {
+            $skip: (page - 1) * limit
+        },
+        {
+            $limit: limit
+        }
+    ])
+
+    return users;
+}
+
 module.exports = {
     findOneUserWithEmail,
     findByIdAndUpdateFromUser,
-    updatePermissionForUser
+    updatePermissionForUser,
+    findAllUser
 }

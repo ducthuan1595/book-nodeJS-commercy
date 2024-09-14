@@ -12,7 +12,8 @@ const {
     publishedItemForShop,
     unpublishedItemForShop,
     searchProduct,
-    getItemWithFlashSale
+    getItemWithFlashSale,
+    removeProductById
 } = require("../../controller/item.controller")
 const { protect } = require("../../middleware/auth.middleware")
 const { asyncHandler } = require('../../support/asyncHandle')
@@ -32,5 +33,6 @@ router.get("/draft/all", asyncHandler(getItemsDraftForShop))
 router.get("/published/all", asyncHandler(getItemsPublishedForShop))
 router.put('/published/:id', asyncHandler(publishedItemForShop))
 router.put('/unpublished/:id', asyncHandler(unpublishedItemForShop))
+router.delete('/:id/:type', asyncHandler(removeProductById))
 
 module.exports = router;

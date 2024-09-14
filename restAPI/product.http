@@ -5,14 +5,12 @@ POST {{url_dev}}
 Content-Type: application/json
 x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
 x-client-id: 66caedd4533d3eefd8d16cc2
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI2MDM3NDM2LCJleHAiOjE3MjYyMTAyMzZ9.73H14TkoO4RL-6kUpgTDAthnVDrGCU2VvmXeIANvLgk
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI2MjgzNTQ0LCJleHAiOjE3MjY0NTYzNDR9.M5-_v_VjjGq-hvOQm4VWn3pnb66IGP57wqfOMXCNLg0
+
 
 {
-    "product_name": "test 001",
-    "product_thumb": [{
-        "url": "image.png",
-        "public_id": "12bn324"
-    }],
+    "product_name": "test 005",
+    "product_thumb": ["https://i.ytimg.com/vi/iZ9Ehu5ICHk/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLD5GxgbcdPsfxCjobx-Sb9LCL5cpg"],
     "product_description": "this is desc",
     "product_slogan": "this is slogan",
     "product_price": {
@@ -112,3 +110,10 @@ GET {{url_dev}}/search/test
 Content-Type: application/json
 x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
 
+###
+
+DELETE {{url_dev}}/66e50234baa44062610d5126/book
+Content-Type: application/json
+x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-client-id: 66caedd4533d3eefd8d16cc2
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI2MjgzNTQ0LCJleHAiOjE3MjY0NTYzNDR9.M5-_v_VjjGq-hvOQm4VWn3pnb66IGP57wqfOMXCNLg0

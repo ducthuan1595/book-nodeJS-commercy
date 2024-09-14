@@ -75,6 +75,18 @@ const updateProductById = async({product_id, payload, model, isNew = true}) => {
     return await model.findByIdAndUpdate(product_id, payload, { new: isNew })
 }
 
+const removeProductById = async({product_id, product_shop, model}) => {
+    const result = await _Product.findByIdAndDelete({
+        _id: product_id,
+        product_shop
+    })
+    if(result) {
+        const type = await model.findByIdAndDelete(product_id)
+        return type ? 1 : 0
+    }
+    return 0
+}
+
 module.exports = {
     findAllProduct,
     findProduct,
@@ -83,4 +95,5 @@ module.exports = {
     searchProductByUser,
     updateProductById,
     findAllProductWithQuery,
+    removeProductById
 }

@@ -23,7 +23,17 @@ const insertPermission = async({
     })
 }
 
+const updatePermissionWithAdmin = async (payload, user_id) => {
+    return await _Permission.findOneAndUpdate(
+        { permit_userId: convertObjectIdMongoDb(user_id) },
+        payload,
+        { new: true }
+    )
+}
+
+
 module.exports = {
     findByIdFromPermission,
-    insertPermission
+    insertPermission,
+    updatePermissionWithAdmin
 }

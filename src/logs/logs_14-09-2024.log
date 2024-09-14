@@ -1,0 +1,55 @@
+14-09-2024	33:11:10---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- TokenExpiredError: jwt expired
+14-09-2024	09:13:10---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.
+14-09-2024	59:16:10---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.
+14-09-2024	30:17:10---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Cannot destructure property 'product_name' of 'undefined' as it is undefined.
+14-09-2024	18:25:10---------/v1/api/product -- POST -- JsonWebTokenError: invalid signature
+14-09-2024	07:26:10---------/v1/api/product/66e1531e6d1a1218bdfc6a10/book -- DELETE -- Remove product error
+14-09-2024	38:26:13---------/v1/api/user/all -- GET -- Cannot read properties of undefined (reading 'isAdmin')
+14-09-2024	29:27:13---------/v1/api/user/all -- GET -- Invalid permit
+14-09-2024	28:28:13---------/v1/api/user/all -- GET -- Invalid permit
+14-09-2024	00:29:13---------/v1/api/user/all -- GET -- findAllUser is not defined
+14-09-2024	44:40:14---------/v1/api/user/permission/66caedd4533d3eefd8d16cc2 -- PUT -- userService.updatePermissionForUserWithAdmin is not a function
+14-09-2024	18:41:14---------/v1/api/user/permission/66caedd4533d3eefd8d16cc2 -- PUT -- userService.updatePermissionForUserWithAdmin is not a function
+14-09-2024	18:42:14---------/v1/api/user/permission/66caedd4533d3eefd8d16cc2 -- PUT -- updatePermissionWithAdmin is not defined
+14-09-2024	44:43:14---------/v1/api/user/permission/66caedd4533d3eefd8d16cc2 -- PUT -- Cast to ObjectId failed for value "{ permit_userId: '66caedd4533d3eefd8d16cc2' }" (type Object) at path "_id" for model "Permission"
+14-09-2024	33:45:14---------/v1/api/user/permission/66caedd4533d3eefd8d16cc2 -- PUT -- Cast to ObjectId failed for value "{ permit_userId: '66caedd4533d3eefd8d16cc2' }" (type Object) at path "_id" for model "Permission"
+14-09-2024	14:47:14---------/v1/api/user/permission/66caedd4533d3eefd8d16cc2 -- PUT -- Cast to ObjectId failed for value "{ permit_userId: new ObjectId("66caedd4533d3eefd8d16cc2") }" (type Object) at path "_id" for model "Permission"
+14-09-2024	22:13:15---------/v1/api/category -- POST -- Invalid permission
+14-09-2024	08:14:15---------/v1/api/category -- POST -- Invalid permission
+14-09-2024	30:14:15---------/v1/api/category -- POST -- Invalid permission
+14-09-2024	12:27:15---------/v1/api/category -- POST -- Category validation failed: category_banner: Cast to string failed for value "{
+  url: 'http://res.cloudinary.com/dvlbv6l2k/image/upload/v1726302434/timGiThe/products/Name%20category14-09-2024.webp',
+  public_id: 'timGiThe/products/Name category14-09-2024'
+}" (type Object) at path "category_banner"
+14-09-2024	01:45:15---------/v1/api/category/66e546214d0eda1711b0e458 -- PUT -- Cannot read properties of undefined (reading 'permit')
+14-09-2024	37:45:15---------/v1/api/category/66e546214d0eda1711b0e458 -- PUT -- Missing required parameter - public_id
+14-09-2024	09:46:15---------/v1/api/category/66e546214d0eda1711b0e458 -- DELETE -- Missing required parameter - public_id
+14-09-2024	32:46:15---------/v1/api/category/66e54923f5318d89f21d9dff -- PUT -- Missing required parameter - file
+14-09-2024	04:49:15---------/v1/api/category/66e54923f5318d89f21d9dff -- PUT -- Missing required parameter - file
+14-09-2024	40:49:15---------/v1/api/category/66e54923f5318d89f21d9dff -- PUT -- Missing required parameter - file
+14-09-2024	56:49:15---------/v1/api/category/66e54923f5318d89f21d9dff -- PUT -- Missing required parameter - file
+14-09-2024	43:52:15---------/v1/api/category/66e54923f5318d89f21d9dff -- PUT -- Missing required parameter - file
+14-09-2024	46:56:15---------/v1/api/category/66e54923f5318d89f21d9dff -- PUT -- Missing required parameter - file
+14-09-2024	20:01:16---------/v1/api/category/66e54923f5318d89f21d9dff -- PUT -- Missing required parameter - file
+14-09-2024	16:04:16---------/v1/api/category/66e54923f5318d89f21d9dff -- PUT -- Missing required parameter - file
+14-09-2024	58:04:16---------/v1/api/category/66e551aade4b39b9c5e62cfd -- PUT -- Missing required parameter - file
+14-09-2024	22:09:16---------/v1/api/category/66e552519261896dcb4df287 -- PUT -- Missing required parameter - file
+14-09-2024	24:10:16---------/v1/api/category/66e552f07c625dc5a53635c3 -- PUT -- Missing required parameter - file
+14-09-2024	23:13:16---------/v1/api/category/66e5539f0cc6c9e791f8949d -- PUT -- Missing required parameter - file
+14-09-2024	51:35:17---------/v1/api/flashsale -- POST -- FlashSale validation failed: flashsale_name: Cast to string failed for value "{
+  url: 'http://res.cloudinary.com/dvlbv6l2k/image/upload/v1726310152/timGiThe/flashsale/Name.flashsale-14-09-2024.webp',
+  public_id: 'timGiThe/flashsale/Name.flashsale-14-09-2024'
+}" (type Object) at path "flashsale_name"
+14-09-2024	52:36:17---------/v1/api/flashsale -- POST -- FlashSale validation failed: flashsale_name: Cast to string failed for value "{
+  url: 'http://res.cloudinary.com/dvlbv6l2k/image/upload/v1726310152/timGiThe/flashsale/Name.flashsale-14-09-2024.webp',
+  public_id: 'timGiThe/flashsale/Name.flashsale-14-09-2024'
+}" (type Object) at path "flashsale_name"
+14-09-2024	29:40:17---------/v1/api/flashsale -- POST -- FlashSale validation failed: flashsale_name: Cast to string failed for value "{
+  url: 'http://res.cloudinary.com/dvlbv6l2k/image/upload/v1726310430/timGiThe/flashsale/Name.flashsale-14-09-2024-40-27.webp',
+  public_id: 'timGiThe/flashsale/Name.flashsale-14-09-2024-40-27'
+}" (type Object) at path "flashsale_name"
+14-09-2024	09:42:17---------/v1/api/flashsale -- POST -- FlashSale validation failed: flashsale_name: Cast to string failed for value "{
+  url: 'http://res.cloudinary.com/dvlbv6l2k/image/upload/v1726310530/timGiThe/flashsale/Name.flashsale-14-09-2024-07-42-07.webp',
+  public_id: 'timGiThe/flashsale/Name.flashsale-14-09-2024-07-42-07'
+}" (type Object) at path "flashsale_name"
+14-09-2024	06:20:20---------/v1/api/flashsale -- GET -- Cannot destructure 'undefined' as it is undefined.

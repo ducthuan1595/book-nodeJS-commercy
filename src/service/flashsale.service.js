@@ -1,8 +1,46 @@
-const _Flashsale = require("../model/flashsale");
-const _Item = require("../model/item.model.js");
-const _User = require("../model/user.model.js");
-const scheduleSale = require("../support/cron");
-const pageSection = require("../support/pageSection");
+'use strict'
+
+const _Flashsale = require("../model/flashsale.model");
+const scheduleSale = require("../support/cron")
+const { AuthorizedFailError, BadRequestError } = require('../core/error.response');
+const { uploadImage } = require("./upload.service");
+const { removeUndefinedObject } = require("../util");
+
+class FlashSaleService {
+  static async createFlashSaleByAdmin({user, payload}) {
+    if(!user.permit.permit_admin) {
+      throw new AuthorizedFailError('Invalid permission')
+    }
+    if(payload.flashsale_start_date >= payload.flashsale_end_date) {
+      throw new BadRequestError('Invalid date time')
+    }
+    const img = await uploadImage({url: payload.flashsale_banner, name: payload.flashsale_name, folder: 'flashsale'})
+    payload.flashsale_banner = img
+    return await _Flashsale.create({...payload})
+  }
+
+  static async updateFlashSale({user, payload, flashsaleId}) {
+    if(!user.permit.permit_admin && !user.permit.permit_moderator) {
+      throw new AuthorizedFailError('Invalid permission')
+    }
+    return await _Flashsale.findByIdAndUpdate(flashsaleId, {...payload}, { new: true })
+  }
+
+  static async addProductToFlashSale({user, payload, flashsaleId}) {
+    if(!user.permit.permit_admin && !user.permit.permit_moderator) {
+      throw new AuthorizedFailError('Invalid permission')
+    }
+    return await _Flashsale.findByIdAndUpdate(flashsaleId, {
+      flashsale_products: removeUndefinedObject(payload.items)
+    }, { new: true })
+  }
+
+  static async getAllFlashSale () {
+    return await _Flashsale.find().populate('flashsale_products.itemId').lean()
+  }
+}
+
+module.exports = FlashSaleService
 
 exports.createFlashsale = (value, req) => {
   return new Promise(async (resolve, reject) => {

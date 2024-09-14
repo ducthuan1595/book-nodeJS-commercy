@@ -1,33 +1,39 @@
-const flashsaleService = require("../service/flashsale");
+'use strict'
 
-exports.createFlashsale = async (req, res) => {
-  const { name, startDate, endDate, discountPercent, arrItem } = req.body;
-  if (!name || !startDate || !endDate || !discountPercent || !arrItem.length) {
-    return res.status(404).json({ message: "Input invalid!" });
-  }
-  const start = new Date(startDate).getTime();
-  const end = new Date(endDate).getTime();
-  const data = await flashsaleService.createFlashsale(
-    {
-      name,
-      start,
-      end,
-      discountPercent,
-      items: arrItem,
-    },
-    req
-  );
-  if (data) {
-    res.status(data.status).json({ message: data.message, data: data?.data });
-  }
-};
+const {
+  createFlashSaleByAdmin,
+  updateFlashSale,
+  addProductToFlashSale,
+  getAllFlashSale
+} = require("../service/flashsale.service")
+const { SuccessResponse, CREATED } = require('../core/success.response')
 
-exports.getFlashSale = async (req, res) => {
-  const page = req.query?.page === "null" ? 1 : req.query?.page;
-  const limit = req.query?.limit === "null" ? 8 : req.query?.limit;
-
-  const data = await flashsaleService.getFlashSale(page, limit, req);
-  if (data) {
-    res.status(data.status).json({ message: data.message, data: data?.data });
+class FlashSaleController {
+  createFlashSaleByAdmin = async (req, res) => {
+    new SuccessResponse({
+      message: 'ok',
+      metadata: await createFlashSaleByAdmin({user: req.user, payload: req.body})
+    }).send(res)
   }
-};
+
+  updateFlashSale = async (req, res) => {
+    new CREATED({
+      metadata: await updateFlashSale({user: req.user, payload: req.body, flashsaleId: req.params.id}) 
+    }).send(res)
+  }
+
+  addProductToFlashSale = async (req, res) => {
+    new CREATED({
+      metadata: await addProductToFlashSale({user: req.user, payload: req.body, flashsaleId: req.params.id}) 
+    }).send(res)
+  }
+
+  getAllFlashSale = async(req, res) => {
+    new SuccessResponse({
+      metadata: await getAllFlashSale()
+    }).send(res)
+  }
+}
+
+module.exports = new FlashSaleController()
+

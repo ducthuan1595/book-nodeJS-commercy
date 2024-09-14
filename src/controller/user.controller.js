@@ -1,20 +1,34 @@
 const userService = require("../service/user.service");
-const { SuccessResponse } = require("../core/success.response");
+const { SuccessResponse, CREATED } = require("../core/success.response");
 const { ErrorResponse, BadRequestError, NotFoundError } = require("../core/error.response");
 const { pwValidate, updateUserValidate } = require("../support/validation/user.validation");
 require("dotenv").config();
 
 class UserController {
 
-  getUser = async (req, res) => {
-    const page = req.query?.page === "null" ? 1 : req.query.page;
-    const limit = req.query?.limit === "null" ? 10 : req.query.limit;
-    const key = req.query?.key === "null" ? null : req.query.key;
-    const data = await userService.getUser(page, limit, key, req);
-    if (data) {
-      res.status(data.status).json({ message: data.message, data: data?.data });
-    }
-  };
+  getInfoUser = async (req, res) => {
+    const data = await userService.getInfoUser(req.user);
+    new SuccessResponse({
+      message: data.message,
+      metadata: data
+    }).send(res)
+  }
+
+  getAllUser = async (req, res) => {
+    const data = await userService.getAllUser({...req.query, user: req.user})
+    new SuccessResponse({
+      message: 'ok',
+      metadata: data
+    }).send(res)
+  }
+
+  updatePermissionForUserWithAdmin = async (req, res) => {
+    const data = await userService.updatePermissionWithAdmin({user: req.user, payload: req.body, userId: req.params.id})
+    new CREATED({
+      message: 'ok',
+      metadata: data
+    }).send(res)
+  }
 
   updateUser = async (req, res) => {
     const { user_account, user_name, user_gender, user_address } = req.body;
