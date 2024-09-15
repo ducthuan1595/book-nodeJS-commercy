@@ -1,0 +1,19 @@
+15-09-2024	14:32:16---------/v1/api/voucher -- POST -- Invalid permission
+15-09-2024	45:33:16---------/v1/api/voucher -- POST -- Expires time invalid
+15-09-2024	53:33:16---------/v1/api/voucher -- POST -- name.replace is not a function
+15-09-2024	33:38:16---------/v1/api/voucher -- POST -- Voucher validation failed: voucher_code: Cast to string failed for value "[ '_hxSxXnbo' ]" (type Array) at path "voucher_code", voucher_quantity: Path `voucher_quantity` is required.
+15-09-2024	11:39:16---------/v1/api/voucher -- POST -- Voucher validation failed: voucher_code: Cast to string failed for value "[ '_ActYJJHN' ]" (type Array) at path "voucher_code"
+15-09-2024	02:40:16---------/v1/api/voucher -- POST -- E11000 duplicate key error collection: book-ecommercy.vouchers index: code_1 dup key: { code: null }
+15-09-2024	15:40:16---------/v1/api/voucher -- POST -- E11000 duplicate key error collection: book-ecommercy.vouchers index: code_1 dup key: { code: null }
+15-09-2024	26:40:16---------/v1/api/voucher -- POST -- E11000 duplicate key error collection: book-ecommercy.vouchers index: code_1 dup key: { code: null }
+15-09-2024	54:40:16---------/v1/api/voucher -- POST -- E11000 duplicate key error collection: book-ecommercy.vouchers index: code_1 dup key: { code: null }
+15-09-2024	00:42:16---------/v1/api/voucher -- POST -- E11000 duplicate key error collection: book-ecommercy.vouchers index: code_1 dup key: { code: null }
+15-09-2024	50:42:16---------/v1/api/voucher -- POST -- E11000 duplicate key error collection: book-ecommercy.vouchers index: code_1 dup key: { code: null }
+15-09-2024	44:43:16---------/v1/api/voucher -- POST -- E11000 duplicate key error collection: book-ecommercy.vouchers index: code_1 dup key: { code: null }
+15-09-2024	00:45:16---------/v1/api/voucher -- POST -- E11000 duplicate key error collection: book-ecommercy.vouchers index: code_1 dup key: { code: null }
+15-09-2024	07:47:16---------/v1/api/voucher -- POST -- E11000 duplicate key error collection: book-ecommercy.vouchers index: code_1 dup key: { code: null }
+15-09-2024	10:47:16---------/v1/api/voucher -- POST -- E11000 duplicate key error collection: book-ecommercy.vouchers index: code_1 dup key: { code: null }
+15-09-2024	37:51:16---------/v1/api/voucher -- POST -- E11000 duplicate key error collection: book-ecommercy.vouchers index: code_1 dup key: { code: null }
+15-09-2024	44:55:16---------/v1/api/voucher/66e6aeb5561a3b8979e87cdd -- PUT -- Expected double-quoted property name in JSON at position 154
+15-09-2024	24:59:16---------/v1/api/voucher/66e6aeb5561a3b8979e87cdd -- PUT -- Expected double-quoted property name in JSON at position 154
+15-09-2024	47:31:17---------/v1/api/voucher/published/66e6af00284f43c33b1e4df6 -- PUT -- Not found

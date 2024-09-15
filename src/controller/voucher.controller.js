@@ -1,27 +1,54 @@
-const voucherService = require("../service/voucher");
+'use strict'
 
-exports.createVoucher = async (req, res) => {
-  const { expirationDate, quantity, discount, code, pic } = req.body;
-  if (!expirationDate || !quantity || !discount || !pic || !code)
-    return res.status(404).json({ message: "Input invalid" });
-  const data = await voucherService.createVoucher(
-    expirationDate,
-    quantity,
-    discount,
-    pic,
-    code,
-    req
-  );
-  if (data) {
-    res.status(data.status).json({ message: data.message, data: data?.data });
-  }
-};
+const {
+  getAllVoucher,
+  createVoucher,
+  updateVoucher,
+  publishedVoucher,
+  unpublishedVoucher,
+  deleteVoucher
+} = require("../service/voucher.service")
+const { SuccessResponse } = require('../core/success.response')
 
-exports.getVoucher = async (req, res) => {
-  const page = req.query?.page !== "null" ? req.query.page : null;
-  const limit = req.query?.limit !== "null" ? req.query.limit : null;
-  const data = await voucherService.getVoucher(page, limit);
-  if (data) {
-    res.status(data.status).json({ message: data.message, data: data?.data });
+class VoucherController {
+  getAllVoucher = async (req, res) => {
+    new SuccessResponse({
+      message: 'ok',
+      metadata: await getAllVoucher()
+    }).send(res)
   }
-};
+
+  createVoucher = async (req, res) => {
+    new SuccessResponse({
+      message: 'ok',
+      metadata: await createVoucher({user: req.user, payload: req.body})
+    }).send(res)
+  }
+
+  updateVoucher = async (req, res) => {
+    new SuccessResponse({
+      message: 'ok',
+      metadata: await updateVoucher({user: req.user, payload: req.body, voucherId: req.params.id})
+    }).send(res)
+  }
+
+  publishedVoucher = async (req, res) => {
+    new SuccessResponse({
+      metadata: await publishedVoucher({user: req.user, voucherId: req.params.id})
+    }).send(res)
+  }
+
+  unpublishedVoucher = async (req, res) => {
+    new SuccessResponse({
+      metadata: await unpublishedVoucher({user: req.user, voucherId: req.params.id})
+    }).send(res)
+  }
+
+  deleteVoucher = async (req, res) => {
+    new SuccessResponse({
+      metadata: await deleteVoucher({user: req.user, voucherId: req.params.id})
+    }).send(res)
+  }
+}
+
+module.exports = new VoucherController()

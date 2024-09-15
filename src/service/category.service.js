@@ -9,7 +9,7 @@ class CategoryService {
     if(!user.permit.permit_admin && !user.permit.permit_moderator) {
       throw new AuthorizedFailError('Invalid permission')
     }
-    const img = await uploadImage({url: payload.category_banner, name: payload.category_name, folder: 'category'})
+    const img = await uploadImage({url: payload.category_banner, folder: 'category'})
     payload.category_banner = img
     return await _Category.create(payload)
   }
@@ -28,7 +28,7 @@ class CategoryService {
 
     if(payload.category_banner) {
       await removeImage({public_id: category.category_banner.public_id})
-      const img = await uploadImage({url: payload.category_banner, name: payload.category_name, folder: 'category'})
+      const img = await uploadImage({url: payload.category_banner, folder: 'category'})
       payload.category_banner = img
     }
     return await new category({...payload}).save()

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const { FLASHSALE_STATUS } = require('../types')
 
 const DOCUMENT_NAME = 'FlashSale'
 const COLLECTION_NAME = 'flashsales'
@@ -27,8 +28,8 @@ const schema = new mongoose.Schema(
     },
     flashsale_status: {
       type: String,
-      enum: ['active', 'inactive', 'pending'],
-      default: 'pending'
+      enum: [FLASHSALE_STATUS.active, FLASHSALE_STATUS.inactive, FLASHSALE_STATUS.pending],
+      default: FLASHSALE_STATUS.pending
     },
     flashsale_products: {
       type: Array,

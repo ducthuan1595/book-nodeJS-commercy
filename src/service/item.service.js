@@ -105,7 +105,7 @@ class Product {
   async createProduct(product_id) {
     const images = []
     for(let url of this.product_thumb) {
-      const img = await uploadImage({url, name: this.product_name})
+      const img = await uploadImage({url})
       images.push(img)
     }
     const newProduct = await _Product.create({...this, _id: product_id, product_thumb: images})
