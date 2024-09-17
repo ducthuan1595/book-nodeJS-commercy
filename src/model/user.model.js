@@ -35,17 +35,11 @@ const schema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Permission'
     },
-    user_cart: [
-      {
-        itemId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Item",
-        },
-        quantity: {
-          type: Number,
-        },
-      },
-    ],
+    user_cart: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Cart",
+      required: true
+    },
     user_avatar: {
       link: Object,
       default: Buffer

@@ -1,16 +1,16 @@
 'use strict'
 
-const express = require('express');
+const express = require('express')
 
-const {addCart, deleteCart} = require('../../controller/cart.controller');
+const { addCartByUser, deleteCartByUser } = require('../../controller/cart.controller')
+const { protect } = require('../../middleware/auth.middleware')
+const { asyncHandler } = require('../../support/asyncHandle')
 
-const { protect } = require('../../middleware/auth.middleware');
-
-const router = express.Router();
+const router = express.Router()
 
 router.use(protect)
 
-router.post("", addCart);
-router.delete("", deleteCart);
+router.put("", asyncHandler(addCartByUser))
+router.delete("/:id", asyncHandler(deleteCartByUser))
 
-module.exports = router;
+module.exports = router

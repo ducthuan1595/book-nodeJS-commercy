@@ -1,3 +1,5 @@
+'use strict'
+
 const _Item = require("../model/item.model.js");
 const _Order = require("../model/order");
 const _User = require("../model/user.model.js");
@@ -7,6 +9,14 @@ const _FlashSale = require("../model/flashsale.model.js");
 const pageSection = require("../support/pageSection");
 const sendMail = require("../support/mails/orderInfo");
 const { getFormatMonth, getFormatYear } = require("../util/format");
+
+class OrderService  {
+  static async createOrder({}) {
+    
+  }
+}
+
+module.exports = OrderService
 
 exports.createOrder = (value, req) => {
   return new Promise(async (resolve, reject) => {

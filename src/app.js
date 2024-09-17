@@ -11,6 +11,7 @@ const createError = require('http-errors')
 
 const { initRedis, redisClient } = require('./dbs/init.redis');
 const logEvents = require('./support/logEvents');
+const {createApiKey} = require('./service/apiKey.service')
 const routes = require('./router');
 
 const app = express();
@@ -52,6 +53,8 @@ app.use(fileupload());
 //     }
 //   }))
 // })();
+
+// createApiKey()
 
 app.get('/', (req, res, next) => {
     res.send('Home Page!')

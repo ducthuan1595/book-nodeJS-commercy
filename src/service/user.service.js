@@ -17,7 +17,7 @@ const KeyTokenService = require("./keyToken.service.js");
 
 class UserService {
   static async getInfoUser (user)  {
-    const userInfo = await _User.findById(user.userId).select('-password')
+    const userInfo = await _User.findById(user.userId).populate('user_cart').select('-password')
     if(!userInfo) throw new NotFoundError('Invalid User')
 
     return {

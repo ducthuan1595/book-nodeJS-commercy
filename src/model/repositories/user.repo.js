@@ -4,7 +4,7 @@ const _User = require('../user.model')
 const { insertPermission } = require('./permission.repo')
 
 const findOneUserWithEmail = async({user_email}) => {    
-    return await _User.findOne({user_email: user_email}).populate('user_cart.itemId')
+    return await _User.findOne({user_email: user_email}).populate('user_cart')
 }
 
 const findByIdAndUpdateFromUser = async({userId, payload, isNew = true}) => {

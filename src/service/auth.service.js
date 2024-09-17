@@ -1,7 +1,8 @@
 "use strict";
 
 const bcrypt = require("bcrypt");
-const _User = require("../model/user.model.js");
+const _User = require("../model/user.model.js")
+const _Cart = require('../model/cart.model.js')
 
 const { createToken } = require('../auth/token.js')
 const confirmMailer = require("../support/mails/confirmAccount");
@@ -24,13 +25,13 @@ const { getInfoData, setCookies, publicKey, privateKey } = require("../util/inde
 
 var that = (module.exports = {
   login: async ({ user_email, user_password, res }) => {
-      const user = await findOneUserWithEmail({ user_email });
+      const user = await findOneUserWithEmail({ user_email })
 
       if (!user) {
         throw new NotFoundError("User is not exist");
       }
       const permit = await findByIdFromPermission(user?.user_role);
-      if (permit && !permit.permit_user) {
+      if (permit && !permit.permit_user && !permit.permit_admin && !permit.permit_shop && !permit.permit_moderator) {
         throw new BadRequestError("Please, check email to confirm");
       }
         const validPs = await bcrypt.compare(user_password, user.user_password);
@@ -114,17 +115,21 @@ var that = (module.exports = {
       if (user) throw new ForbiddenError("Email already exist!");
 
       const salt = await bcrypt.genSalt(10);
-      const pw = await bcrypt.hash(user_password, salt);
+      const pw = await bcrypt.hash(user_password, salt)
+      const cart = await _Cart.create({})
       let newUser = new _User({
         user_name,
         user_email,
         user_password: pw,
+        user_cart: cart,
         user_avatar: {
           default: generateAvatar(user_name),
         },
       });
       const addUser = await newUser.save();
       if (addUser) {
+        cart.cart_userId = addUser._id
+        await cart.save()
 
         // Create Permission for user when signup
         updatePermissionForUser(addUser)

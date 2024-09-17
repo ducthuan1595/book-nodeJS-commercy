@@ -1,25 +1,23 @@
-const cartService = require("../service/cart");
+'use strict'
 
-exports.addCart = async (req, res) => {
-  const { quantity, itemId } = req.body;
-  if (!quantity || !itemId) {
-    res.status(403).json({ message: "Input invalid!" });
-  } else {
-    const data = await cartService.addCart({ quantity, itemId }, req);
-    if (data) {
-      res.status(data.status).json({ message: data.message, data: data?.data });
-    }
-  }
-};
+const { addCartByUser, deleteCartByUser } = require('../service/cart.service')
+const { SuccessResponse } = require('../core/success.response')
 
-exports.deleteCart = async (req, res) => {
-  const { cartId } = req.body;
-  if (!cartId) {
-    res.status(403).json({ message: "Input invalid!" });
-  } else {
-    const data = await cartService.deleteCart(cartId, req);
-    if (data) {
-      res.status(data.status).json({ message: data.message, data: data?.data });
-    }
+class CartController {
+  addCartByUser = async (req, res) => {
+    const data = await addCartByUser({user: req.user, payload: req.body})
+    new SuccessResponse({
+      message: 'ok',
+      metadata: data
+    }).send(res)
   }
-};
+
+  deleteCartByUser = async (req, res) => {
+    new SuccessResponse({
+      message: 'ok',
+      metadata: await deleteCartByUser({user: req.user, productId: req.params.id})
+    }).send(res)
+  }
+}
+
+module.exports = new CartController()

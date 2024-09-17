@@ -1,0 +1,29 @@
+17-09-2024	10:21:11---------/v1/api/access/signup -- POST -- User validation failed: user_cart: Path `user_cart` is required.
+17-09-2024	31:22:11---------/v1/api/access/signup -- POST -- User validation failed: user_cart: Path `user_cart` is required.
+17-09-2024	27:42:13---------/v1/api/access/login -- POST -- Schema hasn't been registered for model "Cart".
+Use mongoose.model(name, schema)
+17-09-2024	53:43:13---------/v1/api/access/login -- POST -- Schema hasn't been registered for model "Cart".
+Use mongoose.model(name, schema)
+17-09-2024	42:47:13---------/v1/api/access/login -- POST -- Please, check email to confirm
+17-09-2024	55:52:13---------/v1/api/product -- POST -- Not found
+17-09-2024	07:57:13---------/v1/api/cart -- PUT -- JsonWebTokenError: invalid signature
+17-09-2024	38:57:13---------/v1/api/cart -- PUT -- Not found product
+17-09-2024	55:57:13---------/v1/api/cart -- PUT -- Not found product
+17-09-2024	47:58:13---------/v1/api/cart -- PUT -- Not found product
+17-09-2024	25:59:13---------/v1/api/cart -- PUT -- Cannot read properties of undefined (reading 'ids')
+17-09-2024	45:00:14---------/v1/api/cart -- PUT -- Cannot read properties of undefined (reading 'ids')
+17-09-2024	36:01:14---------/v1/api/cart -- PUT -- Cannot read properties of undefined (reading 'length')
+17-09-2024	25:04:14---------/v1/api/cart -- PUT -- Cannot read properties of undefined (reading 'every')
+17-09-2024	36:05:14---------/v1/api/cart -- PUT -- Cannot create field 'ids' in element {cart_products: []}
+17-09-2024	09:06:14---------/v1/api/cart -- PUT -- The positional operator did not find the match needed from the query.
+17-09-2024	48:13:14---------/v1/api/cart -- PUT -- Cannot create field 'ids' in element {cart_products: []}
+17-09-2024	02:19:14---------/v1/api/cart -- PUT -- Not found product
+17-09-2024	46:32:14---------/v1/api/cart -- PUT -- Cannot read properties of undefined (reading 'every')
+17-09-2024	11:33:14---------/v1/api/cart -- PUT -- Cannot read properties of undefined (reading 'toString')
+17-09-2024	30:33:14---------/v1/api/cart -- PUT -- CART_STATE is not defined
+17-09-2024	33:34:14---------/v1/api/cart -- PUT -- Path "ids.item" is not in schema, strict mode is `true`, and upsert is `true`.
+17-09-2024	31:35:14---------/v1/api/cart -- PUT -- Path "$.item" is not in schema, strict mode is `true`, and upsert is `true`.
+17-09-2024	13:48:14---------/v1/api/cart/66e927588c2f81cf4c283c57 -- DELETE -- Cannot use the part (item) of (cart_products.item) to traverse the element ({cart_products: [ { item: ObjectId('66e927588c2f81cf4c283c57'), quantity: 5, _id: ObjectId('66e9308f528abb172c369b6c') } ]})
+17-09-2024	35:52:14---------/v1/api/cart -- PUT -- Performing an update on the path '_id' would modify the immutable field '_id'
+17-09-2024	16:53:14---------/v1/api/cart -- PUT -- Performing an update on the path '_id' would modify the immutable field '_id'
+17-09-2024	59:53:14---------/v1/api/cart -- PUT -- Cannot apply $addToSet to non-array field. Field named '_id' has non-array type objectId
