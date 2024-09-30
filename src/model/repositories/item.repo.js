@@ -87,6 +87,19 @@ const removeProductById = async({product_id, product_shop, model}) => {
     return 0
 }
 
+const checkProductByService = async (products) => {
+    return await Promise.all(products.map(async product => {
+        const foundProduct = await _Product.findById(product.productId)
+        if(foundProduct) {
+            return {
+                price: foundProduct.product_price,
+                quantity: product.quantity,
+                productId: foundProduct._id
+            }
+        }
+    }))
+}
+
 module.exports = {
     findAllProduct,
     findProduct,
@@ -95,5 +108,6 @@ module.exports = {
     searchProductByUser,
     updateProductById,
     findAllProductWithQuery,
-    removeProductById
+    removeProductById,
+    checkProductByService
 }

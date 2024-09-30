@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const { VOUCHER_STATE, VOUCHER_APPLY_TO } = require('../types')
+const { VOUCHER_STATE, VOUCHER_APPLY_TO, VOUCHER_APPLY_TYPE } = require('../types')
 
 const DOCUMENT_NAME = 'Voucher'
 const COLLECTION_NAME = 'vouchers'
@@ -17,8 +17,8 @@ const schema = new mongoose.Schema(
     },
     voucher_type: {
       type: String,
-      enum: [VOUCHER_STATE.fixed_amount, VOUCHER_STATE.free_ship],
-      default: VOUCHER_STATE.free_ship
+      enum: [VOUCHER_STATE.fixed_amount, VOUCHER_STATE.percent_amount],
+      default: VOUCHER_STATE.fixed_amount
     },
     voucher_start_date: {
       type: Number,
@@ -27,10 +27,6 @@ const schema = new mongoose.Schema(
     voucher_end_date: {
       type: Number,
       required: true
-    },
-    voucher_expiration: {
-      type: Number,
-      required: true,
     },
     voucher_description: {
       type: String,
@@ -55,15 +51,31 @@ const schema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    voucher_max_uses_per_user: {
+      type: Number,
+      default: 0
+    },
+    voucher_users_used: {
+      type: Array,
+      default: []
+    },
     voucher_products: {
       type: Array,
-      default: [],
       ids: [
         {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Item'
         }
-      ]
+      ],
+      validate: {
+        validator: function(value) {
+          if(this.voucher_apply_to === VOUCHER_APPLY_TO.all) {
+            return value.ids.length === 0
+          }
+          return true
+        },
+        message: props => `voucher_apply_type is not valid with voucher_apply_type`
+      }
     },
     voucher_min_order_value: {
       type: Number,
@@ -71,9 +83,28 @@ const schema = new mongoose.Schema(
     },
     voucher_apply_to: {
       type: String,
-      required: true,
+      default: VOUCHER_APPLY_TO.all,
       enum: [VOUCHER_APPLY_TO.all, VOUCHER_APPLY_TO.specific]
-    }
+    },
+    // voucher_apply_type: {
+    //   type: Array,
+    //   enum: [
+    //     VOUCHER_APPLY_TYPE.t_all, 
+    //     VOUCHER_APPLY_TYPE.t_001, 
+    //     VOUCHER_APPLY_TYPE.t_002, 
+    //     VOUCHER_APPLY_TYPE.t_003
+    //   ],
+    //   default: [],
+    //   validate: {
+    //     validator: function(value) {
+    //       if(this.voucher_apply_to === VOUCHER_APPLY_TO.specific) {
+    //         return value !== VOUCHER_APPLY_TYPE.t_all
+    //       }
+    //       return true
+    //     },
+    //     message: props => `voucher_apply_type is not valid with voucher_apply_type: ${props.value}`
+    //   }
+    // }
   },
   { timestamps: true, collection: COLLECTION_NAME }
 );

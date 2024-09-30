@@ -18,18 +18,6 @@ class UploadService {
     static removeImage = async ({public_id}) => {
         return await cloudinaryConfig.uploader.destroy(public_id)
     }
-
-    static removeAndUpdateImage = async (imgsRemove, imgsAdd) => {
-        const images = []
-        for(let img of imgsRemove) {
-            await this.removeImage(img.public_id)
-        }
-        for(let url of imgsAdd) {
-            const image = await this.uploadImage({url})
-            images.push(image)
-        }
-        return images
-    }
 }
 
 module.exports = UploadService

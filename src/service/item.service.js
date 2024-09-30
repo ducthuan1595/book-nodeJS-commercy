@@ -13,7 +13,7 @@ const {
 } = require('../model/repositories/item.repo.js')
 const { insertInventory } = require('../model/repositories/inventory.repo.js');
 const { removeUndefinedObject, updateNestParser } = require('../util/index.js');
-const { uploadImage, removeImage, removeAndUpdateImage } = require('./upload.service.js');
+const { uploadImage, removeImage } = require('./upload.service.js');
 
 class ProductFactory {
   static productRegistry = {}
@@ -103,12 +103,7 @@ class Product {
   }
 
   async createProduct(product_id) {
-    const images = []
-    for(let url of this.product_thumb) {
-      const img = await uploadImage({url})
-      images.push(img)
-    }
-    const newProduct = await _Product.create({...this, _id: product_id, product_thumb: images})
+    const newProduct = await _Product.create({...this, _id: product_id})
     if(newProduct) {
       await insertInventory({
         productId: newProduct._id,
@@ -124,11 +119,10 @@ class Product {
     const product = await _Product.findById(product_id)
     if(!product) throw NotFoundError('Product invalid!')
 
-    let images = []
     if(this.product_thumb && this.product_thumb.length > 0) {
-      images = await removeAndUpdateImage(product.product_thumb, this.product_thumb, this.product_name)
+      await removeImage(product.product_thumb.public_id)
     }
-    payload.product_thumb = images
+    
     return await updateProductById({product_id, payload, model: _Product})
   }
 

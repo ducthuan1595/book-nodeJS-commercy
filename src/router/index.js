@@ -20,6 +20,7 @@ route.use('/v1/api/otp', require('./otp'))
 route.use('/v1/api/category', require('./category'))
 route.use('/v1/api/review', require('./review'))
 route.use('/v1/api/stripe', require('./stripe'))
+route.use('/v1/api/upload', require('./upload'))
 
 
 module.exports = route;

@@ -3,7 +3,7 @@
 const voucher_codes = require("voucher-code-generator")
 const _Voucher = require("../model/voucher.model")
 const { AuthorizedFailError, NotFoundError, BadRequestError } = require('../core/error.response')
-const { uploadImage, removeImage } = require("./upload.service");
+const { removeImage } = require("./upload.service");
 
 class VoucherService {
   static async createVoucher({user, payload}) {
@@ -18,8 +18,6 @@ class VoucherService {
       count: 1,
       prefix: "_"
     })
-    const img = await uploadImage({url: payload.voucher_thumb, folder: 'voucher'})
-    payload.voucher_thumb = img
     payload.voucher_code = code[0]
     return await _Voucher.create({...payload})
   }
@@ -31,10 +29,8 @@ class VoucherService {
     const voucher = await _Voucher.findById(voucherId)
     if(!voucher) throw new NotFoundError('Not found voucher')
 
-    let img = {}
     if(payload.voucher_thumb) {
       await removeImage({public_id: voucher.voucher_thumb.public_id})
-      img = await uploadImage({ url: payload.voucher_thumb, folder: 'voucher' })
     }
 
     Object.assign(voucher, payload)

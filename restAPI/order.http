@@ -1,0 +1,46 @@
+@url_dev=http://localhost:9000/v1/api
+@token=
+
+POST {{url_dev}}/checkout/review
+Content-Type: application/json
+x-api-key: 440b6f4dade5177e270a7a32f65ca5a576284336b1fb5f486170cd1807f47ac9
+x-client-id: 668fffabf8cd7875d1f191f6
+authorization: {{token}}
+
+{
+    "cartId": "66a27a86189ac446a9a80980",
+    "shop_order_ids": [
+        {
+            "shopId": "668fffabf8cd7875d1f191f6",
+            "shop_vouchers": [
+                {
+                    "voucherId": "66a24d4a9da8fbae76197348",
+                    "codeId": "Shop-01"
+                }
+            ],
+            "shop_flashsale": {
+                "flashsaleId": "",
+                "shopId": "66a100c30da9e6ec4b974e1c",
+            },
+            "item_products": [
+                {
+                    "price": 34,
+                    "quantity": 2,
+                    "productId": "66a0dac8681df7d8e4700708"
+                }
+            ]
+        },
+        {
+            "shopId": "668fffabf8cd7875d1f191f6",
+            "shop_vouchers": [],
+            "shop_flashsale": false,
+            "item_products": [
+                {
+                    "price": 690,
+                    "quantity": 2,
+                    "productId": "66a100c30da9e6ec4b974e1c"
+                }
+            ]
+        }
+    ]
+}

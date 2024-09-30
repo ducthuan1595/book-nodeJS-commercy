@@ -13,7 +13,14 @@ const CART_STATE = {
 
 const VOUCHER_STATE = {
     'fixed_amount': 'fixed_amount',
-    'free_ship': 'free_ship'
+    'percent_amount': 'percent_amount'
+}
+
+const VOUCHER_APPLY_TYPE = {
+    't_all': 'all',
+    't_001': 'book',
+    't_002': 'clothing',
+    't_003': 'electronic',
 }
 
 const VOUCHER_APPLY_TO = {
@@ -34,5 +41,6 @@ module.exports = {
     CART_STATE,
     VOUCHER_STATE,
     VOUCHER_APPLY_TO,
-    ORDER_STATUS
+    ORDER_STATUS,
+    VOUCHER_APPLY_TYPE
 }
