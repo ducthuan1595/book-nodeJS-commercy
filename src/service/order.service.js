@@ -1,23 +1,46 @@
 'use strict'
 
-const _Item = require("../model/item.model.js");
+const _Order = require("../model/order.model.js");
 const _Cart = require('../model/cart.model.js')
-const _Order = require("../model/order");
 const _User = require("../model/user.model.js");
 const _Voucher = require("../model/voucher.model.js");
 const _Review = require("../model/review.model.js");
-const _FlashSale = require("../model/flashsale.model.js");
 const pageSection = require("../support/pageSection");
 const sendMail = require("../support/mails/orderInfo");
 const { getFormatMonth, getFormatYear } = require("../util/format");
 const { acquireLock, releaseLock } = require('./redis.service.js')
-const { BadRequestError } = require('../core/error.response.js')
+const { BadRequestError, NotFoundError } = require('../core/error.response.js')
 const { checkProductByService } =  require('../model/repositories/item.repo.js');
-const { getVoucherAmount } = require("../model/repositories/discount.repo.js");
+const { getVoucherAmount, getFlashsaleAmount } = require("../model/repositories/discount.repo.js");
 
 class OrderService  {
-  static async createOrder({}) {
-    
+  static async orderByUser({shop_order_ids, cartId, user_address = {}, user_payment = {}, user}) {
+    const { 
+      shop_order_ids_new,
+      checkout_order 
+    } = await OrderService.orderReview({cartId, shop_order_ids, userId: user.userId})
+
+    const products = shop_order_ids_new.flatMap(order => order.item_products)
+    const acquireProduct = []
+    for(let i = 0; i < products.length; i++) {
+      const { quantity, productId } = products[i]
+      const keyLock = await acquireLock(productId, quantity, cartId)
+
+      acquireProduct.push(keyLock ? true : false)
+      if(keyLock) await releaseLock(keyLock)
+    }
+    if(acquireProduct.includes(false)) {
+      throw new BadRequestError('Some product is added please  come back')
+    }
+    const newOrder = await _Order.create({
+      order_userId: user.userId,
+      order_checkout: checkout_order,
+      order_shipping: user_address,
+      order_payment: user_payment,
+      order_products: shop_order_ids
+    })
+
+    return newOrder
   }
 
   static async orderReview ({cartId, shop_order_ids, userId}) {
@@ -33,7 +56,7 @@ class OrderService  {
     }, shop_order_ids_new  = []
 
     for(let i = 0; i < shop_order_ids; i++) {
-      const  {shopId, shop_vouchers = [], item_products = [], flashsales = []} = shop_order_ids[i]
+      const  {shopId, shop_vouchers = [], item_products = [], flashsaleId} = shop_order_ids[i]
       // check product available
       const checkProductService = await checkProductByService(item_products)
       if(!checkProductService[0]) throw new BadRequestError('order wrong')
@@ -47,6 +70,7 @@ class OrderService  {
       const itemCheckout = {
         shopId,
         shop_vouchers,
+        flashsaleId,
         priceRaw: checkoutPrice,
         priceApplyDiscount: checkoutPrice,
         item_products: checkProductService
@@ -76,13 +100,19 @@ class OrderService  {
       }
 
       //// handle with flashsale
+      if(flashsaleId) {
+        for(let product of checkProductService) {
+          const { discountAmount } = getFlashsaleAmount(flashsaleId, product)
+          itemCheckout.priceApplyDiscount -= discountAmount
+          checkOrder.totalDiscount += discountAmount
+        }
+      }
 
 
       checkOrder.totalCheckout += itemCheckout.priceApplyDiscount
       shop_order_ids_new.push(itemCheckout)
     }
     return {
-      shop_order_ids,
       shop_order_ids_new,
       checkout_order: checkOrder
     }

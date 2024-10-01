@@ -1,4 +1,6 @@
 @url_dev=http://localhost:8000/v1/api/product
+@api_key=3ba73ff48c21cd92f1f7fc1ce55e125f0bd176323da76c8abdfed7a79aeb56f6
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmU5MmZkM2E0ZDZiZGYyYjNkMGViZDciLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwicGVybWl0Ijp7Il9pZCI6IjY2ZTkyZmQzYTRkNmJkZjJiM2QwZWJkYSIsInBlcm1pdF91c2VyIjpmYWxzZSwicGVybWl0X21vZGVyYXRvciI6ZmFsc2UsInBlcm1pdF9hZG1pbiI6dHJ1ZSwicGVybWl0X2d1ZXN0Ijp0cnVlLCJwZXJtaXRfc2hvcCI6ZmFsc2UsInBlcm1pdF91c2VySWQiOiI2NmU5MmZkM2E0ZDZiZGYyYjNkMGViZDciLCJjcmVhdGVkQXQiOiIyMDI0LTA5LTE3VDA3OjI5OjIzLjU3NVoiLCJ1cGRhdGVkQXQiOiIyMDI0LTA5LTE3VDA3OjI5OjIzLjU3NVoiLCJfX3YiOjB9LCJpYXQiOjE3Mjc3OTcxOTUsImV4cCI6MTcyNzk2OTk5NX0.Y7972__jchJJ2CFNjxGL99sK3o4MYYazE2IIRORvTag
 
 ###
 POST {{url_dev}}
@@ -58,7 +60,7 @@ authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUz
 
 GET {{url_dev}}
 Content-Type: application/json
-x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-api-key: {{api_key}}
 
 ###
 
@@ -70,23 +72,23 @@ x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
 
 GET {{url_dev}}/66e143f85a30edf447af3fd9
 Content-Type: application/json
-x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-api-key: {{api_key}}
 
 ###
 
 GET {{url_dev}}/draft/all
 Content-Type: application/json
-x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-api-key: {{api_key}}
 x-client-id: 66caedd4533d3eefd8d16cc2
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI2MDM3NDM2LCJleHAiOjE3MjYyMTAyMzZ9.73H14TkoO4RL-6kUpgTDAthnVDrGCU2VvmXeIANvLgk
+authorization: {{token}}
 
 ###
 
 GET {{url_dev}}/published/all
 Content-Type: application/json
-x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-api-key: {{api_key}}
 x-client-id: 66caedd4533d3eefd8d16cc2
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUzM2QzZWVmZDhkMTZjYzIiLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwiaWF0IjoxNzI2MDM3NDM2LCJleHAiOjE3MjYyMTAyMzZ9.73H14TkoO4RL-6kUpgTDAthnVDrGCU2VvmXeIANvLgk
+authorization: {{token}}
 
 ###
 

@@ -17,7 +17,7 @@ const protect = asyncHandler( async (req, res, next) => {
   const keyStore = await _Key.findOne({key_token_userId: userId})
   
   if(!keyStore) {
-      throw new NotFoundError('Not found')
+      throw new NotFoundError('Not found user')
   }
   req.keyStore = keyStore
 

@@ -31,18 +31,16 @@ const schema = new mongoose.Schema(
       enum: [FLASHSALE_STATUS.active, FLASHSALE_STATUS.inactive, FLASHSALE_STATUS.pending],
       default: FLASHSALE_STATUS.pending
     },
+    flashsale_quantity: {
+      type: Number,
+      default: 0
+    },
     flashsale_products: {
       type: Array,
-      default: [],
-      items: [
+      ids: [
         {
-          itemId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Item",
-          },
-          quantity: {
-            type: Number,
-          },
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Item",
         },
       ]
     },

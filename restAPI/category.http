@@ -1,5 +1,7 @@
 @url_dev=http://localhost:8000/v1/api/category
+@api_key=3ba73ff48c21cd92f1f7fc1ce55e125f0bd176323da76c8abdfed7a79aeb56f6
 
+###
 POST {{url_dev}}
 Content-Type: application/json
 x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
@@ -15,7 +17,7 @@ authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhZWRkNDUz
 
 GET {{url_dev}}
 Content-Type: application/json
-x-api-key: 62deb3015e786cefbffa7cd33e488f5d262fc7754c9ce4aba884fb116ec08c67
+x-api-key: {{api_key}}
 
 ###
 

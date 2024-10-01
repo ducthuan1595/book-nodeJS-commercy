@@ -1,27 +1,26 @@
-@url_dev=http://localhost:9000/v1/api
-@token=
+@url_dev=http://localhost:8000/v1/api
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmU5MmZkM2E0ZDZiZGYyYjNkMGViZDciLCJlbWFpbCI6ImhpLnRpbS5naS50aGVAZ21haWwuY29tIiwicGVybWl0Ijp7Il9pZCI6IjY2ZTkyZmQzYTRkNmJkZjJiM2QwZWJkYSIsInBlcm1pdF91c2VyIjpmYWxzZSwicGVybWl0X21vZGVyYXRvciI6ZmFsc2UsInBlcm1pdF9hZG1pbiI6dHJ1ZSwicGVybWl0X2d1ZXN0Ijp0cnVlLCJwZXJtaXRfc2hvcCI6ZmFsc2UsInBlcm1pdF91c2VySWQiOiI2NmU5MmZkM2E0ZDZiZGYyYjNkMGViZDciLCJjcmVhdGVkQXQiOiIyMDI0LTA5LTE3VDA3OjI5OjIzLjU3NVoiLCJ1cGRhdGVkQXQiOiIyMDI0LTA5LTE3VDA3OjI5OjIzLjU3NVoiLCJfX3YiOjB9LCJpYXQiOjE3Mjc3OTcxOTUsImV4cCI6MTcyNzk2OTk5NX0.Y7972__jchJJ2CFNjxGL99sK3o4MYYazE2IIRORvTag
+@api_key=3ba73ff48c21cd92f1f7fc1ce55e125f0bd176323da76c8abdfed7a79aeb56f6
 
-POST {{url_dev}}/checkout/review
+###
+
+POST {{url_dev}}/checkout
 Content-Type: application/json
-x-api-key: 440b6f4dade5177e270a7a32f65ca5a576284336b1fb5f486170cd1807f47ac9
-x-client-id: 668fffabf8cd7875d1f191f6
+x-api-key: {{api_key}}
+x-client-id: 66e92fd3a4d6bdf2b3d0ebd7
 authorization: {{token}}
 
 {
     "cartId": "66a27a86189ac446a9a80980",
     "shop_order_ids": [
         {
-            "shopId": "668fffabf8cd7875d1f191f6",
+            "shopId": "66caedd4533d3eefd8d16cc2",
             "shop_vouchers": [
                 {
                     "voucherId": "66a24d4a9da8fbae76197348",
                     "codeId": "Shop-01"
                 }
             ],
-            "shop_flashsale": {
-                "flashsaleId": "",
-                "shopId": "66a100c30da9e6ec4b974e1c",
-            },
             "item_products": [
                 {
                     "price": 34,
@@ -31,9 +30,8 @@ authorization: {{token}}
             ]
         },
         {
-            "shopId": "668fffabf8cd7875d1f191f6",
+            "shopId": "66caedd4533d3eefd8d16cc2",
             "shop_vouchers": [],
-            "shop_flashsale": false,
             "item_products": [
                 {
                     "price": 690,

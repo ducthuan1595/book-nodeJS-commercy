@@ -43,7 +43,6 @@ const getVoucherAmount = async({voucherId, codeId, products, userId}) => {
     }
   }
 
-  
   if(voucher_max_uses_per_user < 0) {
     throw new NotFoundError('Maximum voucher for user')
   }
@@ -58,10 +57,16 @@ const getVoucherAmount = async({voucherId, codeId, products, userId}) => {
         throw new NotFoundError('product is not exist in voucher products')
       }
     }
-
   }
 
   const amount = voucher_type === VOUCHER_STATE.fixed_amount ? voucher_discount : (totalOrder * (voucher_discount / 100)).toFixed(0)
+
+  // update voucher db
+  const newQuantity = products.reduce((acc, product) => acc + product.quantity , 0)
+  foundVoucher.voucher_quantity -= newQuantity
+  foundVoucher.voucher_used_count += newQuantity
+  foundVoucher.voucher_users_used.push(userId)
+  await foundVoucher.save()
 
   return {
     totalOrder,
@@ -70,6 +75,46 @@ const getVoucherAmount = async({voucherId, codeId, products, userId}) => {
   }
 }
 
+const getFlashsaleAmount = async (flashsaleId, product) => {
+  const foundFlashsale = await _FlashSale.findById(flashsaleId)
+  if(!foundFlashsale) throw  new NotFoundError('Not found flash sale')
+
+  const { 
+    flashsale_start_date, 
+    flashsale_end_date,
+    flashsale_status,
+    flashsale_products,
+    flashsale_discount_percent,
+    flashsale_quantity
+  } = foundFlashsale
+
+  if(flashsale_start_date > Date.now() || flashsale_end_date < Date.now()) {
+    throw new BadRequestError('Flash sale is expired')
+  }
+
+  switch(flashsale_status.FLASHSALE_STATUS) {
+    case 'pending':
+      throw new BadRequestError('Flashsale statue is pending')
+    case 'inactive':
+      throw new BadRequestError('Flashsale status is inactive')
+  }
+  
+  const flashsaleItem = flashsale_products.ids.find(item => item.toString() === product.productId.toString())
+
+  if(flashsaleItem && flashsale_quantity > 0 && flashsale_quantity >= product.quantity) {
+    const discountAmount = (flashsale_discount_percent / 100).toFixed(2)
+
+    //update quantity flashsale for item
+    foundFlashsale.flashsale_quantity -= product.quantity
+    await foundFlashsale.save()
+
+    return {
+      discountAmount
+    }
+  }
+}
+
 module.exports = {
-  getVoucherAmount
+  getVoucherAmount,
+  getFlashsaleAmount
 }

@@ -8,7 +8,6 @@ const apiKey = async (req, res, next) => {
     try{
         const key = req.headers[HEADERS.API_KEY]?.toString()
         if(!key) throw new ForbiddenError('Forbidden')
-        
         const objKey = await _ApiKey.findOne({api_key: key})
         if(!objKey) throw new ForbiddenError('Forbidden Error api key')
 
@@ -16,7 +15,7 @@ const apiKey = async (req, res, next) => {
         next()
     }catch(err) {
         console.log(err);
-        
+        next(err)
     }
 }
 

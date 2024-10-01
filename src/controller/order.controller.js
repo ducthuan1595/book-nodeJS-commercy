@@ -1,4 +1,4 @@
-const { createOrder } = require("../service/order.service");
+const { orderByUser } = require("../service/order.service");
 const { SuccessResponse } = require('../core/success.response')
 
 
@@ -9,7 +9,8 @@ class OrderController {
    * @body {array} shop_order_ids: [
    *    {
    *       shopId,
-   *       shop_discount: [],
+   *       shop_voucher: [],
+   *       flashsaleId: '',
    *       item_products: [
    *          {
    *            price, quantity, productId
@@ -18,9 +19,9 @@ class OrderController {
    *    },
    *    {
    *      shopId,
-   *      shop_discount: [
+   *      shop_voucher: [
    *        {
-   *          shopId, discountId, codeId
+   *           discountId, codeId
    *        }  
    *      ],
    *      item_products: [
@@ -36,7 +37,7 @@ class OrderController {
   createOrder = async (req, res) => {
     new SuccessResponse({
       message: 'Order success',
-      metadata: await createOrder({
+      metadata: await orderByUser({
         ...req.body,
         user: req.user
       })
