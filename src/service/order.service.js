@@ -1,24 +1,18 @@
 'use strict'
 
 const _Order = require("../model/order.model.js");
-const _Cart = require('../model/cart.model.js')
-const _User = require("../model/user.model.js");
-const _Voucher = require("../model/voucher.model.js");
-const _Review = require("../model/review.model.js");
-const pageSection = require("../support/pageSection");
-const sendMail = require("../support/mails/orderInfo");
-const { getFormatMonth, getFormatYear } = require("../util/format");
 const { acquireLock, releaseLock } = require('./redis.service.js')
 const { BadRequestError, NotFoundError } = require('../core/error.response.js')
-const { checkProductByService } =  require('../model/repositories/item.repo.js');
-const { getVoucherAmount, getFlashsaleAmount } = require("../model/repositories/discount.repo.js");
+const { orderReview } = require('../model/repositories/checkout.repo.js')
+const { addStockToInventory } = require('./inventory.service.js')
+const { ORDER_STATUS } = require('../common/constant.js')
 
 class OrderService  {
   static async orderByUser({shop_order_ids, cartId, user_address = {}, user_payment = {}, user}) {
     const { 
       shop_order_ids_new,
       checkout_order 
-    } = await OrderService.orderReview({cartId, shop_order_ids, userId: user.userId})
+    } = await orderReview({cartId, shop_order_ids, userId: user.userId})
 
     const products = shop_order_ids_new.flatMap(order => order.item_products)
     const acquireProduct = []
@@ -40,82 +34,72 @@ class OrderService  {
       order_products: shop_order_ids
     })
 
+    // update inventory
+    for(let i = 0; i < products.length; i++) {
+      const { productId, quantity } = products[i]
+      await addStockToInventory({productId, shopId: user.shopId, quantity: -quantity})
+    }
+
     return newOrder
   }
 
-  static async orderReview ({cartId, shop_order_ids, userId}) {
-    // check cartId exist
-    const foundCart =  await _Cart.findById(cartId)
-    if(!foundCart) throw new BadRequestError('Not found cart')
-    
-    const checkOrder = {
-      totalPrice: 0,
-      feeShip: 0,
-      totalDiscount: 0,
-      totalCheckout: 0
-    }, shop_order_ids_new  = []
-
-    for(let i = 0; i < shop_order_ids; i++) {
-      const  {shopId, shop_vouchers = [], item_products = [], flashsaleId} = shop_order_ids[i]
-      // check product available
-      const checkProductService = await checkProductByService(item_products)
-      if(!checkProductService[0]) throw new BadRequestError('order wrong')
-
-      const checkoutPrice = checkProductService.reduce((acc, product) => {
-        return acc + (product.quantity * product.price)
-      }, 0)
-
-      // total price order
-      checkOrder.totalPrice += checkoutPrice
-      const itemCheckout = {
-        shopId,
-        shop_vouchers,
-        flashsaleId,
-        priceRaw: checkoutPrice,
-        priceApplyDiscount: checkoutPrice,
-        item_products: checkProductService
-      }
-
-      //// handle with voucher
-      if(shop_vouchers.length > 0) {
-        const checkVoucher = {
-          totalOrder: 0,
-          discount: 0,
-          totalPrice: 0
-        }
-        for(let voucher of shop_vouchers) {
-          const {voucherId, codeId} = voucher
-          const { totalOrder, discount, totalPrice } = await getVoucherAmount({voucherId, codeId, products: checkProductService, userId})
-          
-          checkVoucher.totalOrder += totalOrder
-          checkVoucher.discount += discount
-          checkVoucher.totalPrice += totalPrice
-        }
-
-        // get total voucher
-        checkOrder.totalDiscount += checkVoucher.discount
-        if(checkVoucher.discount > 0) {
-          itemCheckout.priceApplyDiscount = checkoutPrice - checkVoucher.discount
-        }
-      }
-
-      //// handle with flashsale
-      if(flashsaleId) {
-        for(let product of checkProductService) {
-          const { discountAmount } = getFlashsaleAmount(flashsaleId, product)
-          itemCheckout.priceApplyDiscount -= discountAmount
-          checkOrder.totalDiscount += discountAmount
-        }
-      }
-
-
-      checkOrder.totalCheckout += itemCheckout.priceApplyDiscount
-      shop_order_ids_new.push(itemCheckout)
+  static async cancelOrder({orderId, shop_order_ids}) {
+    const products = shop_order_ids.flatMap(order => order.item_products)
+    for(let i = 0; i < products.length; i++) {
+      const { productId, quantity, shopId } = products[i]
+      await addStockToInventory({productId, shopId, quantity: quantity})
     }
-    return {
-      shop_order_ids_new,
-      checkout_order: checkOrder
+
+    // update order
+    const foundOrder = await _Order.findByIdAndUpdate(orderId, {order_status: ORDER_STATUS.cancelled})
+    if(!foundOrder) throw new NotFoundError('Not found order')
+
+    return foundOrder
+  }
+
+  static async changeOrderStatus({orderId, status}) {
+    const foundOrder = await _Order.findByIdAndUpdate(orderId, {order_status: status})
+    if(!foundOrder) throw new NotFoundError('Not found order')
+
+    return foundOrder ? 1 : 0
+  }
+
+  static async getOrderByProduct({productId, page, limit}) {
+    const foundOrder = await _Order.findOne({order_products: { $elemMatch: { productId }}}).paginate(page, limit).lean()
+    if(!foundOrder) throw new NotFoundError('Not found order')
+
+    return foundOrder
+  }
+
+  static async getOrderByUser(userId, page, limit) {
+    const foundOrder = await _Order.findOne({order_userId: userId}).paginate(page, limit).lean()
+    if(!foundOrder) throw new NotFoundError('Not found order')
+
+    return foundOrder
+  }
+
+  static async getOrderByShop(shopId, page, limit) {
+    const query = {
+      "order_checkout": {
+        $elemMatch: {
+          shopId: shopId
+        }
+      }
     }
+    const foundOrder = await _Order.find(query).paginate(page, limit).lean()
+    if(!foundOrder) throw new NotFoundError('Not found order')
+
+    return foundOrder
+  }
+
+  static async getOrderByAdmin(user, page, limit) {
+    if(!user.permit.permit_admin) {
+      throw new ForbiddenError('Not permission')
+    }
+    const foundOrder = await _Order.find().sort({createdAt: -1}).paginate(page, limit).lean()
+    if(!foundOrder) throw new NotFoundError('Not found order')
+
+    return foundOrder
   }
 }
 

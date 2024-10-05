@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { ORDER_STATUS } = require("../types");
+const { ORDER_STATUS } = require("../common/constant.js");
 
 const DOCUMENT_NAME = 'Order'
 const COLLECTION_NAME = 'orders'
@@ -16,7 +16,7 @@ const orderSchema = new mongoose.Schema(
       type: Object,
       default: {}
     },
-    /* total price, total discount, voucher code, method payment */
+    /* total price, total discount, voucher code, method payment, shopId */
     order_checkout: {
       type: Object,
       default: {}

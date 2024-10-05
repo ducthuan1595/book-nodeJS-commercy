@@ -25,42 +25,41 @@ const { getInfoData, setCookies, publicKey, privateKey } = require("../util/inde
 
 var that = (module.exports = {
   login: async ({ user_email, user_password, res }) => {
-      const user = await findOneUserWithEmail({ user_email })
+    const user = await findOneUserWithEmail({ user_email })
 
-      if (!user) {
-        throw new NotFoundError("User is not exist");
+    if (!user) {
+      throw new NotFoundError("User is not exist");
+    }
+    const permit = await findByIdFromPermission(user?.user_role);
+    if (permit && !permit.permit_user && !permit.permit_admin && !permit.permit_shop && !permit.permit_moderator) {
+      throw new BadRequestError("Please, check email to confirm");
+    }
+      const validPs = await bcrypt.compare(user_password, user.user_password);
+      if (!validPs) {
+        throw new ForbiddenError("Password incorrect!");
       }
-      const permit = await findByIdFromPermission(user?.user_role);
-      if (permit && !permit.permit_user && !permit.permit_admin && !permit.permit_shop && !permit.permit_moderator) {
-        throw new BadRequestError("Please, check email to confirm");
-      }
-        const validPs = await bcrypt.compare(user_password, user.user_password);
-        if (!validPs) {
-          throw new ForbiddenError("Password incorrect!");
-        }
-        const strPublicKey = publicKey(), strPrivateKey = privateKey()
-        const tokens = await createToken({userId: user._id, email: user.user_email, permit}, strPublicKey, strPrivateKey)
+      const strPublicKey = publicKey(), strPrivateKey = privateKey()
+      const tokens = await createToken({userId: user._id, email: user.user_email, permit}, strPublicKey, strPrivateKey)
 
-        const keyStore = await KeyTokenService.createKeyToken({
-          userId: user._id,
-          publicKey: strPublicKey,
-          privateKey: strPrivateKey,
-          refreshToken: tokens.refreshToken
-        })
+      const keyStore = await KeyTokenService.createKeyToken({
+        userId: user._id,
+        publicKey: strPublicKey,
+        privateKey: strPrivateKey,
+        refreshToken: tokens.refreshToken
+      })
 
-        if(!keyStore) throw new ErrorResponse('Error create key store')
+      if(!keyStore) throw new ErrorResponse('Error create key store')
 
-        // set token into cookie
-        setCookies(tokens, res)
+      // set token into cookie
+      setCookies(tokens, res)
 
-        return {
-          status: 201,
-          message: "ok",
-          data: {
-            user: getInfoData({fields: ['_id', 'user_name', 'user_email', 'user_cart', 'user_gender', 'user_avatar'], object: user}),
-            tokens
-          },
-        };
+      return {
+        message: "ok",
+        data: {
+          user: getInfoData({fields: ['_id', 'user_name', 'user_email', 'user_cart', 'user_gender', 'user_avatar'], object: user}),
+          tokens
+        },
+      };
       
   },
 

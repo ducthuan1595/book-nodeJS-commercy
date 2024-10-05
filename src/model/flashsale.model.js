@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const { FLASHSALE_STATUS } = require('../types')
+const { FLASHSALE_STATUS } = require('../common/constant.js')
 
 const DOCUMENT_NAME = 'FlashSale'
 const COLLECTION_NAME = 'flashsales'

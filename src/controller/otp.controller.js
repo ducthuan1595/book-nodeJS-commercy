@@ -3,6 +3,11 @@
 const {verifyOtpService, sendAgainOtpService} = require('../service/otp.service');
 
 var that = module.exports = {
+    /**
+     * 
+     * @param {body: {email, otp}} req 
+     * @param {message: 'Verify OTP success', metadata: await verifyOtpService(email, otp, res)} res 
+     */
     verifyOtp: async(req, res, next) => {
         const {email, otp} = req.body;
         if(!email || !otp) {
@@ -17,6 +22,11 @@ var that = module.exports = {
         }
     },
 
+    /**
+     * 
+     * @param {body: {email}} req 
+     * @param {message: 'Send again OTP success', metadata: await sendAgainOtpService(email)} res 
+     */
     sendAgainOtp: async(req, res, next) => {
         const {email} = req.body;
         if(!email) {

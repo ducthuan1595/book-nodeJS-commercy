@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const { VOUCHER_STATE, VOUCHER_APPLY_TO, VOUCHER_APPLY_TYPE } = require('../types')
+const { VOUCHER_STATE, VOUCHER_APPLY_TO } = require('../common/constant.js')
 
 const DOCUMENT_NAME = 'Voucher'
 const COLLECTION_NAME = 'vouchers'
